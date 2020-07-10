@@ -1,7 +1,15 @@
+<div class="row m-5 justify-content-end">
+  <div class="alert alert-danger" role="alert">
+    <p class="text-center my-auto">
+      Some error
+    </p>
+  </div>
+</div>
 <form class="row mx-auto form-def mt-5 mb-5"
       [formGroup]="form"
       (ngSubmit)="onLogin()">
-  <mat-form-field class="col-sm-12 mb-3">
+  <mat-form-field appearance="outline"
+                  class="col-sm-12 mb-3">
     <mat-label>Email</mat-label>
     <input matInput
            formControlName="email"
@@ -22,7 +30,7 @@
       Email max length is 50 symbols
     </mat-error>
   </mat-form-field>
-  <mat-form-field appearance="fill"
+  <mat-form-field appearance="outline"
                   class="col-sm-12 mb-3">
     <mat-label>Password</mat-label>
     <input matInput
@@ -41,7 +49,7 @@
       <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
     </button>
   </mat-form-field>
-  <div class="col-sm-12">
+  <div class="col-sm-12 text-center">
     <button type="submit"
             mat-raised-button
             color="primary"
