@@ -30,8 +30,13 @@
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "node_modules/bootstrap/scss/bootstrap.scss",
-              "src/styles.scss"
+              "src/styles/main.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/styles"
+              ]
+            },
             "scripts": []
           },
           "configurations": {
@@ -128,5 +133,8 @@
       }
     }
   },
-  "defaultProject": "hot-desk-booking-app"
+  "defaultProject": "hot-desk-booking-app",
+  "cli": {
+    "analytics": false
+  }
 }

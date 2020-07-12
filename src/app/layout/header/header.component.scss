@@ -1,0 +1,68 @@
+@import "main";
+
+.header {
+  background: $header-bg;
+  box-shadow: 0 0 0.375rem rgba(0,0,0,0.1);
+
+  &--burger {
+    transition: .2s;
+    &:hover {
+      transition: .2s;
+      background: #eeeeee;
+    }
+  }
+
+  &--logo {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    height: 2.5rem;
+    width: 16.875rem;
+    background: url("../../../assets/images/logo/logo_b.png") center no-repeat;
+    background-size: 16.75rem;
+
+    @media (max-width: 1070px) {
+      background: url("../../../assets/images/logo/logo_min.png") center no-repeat;
+      background-size: 9rem;
+    }
+  }
+
+  &--search {
+
+    .search-btn {
+      border-color: $btn-bg;
+      color: $btn-bg;
+      transition: .2s;
+      &:hover {
+        transition: .2s;
+        background: $btn-hover;
+        border-color: $btn-hover;
+        color: #ffff;
+      }
+    }
+  }
+
+  &--user-menu {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    .user-icon {
+      border-radius: 50%;
+      background: $user-icon-bg;
+      width: 2.875rem;
+      height: 2.875rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.75rem;
+      color: #ffff;
+    }
+
+    .user-menu {
+      background: $dropdown-menu-bg;
+      margin: 0.4rem 1rem 0 0;
+    }
+
+  }
+}

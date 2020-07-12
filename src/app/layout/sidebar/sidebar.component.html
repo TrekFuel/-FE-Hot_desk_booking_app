@@ -1,0 +1,17 @@
+<ng-container *ngIf="isVisibleSidebar">
+
+  <div
+    [@sidebarAnimation]
+    (click)="closeSidebar($event)"
+    id="component" class="sidebar">
+
+    <!--Place for items sidebar-->
+    <div class="sidebar--container">
+      <h3>Hello</h3>
+    </div>
+
+  </div>
+
+</ng-container>
+
+

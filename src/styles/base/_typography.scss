@@ -1,0 +1,20 @@
+/* You can add global styles to this file, and also import other style files */
+
+// Angular material css here, if needed
+//html, body { height: 100%; }
+@import "abstracts/varColors";
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background: $body-bg;
+}
+
+.hover-item {
+  transition: .2s;
+  &:hover {
+    transition: .2s;
+    color: #ffff;
+    background: $dropdown-menu-hover;
+  }
+}
