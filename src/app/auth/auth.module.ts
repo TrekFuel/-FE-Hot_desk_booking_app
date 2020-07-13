@@ -1,12 +1,8 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { LoginComponent } from './login/login.component';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {LoginComponent} from './login/login.component';
 import {ReactiveFormsModule} from '@angular/forms';
-import {MatInputModule} from '@angular/material/input';
-import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
-
+import {MaterialModule} from '../material/material-module';
 
 
 @NgModule({
@@ -16,11 +12,11 @@ import {MatIconModule} from '@angular/material/icon';
   ],
   imports: [
     CommonModule,
-    MatFormFieldModule,
     ReactiveFormsModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule
+    MaterialModule
   ]
 })
-export class AuthModule { }
+export class AuthModule {
+}
+
+
