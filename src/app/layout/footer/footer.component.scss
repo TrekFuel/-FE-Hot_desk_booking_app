@@ -1,0 +1,15 @@
+@import "main";
+
+.footer {
+  display: flex;
+  justify-content: center;
+  background: $footer-bg;
+  box-shadow: 0 0 6px rgba(0,0,0,0.1);
+
+  &--logo{
+    height: 1.5rem;
+    width: 7.5rem;
+    background: url("../../../assets/images/logo/logo_c.png") center no-repeat;
+    background-size: 7rem;
+  }
+}
