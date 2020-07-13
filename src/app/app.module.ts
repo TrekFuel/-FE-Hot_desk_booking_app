@@ -4,9 +4,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StoreModule } from '@ngrx/store';
-import { reducers, metaReducers } from './reducers';
 import { LayoutModule } from "./layout/layout.module";
 import { AuthModule } from './auth/auth.module';
+import { MaterialModule } from './material/material-module';
+import { reducers } from './store';
 
 @NgModule({
   declarations: [
@@ -18,9 +19,7 @@ import { AuthModule } from './auth/auth.module';
     BrowserAnimationsModule,
     LayoutModule,
     MaterialModule,
-    StoreModule.forRoot(reducers, {
-      metaReducers
-    }),
+    StoreModule.forRoot(reducers),
     AuthModule
   ],
   providers: [],
