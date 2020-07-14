@@ -4,11 +4,10 @@
   margin: 2.5rem 0;
 
   .table {
-    width: 100%;
 
-    &--header {
+    thead th{
       position: sticky;
-      top: 3.75rem;
+      top: 3.78rem;
     }
 
     &--row {
