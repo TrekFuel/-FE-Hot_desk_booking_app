@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
-import { SidebarServices } from "../sidebar/sidebar.services";
+import { SidebarServices } from '../sidebar/sidebar.services';
 
 @Component({
   selector: 'app-header',
@@ -8,15 +8,15 @@ import { SidebarServices } from "../sidebar/sidebar.services";
 })
 export class HeaderComponent {
 
-  isVisibleSubmenu: boolean = false;
+  isVisibleSubmenu = false;
 
   @ViewChild('subMenu') subMenu: ElementRef;
   @ViewChild('btnSubMenu') btnSubMenu: ElementRef;
 
   @HostListener('document:click', ['$event']) clickOut(event) {
-    let open: boolean = this.btnSubMenu.nativeElement.contains(event.target);
-    let close: boolean = this.subMenu.nativeElement.contains(event.target);
-    if(!open && !close) this.isVisibleSubmenu = false;
+    const open: boolean = this.btnSubMenu.nativeElement.contains(event.target);
+    const close: boolean = this.subMenu.nativeElement.contains(event.target);
+    if (!open && !close) { this.isVisibleSubmenu = false; }
   }
 
   constructor(

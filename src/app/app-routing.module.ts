@@ -12,7 +12,12 @@ const routes: Routes = [
     path: 'login',
     pathMatch: 'full',
     component: LoginComponent
-  }
+  },
+  {
+    path: 'rooms-management',
+    pathMatch: 'full',
+    redirectTo: 'rooms-management',
+  },
 ];
 
 @NgModule({

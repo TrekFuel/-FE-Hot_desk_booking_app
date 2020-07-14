@@ -13,7 +13,7 @@ import {MaterialModule} from '../material/material-module';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MaterialModule
+    MaterialModule,
   ]
 })
 export class AuthModule {
