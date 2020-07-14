@@ -1,0 +1,28 @@
+@import "main";
+
+.users {
+  margin: 2.5rem 0;
+
+  .table {
+    width: 100%;
+
+    &--header {
+      position: sticky;
+      top: 3.75rem;
+    }
+
+    &--row {
+      vertical-align: middle;
+    }
+
+    &--btn {
+      border-color: $btn-bg;
+      color: $btn-bg;
+      &:hover {
+        border-color: #40bfef;
+        background: #40bfef;
+        color: #ffff;
+      }
+    }
+  }
+}

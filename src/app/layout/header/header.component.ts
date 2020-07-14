@@ -8,7 +8,7 @@ import { SidebarServices } from "../sidebar/sidebar.services";
 })
 export class HeaderComponent {
 
-  isVisibleSubmenu: boolean = false;
+  public isVisibleSubmenu = false;
 
   @ViewChild('subMenu') subMenu: ElementRef;
   @ViewChild('btnSubMenu') btnSubMenu: ElementRef;
