@@ -1,7 +1,7 @@
-<form class="row m-5 justify-content-center"
+<form class="row m-3 justify-content-center"
       [formGroup]="form">
   <mat-form-field appearance="outline"
-                  class="col-sm-4 m-3 select-form">
+                  class="col-sm-4 my-1 select-form">
     <mat-label class="">Country</mat-label>
     <mat-select formControlName="country">
       <mat-option *ngFor="let option of countryOptions"
@@ -12,7 +12,7 @@
     </mat-select>
   </mat-form-field>
   <mat-form-field appearance="outline"
-                  class="col-sm-4 m-3 select-form">
+                  class="col-sm-4 my-1 select-form">
     <mat-label>City</mat-label>
     <mat-select formControlName="city">
       <mat-option *ngFor="let option of cityOptions"
@@ -23,7 +23,7 @@
     </mat-select>
   </mat-form-field>
   <mat-form-field appearance="outline"
-                  class="col-sm-4 m-3 select-form">
+                  class="col-sm-4 my-1 select-form">
     <mat-label>Office</mat-label>
     <mat-select formControlName="office">
       <mat-option *ngFor="let option of officeOptions"
