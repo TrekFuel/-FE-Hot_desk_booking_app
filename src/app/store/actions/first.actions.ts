@@ -6,3 +6,4 @@ export class FirstActions implements Action{
   readonly type = FIRST_ACTION;
   constructor(public payload: any) {}
 }
+
