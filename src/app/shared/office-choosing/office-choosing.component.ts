@@ -35,7 +35,7 @@ export class OfficeChoosingComponent implements OnInit {
     });
   }
 
-  onSelected(value: string) {
+  onSelected(value: string | undefined) {
     console.log(value);
   }
 
