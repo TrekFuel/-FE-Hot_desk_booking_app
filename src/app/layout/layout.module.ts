@@ -2,11 +2,10 @@ import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HeaderComponent } from "./header/header.component";
 import { FooterComponent } from './footer/footer.component';
-import { MaterialModule } from "../material/material-module";
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { UsersComponent } from './users/users.component';
-import {MatRadioModule} from "@angular/material/radio";
+import { MaterialModule } from "../material/material-module";
 
 @NgModule({
   exports: [
@@ -16,10 +15,9 @@ import {MatRadioModule} from "@angular/material/radio";
     UsersComponent
   ],
     imports: [
-        BrowserAnimationsModule,
-        MaterialModule,
-        FormsModule,
-        MatRadioModule
+      BrowserAnimationsModule,
+      FormsModule,
+      MaterialModule
     ],
   declarations: [
     HeaderComponent,

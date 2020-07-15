@@ -5,6 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTableModule } from "@angular/material/table";
 import { MatSortModule } from "@angular/material/sort";
+import { MatRadioModule } from "@angular/material/radio";
 
 @NgModule({
   exports: [
@@ -13,7 +14,8 @@ import { MatSortModule } from "@angular/material/sort";
     MatInputModule,
     MatFormFieldModule,
     MatTableModule,
-    MatSortModule
+    MatSortModule,
+    MatRadioModule
   ]
 })
 export class MaterialModule {
