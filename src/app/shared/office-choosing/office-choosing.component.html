@@ -1,34 +1,34 @@
-<form class="row m-3 justify-content-center"
+<form class="row mt-4 justify-content-center"
       [formGroup]="form">
-  <mat-form-field appearance="outline"
-                  class="col-sm-4 my-1 select-form">
+
+  <mat-form-field appearance="outline" class="col-sm-4 my-1 select-form">
     <mat-label class="">Country</mat-label>
-    <mat-select formControlName="country">
+    <mat-select formControlName="country" (selectionChange)="onSelected($event.value)">
+      <mat-option>--</mat-option>
       <mat-option *ngFor="let option of countryOptions"
-                  [value]="option | lowercase"
-                  (select)="onSelected($event.target.value)">
+                  [value]="option | lowercase">
         {{option}}
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-form-field appearance="outline"
-                  class="col-sm-4 my-1 select-form">
+
+  <mat-form-field appearance="outline" class="col-sm-4 my-1 select-form">
     <mat-label>City</mat-label>
-    <mat-select formControlName="city">
+    <mat-select formControlName="city" (selectionChange)="onSelected($event.value)">
+      <mat-option>--</mat-option>
       <mat-option *ngFor="let option of cityOptions"
-                  [value]="option | lowercase"
-                  (select)="onSelected($event.target.value)">
+                  [value]="option | lowercase">
         {{option}}
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-form-field appearance="outline"
-                  class="col-sm-4 my-1 select-form">
+
+  <mat-form-field appearance="outline" class="col-sm-4 my-1 select-form">
     <mat-label>Office</mat-label>
-    <mat-select formControlName="office">
+    <mat-select formControlName="office" (selectionChange)="onSelected($event.value)">
+      <mat-option>--</mat-option>
       <mat-option *ngFor="let option of officeOptions"
-                  [value]="option | lowercase"
-                  (select)="onSelected($event.target.value)">
+                  [value]="option | lowercase">
         {{option}}
       </mat-option>
     </mat-select>
