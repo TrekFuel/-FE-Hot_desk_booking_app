@@ -1,0 +1,18 @@
+@import "abstracts/varColors";
+
+.mat-radio-button.mat-accent .mat-radio-inner-circle {
+  background: $radio-btn;
+}
+
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+  border-color: #0282ca;
+}
+
+.mat-radio-button ~ .mat-radio-button {
+  margin-left: 16px;
+}
+
+.mat-ripple-element {
+  display: none;
+}
+

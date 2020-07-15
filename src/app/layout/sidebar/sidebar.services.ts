@@ -5,7 +5,7 @@ import { Injectable } from "@angular/core";
 })
 export class SidebarServices {
 
-  private _isVisible: boolean = false;
+  private _isVisible = false;
 
   get isVisible(): boolean {
     return this._isVisible;
