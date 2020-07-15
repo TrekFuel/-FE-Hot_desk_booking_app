@@ -1,15 +1,18 @@
 .form-def {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   min-width: 12.5rem;
   max-width: 25rem;
-  width: 100%;
   font-size: 1rem;
 }
 
 .alert {
+  position: fixed;
+  top: 10%;
   min-width: 9.38rem;
   max-width: 21.88rem;
-  position: fixed;
-  top: 5%;
   z-index: 9999;
   opacity: 0.65;
   font-size: 0.95rem;
