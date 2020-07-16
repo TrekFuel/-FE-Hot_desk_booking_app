@@ -10,6 +10,7 @@ import {MaterialModule} from './material/material-module';
 import {reducers} from './store';
 import {SharedModule} from './shared/shared.module';
 import {RoomsManagementModule} from './rooms-management/rooms-management.module';
+import {BookingModule} from './booking/booking.module';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import {RoomsManagementModule} from './rooms-management/rooms-management.module'
     AuthModule,
     SharedModule,
     RoomsManagementModule,
+    BookingModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
