@@ -12,4 +12,7 @@ export class RoomsManagementEditComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  inputMessage(message) {
+    console.log(message);
+  }
 }

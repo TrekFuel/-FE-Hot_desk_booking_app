@@ -20,5 +20,6 @@ export class ClearableInputComponent {
   @Output() inputMessage = new EventEmitter<string>();
   onChange(value: string) {
     this.inputMessage.emit(value);
+    this.value = '';
   }
 }

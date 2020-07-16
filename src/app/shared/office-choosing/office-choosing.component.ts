@@ -39,4 +39,9 @@ export class OfficeChoosingComponent implements OnInit {
     console.log(value);
   }
 
+  onInputMessage(message: string): void {
+    console.log(message);
+  }
+
+
 }

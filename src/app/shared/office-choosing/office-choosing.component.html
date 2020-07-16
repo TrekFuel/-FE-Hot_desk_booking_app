@@ -34,10 +34,13 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field appearance="outline" style="width: 100%" class="col-sm-4 my-1">
-    <mat-label>Favorite food</mat-label>
-    <input matInput placeholder="Ex. Pizza" value="Sushi" [disabled]="true">
-  </mat-form-field>
+  <div class="col-sm-4">
+    <app-clearable-input (inputMessage)="onInputMessage($event)"
+                         [label]="'Any'"
+                         [disableStatus]="true"
+                         [value]="'some value'">
+    </app-clearable-input>
+  </div>
 
   <div class="text-center col-sm-8 my-1">
     <button type="button" class="btn btn-outline-warning mx-3">Edit</button>
