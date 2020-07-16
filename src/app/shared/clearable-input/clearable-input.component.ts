@@ -6,7 +6,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
     <mat-form-field appearance="outline">
       <mat-label>{{label}}</mat-label>
       <input matInput type="text" [(ngModel)]="value" [disabled]="disableStatus" (change)="onChange(value)">
-      <button mat-button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+      <button mat-button *ngIf="value && !disableStatus" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>
