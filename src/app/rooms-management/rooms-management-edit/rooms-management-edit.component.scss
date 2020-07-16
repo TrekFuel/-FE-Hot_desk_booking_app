@@ -1,0 +1,36 @@
+@import "main";
+
+:host {
+  .card-body {
+    padding: 8px 15px;
+
+    .images-item {
+      cursor: pointer;
+      padding: 3px;
+      margin: 3px;
+      max-width: 49px;
+      max-height: 49px;
+      width: 100%;
+      border: 1px solid $ItemBorderColor;
+      //@media (min-width: map-get($grid-breakpoints, "md")) {
+      //  max-width: 49px;
+      //  max-height: 49px;
+      //}
+
+      &:hover {
+        background-color: $hoverItemBackgroundColor;
+      }
+    }
+  }
+
+  .canvas-place {
+    border: 1px solid $commonBorderColor;
+    border-radius: 3px;
+    min-height: 500px;
+
+    canvas {
+      border: 2px solid $canvasBorderColor;
+      border-radius: 3px;
+    }
+  }
+}

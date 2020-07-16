@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-rooms-management-edit',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./rooms-management-edit.component.scss']
 })
 export class RoomsManagementEditComponent implements OnInit {
+
+  @ViewChild('htmlCanvas') htmlCanvas: ElementRef;
 
   constructor() { }
 

@@ -2,12 +2,41 @@
   <div class="row">
 
     <div class="col-sm-12 text-center">
-      <h2 class="mt-4 mb-2" style="font-size: 2rem">Edit room</h2>
-      <h4 class="my-2">Countrie: Belarus, City: Grodno, Office: New office</h4>
+      <h2 class="mt-2 mt-lg-5 mb-2" style="font-size: 2rem">Edit room</h2>
+      <h4 class="mt-2">
+        Countrie: {{'Belarus' | uppercase}}, City: {{'Grodno' | uppercase}}, Office: {{'New office' | uppercase}}
+      </h4>
     </div>
 
-    <div class="col-sm-12">
-      <app-clearable-input (inputMessage)="inputMessage($event)"></app-clearable-input>
+    <div class="col-sm-12 my-1 my-lg-3">
+      <button class="btn btn-outline-primary mr-2 mb-1">room</button>
+      <button class="btn btn-outline-primary mr-2 mb-1">place</button>
+      <button class="btn btn-outline-primary mr-2 mb-1">load</button>
+      <button class="btn btn-outline-primary mr-2 mb-1">save</button>
+      <button class="btn btn-outline-primary mr-2 mb-1">back</button>
+      <button class="btn btn-outline-primary mr-2 mb-1">fwrd</button>
+      <button class="btn btn-danger mr-2 mb-1">clear</button>
+      <button class="btn btn-outline-primary mr-2 mb-1">+</button>
+      <button class="btn btn-outline-primary mr-2 mb-1">-</button>
+      <!--      <app-clearable-input class="my-1" (inputMessage)="inputMessage($event)" [disableStatus]="true"></app-clearable-input>-->
+    </div>
+
+    <div class="col-sm-3 my-1">
+      <div class="card">
+        <div class="card-header">Room element</div>
+        <div class="card-body">
+          <img class="images-item" src="../assets/editor-images/room-elements/rect-room.svg">
+          <img class="images-item" src="../assets/editor-images/room-elements/square-room.svg">
+          <img class="images-item" src="../assets/editor-images/room-elements/wall.svg">
+          <img class="images-item" src="../assets/editor-images/room-elements/l-wall.svg">
+          <img class="images-item" src="../assets/editor-images/room-elements/p-wall.svg">
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-9 my-1 canvas-place">
+      <canvas class="m-1" #htmlCanvas></canvas>
     </div>
 
 
