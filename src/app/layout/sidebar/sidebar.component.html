@@ -7,7 +7,31 @@
 
     <!--Place for items sidebar-->
     <div class="sidebar--container">
-      <h3>Hello</h3>
+
+      <!-- User data -->
+      <div class="user font-weight-light">
+        <div class="user--position text-secondary">HR Manager</div>
+        <div class="user--name text-dark">
+          <div class="first">Jennifer</div>
+          <div class="last">Lopez</div>
+        </div>
+      </div>
+
+      <!-- User btn -->
+      <div class="user-btn">
+        <div class="list-group list-group-flush">
+          <button
+            *ngFor="let button of btnValue"
+            (click)="closeSidebar($event)"
+            routerLink="{{ button.route }}"
+            id="btnSidebar"
+            type="button"
+            class="list-group-item list-group-item-action hover-item">
+            {{ button.value }}
+          </button>
+        </div>
+      </div>
+
     </div>
 
   </div>

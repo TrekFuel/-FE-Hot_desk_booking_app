@@ -1,7 +1,11 @@
 @import "main";
 
 .footer {
+  position: absolute;
   display: flex;
+  left: 0;
+  right: 0;
+  bottom: 0;
   justify-content: center;
   background: $footer-bg;
   box-shadow: 0 0 6px rgba(0,0,0,0.1);

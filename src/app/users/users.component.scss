@@ -1,14 +1,18 @@
-@import "main";
+@import 'src/styles/main';
+
+th {
+  min-width: 140px;
+}
 
 .users {
-  margin: 2.5rem 0;
+  margin: 2.5rem 0 calc(2.5rem * 2 ) 0;
+
+  &--table {
+    overflow-x: auto;
+    max-width: 100%;
+  }
 
   .table {
-
-    thead th{
-      position: sticky;
-      top: 3.78rem;
-    }
 
     &--row {
       vertical-align: middle;

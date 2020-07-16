@@ -5,7 +5,7 @@ import {
   style,
   transition,
   trigger
-} from "@angular/animations";
+} from '@angular/animations';
 
 export const sidebarAnimation =
 
@@ -14,7 +14,7 @@ export const sidebarAnimation =
     transition(':enter', [
       sequence([
         query('div', [
-          style({left: '-16%'})
+          style({left: '-16rem'})
         ]),
         style({ opacity: 0 }),
         animate('160ms ease'),
@@ -27,7 +27,7 @@ export const sidebarAnimation =
     transition(':leave', [
       sequence([
         query('div', [
-          animate('200ms ease-out', style({ left: '-16%' }))
+          animate('200ms ease-out', style({ left: '-16rem' }))
         ]),
         animate('170ms ease'),
         style({ opacity: 0 }),

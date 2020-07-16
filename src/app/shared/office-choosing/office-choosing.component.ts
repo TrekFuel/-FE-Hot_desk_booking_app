@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-import { OfficeChoosingService } from './office-choosing.service';
 
 @Component({
   selector: 'app-office-choosing',
