@@ -2,8 +2,9 @@
       [formGroup]="form">
 
   <mat-form-field appearance="outline" class="col-sm-4 my-1 select-form">
-    <mat-label class="">Country</mat-label>
-    <mat-select formControlName="country" (selectionChange)="onSelected($event.value)">
+    <mat-label class="">Choose a country</mat-label>
+    <mat-select formControlName="country"
+                (selectionChange)="onSelected($event.value)">
       <mat-option>--</mat-option>
       <mat-option *ngFor="let option of countryOptions"
                   [value]="option | lowercase">
@@ -13,8 +14,9 @@
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="col-sm-4 my-1 select-form">
-    <mat-label>City</mat-label>
-    <mat-select formControlName="city" (selectionChange)="onSelected($event.value)">
+    <mat-label>Choose a city</mat-label>
+    <mat-select formControlName="city"
+                (selectionChange)="onSelected($event.value)">
       <mat-option>--</mat-option>
       <mat-option *ngFor="let option of cityOptions"
                   [value]="option | lowercase">
@@ -24,8 +26,9 @@
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="col-sm-4 my-1 select-form">
-    <mat-label>Office</mat-label>
-    <mat-select formControlName="office" (selectionChange)="onSelected($event.value)">
+    <mat-label>Choose an office</mat-label>
+    <mat-select formControlName="office"
+                (selectionChange)="onSelected($event.value)">
       <mat-option>--</mat-option>
       <mat-option *ngFor="let option of officeOptions"
                   [value]="option | lowercase">
