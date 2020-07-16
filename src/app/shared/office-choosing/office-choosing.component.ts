@@ -13,11 +13,17 @@ export class OfficeChoosingComponent implements OnInit {
   cityOptions = ['Minsk', 'Grodno', 'Kiev'];
   officeOptions = ['ул. Свердлова 2', 'ул. Королева 34', 'ул. Светлова 30'];
 
-  constructor() {
-  }
+  adminMode = true;
+
+  constructor( ) { }
 
   ngOnInit() {
     this._initChoosingForm();
+    if (this.adminMode) {
+      this.countryOptions.unshift('New');
+      this.cityOptions.unshift('New');
+      this.officeOptions.unshift('New');
+    }
   }
 
   private _initChoosingForm() {
@@ -28,7 +34,7 @@ export class OfficeChoosingComponent implements OnInit {
     });
   }
 
-  onSelected(value: string) {
+  onSelected(value: string | undefined) {
     console.log(value);
   }
 
