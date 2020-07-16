@@ -14,10 +14,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styles: ['mat-form-field { width: 100% }'],
 })
 export class ClearableInputComponent {
-  @Input() label: string = 'Label';
+  @Input() value: string = '';
+  @Input() label: string = '';
   @Input() disableStatus: boolean = false;
   @Output() inputMessage = new EventEmitter<string>();
-  value: string = 'Clear me';
   onChange(value: string) {
     this.inputMessage.emit(value);
   }
