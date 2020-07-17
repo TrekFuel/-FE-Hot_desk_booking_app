@@ -23,6 +23,7 @@
     "@angular/router": "~9.1.11",
     "@ngrx/effects": "^9.2.0",
     "@ngrx/store": "^9.2.0",
+    "@types/fabric": "^3.6.8",
     "bootstrap": "^4.5.0",
     "fabric": "^3.6.3",
     "rxjs": "~6.5.4",

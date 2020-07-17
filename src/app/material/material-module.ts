@@ -8,6 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from "@angular/material/table";
 import { MatSortModule } from "@angular/material/sort";
 import { MatRadioModule } from "@angular/material/radio";
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   exports: [
@@ -20,6 +21,7 @@ import { MatRadioModule } from "@angular/material/radio";
     MatTableModule,
     MatSortModule,
     MatRadioModule,
+    MatTooltipModule,
   ]
 })
 export class MaterialModule {
