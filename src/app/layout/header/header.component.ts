@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
-import { SidebarServices } from "../sidebar/sidebar.services";
+import { SidebarServices } from '../sidebar/sidebar.services';
 
 @Component({
   selector: 'app-header',

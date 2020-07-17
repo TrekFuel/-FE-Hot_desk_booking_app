@@ -12,6 +12,7 @@ import {SharedModule} from './shared/shared.module';
 import {RoomsManagementModule} from './rooms-management/rooms-management.module';
 import {BookingModule} from './booking/booking.module';
 import {MomentDateModule} from '@angular/material-moment-adapter';
+import {UsersModule} from './users/users.module';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import {MomentDateModule} from '@angular/material-moment-adapter';
     AppRoutingModule,
     BrowserAnimationsModule,
     LayoutModule,
+    UsersModule,
     MaterialModule,
     StoreModule.forRoot(reducers),
     AuthModule,

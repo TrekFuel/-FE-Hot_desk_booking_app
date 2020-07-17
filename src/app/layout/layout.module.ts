@@ -1,29 +1,28 @@
-import { NgModule } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { HeaderComponent } from "./header/header.component";
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { UsersComponent } from './users/users.component';
-import { MaterialModule } from "../material/material-module";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialModule } from '../material/material-module';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   exports: [
     HeaderComponent,
     FooterComponent,
-    SidebarComponent,
-    UsersComponent
+    SidebarComponent
   ],
     imports: [
-      BrowserAnimationsModule,
-      FormsModule,
-      MaterialModule
+        BrowserAnimationsModule,
+        FormsModule,
+        MaterialModule,
+        RouterModule
     ],
   declarations: [
     HeaderComponent,
     FooterComponent,
-    SidebarComponent,
-    UsersComponent
+    SidebarComponent
   ]
 })
 export class LayoutModule { }
