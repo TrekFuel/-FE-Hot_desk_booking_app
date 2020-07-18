@@ -1,0 +1,56 @@
+@import "main";
+
+:host {
+  .card {
+    .card-header{
+      mat-icon{
+        color: $editorLockColor;
+        position: absolute;
+        right: 0;
+        top: 5px;
+        cursor: pointer;
+      }
+    }
+    .card-body {
+      padding: 8px 15px;
+
+      .images-item {
+        cursor: pointer;
+        padding: 3px;
+        margin: 3px;
+        max-width: 98px;
+        max-height: 98px;
+        border: 1px solid $ItemBorderColor;
+        //@media (min-width: map-get($grid-breakpoints, "md")) {
+        //  max-width: 49px;
+        //  max-height: 49px;
+        //}
+
+        &:hover {
+          background-color: $hoverItemBackgroundColor;
+        }
+      }
+    }
+  }
+
+  .canvas {
+    border: 1px solid $commonBorderColor;
+    border-radius: 3px;
+    min-height: 700px;
+    max-width: 900px;
+    width: 100%;
+    overflow: scroll;
+
+    app-zoom {
+      z-index: 2;
+      position: absolute;
+      top: 5px;
+      right: 20px;
+    }
+
+    &-place {
+      border: 2px solid $canvasBorderColor;
+      border-radius: 3px;
+    }
+  }
+}

@@ -36,4 +36,18 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
+
+  <div class="col-sm-4">
+    <app-clearable-input (inputMessage)="onInputMessage($event)"
+                         [label]="'Any'"
+                         [disableStatus]="true"
+                         [value]="'some value'">
+    </app-clearable-input>
+  </div>
+
+  <div class="text-center col-sm-8 my-1">
+    <button type="button" class="btn btn-outline-warning mx-3">Edit</button>
+    <button type="button" class="btn btn-outline-danger mx-3">Delete</button>
+  </div>
+
 </form>

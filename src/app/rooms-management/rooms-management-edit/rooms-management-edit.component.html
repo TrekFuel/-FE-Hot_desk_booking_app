@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="row">
+
+    <div class="col-sm-12 my-2 text-center">
+      <h2 class="mt-2 mt-lg-5 mb-2 h1" style="font-size: 2rem">Edit room</h2>
+      <h4 class="mt-2">
+        Country: {{'Belarus' | uppercase}}, City: {{'Grodno' | uppercase}}, Office: {{'New office' | uppercase}}
+      </h4>
+    </div>
+
+    <div class="col-sm-4 my-1">
+      <div class="card mb-2" *ngFor="let editorBlock of editorBlocks">
+        <div class="card-header">
+          <mat-icon class="pr-1" (click)="onBlockElementClick(editorBlock.name)">
+            {{blockedElements.includes(editorBlock.name) ? 'lock' : 'lock_open'}}
+          </mat-icon>
+          <span>{{editorBlock.name}}</span>
+        </div>
+        <div class="card-body">
+          <img class="images-item" *ngFor="let url of editorBlock.urls"
+               matTooltip="{{url.title}}" matTooltipPosition="above"
+               (click)="addElementOnCanvas($event, editorBlock.name)"
+               [src]="url.src" [alt]="url.title">
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-8 my-1 canvas">
+      <app-zoom (zoomChange)="doCanvasZoom($event)" [zoom]="canvasSize.zoom"></app-zoom>
+      <canvas class="my-3 mx-1 canvas-place" #htmlCanvas></canvas>
+    </div>
+  </div>
+</div>

@@ -4,11 +4,13 @@ import {RoomsManagementEntryComponent} from './rooms-management-entry/rooms-mana
 import {RoomsManagementRoutingModule} from './rooms-management-routing.module';
 import {SharedModule} from '../shared/shared.module';
 import {MaterialModule} from '../material/material-module';
+import { RoomsManagementEditComponent } from './rooms-management-edit/rooms-management-edit.component';
 
 
 @NgModule({
   declarations: [
     RoomsManagementEntryComponent,
+    RoomsManagementEditComponent,
   ],
   imports: [
     CommonModule,
