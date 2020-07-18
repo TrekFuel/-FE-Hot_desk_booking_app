@@ -5,7 +5,6 @@ import { BehaviorSubject } from 'rxjs';
 import { editorBlocks } from './editorBlocksInfo';
 import { CanvasSize } from './models/canvas-size.model';
 import { EditorBlocks } from './models/editor-blocks.model';
-import { mockData } from './del';
 
 @Component({
   selector: 'app-rooms-management-edit',
