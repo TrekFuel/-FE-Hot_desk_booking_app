@@ -2,8 +2,8 @@
 
 :host {
   .card {
-    .card-header{
-      mat-icon{
+    .card-header {
+      mat-icon {
         color: $editorLockColor;
         position: absolute;
         right: 0;
@@ -11,6 +11,7 @@
         cursor: pointer;
       }
     }
+
     .card-body {
       padding: 8px 15px;
 
@@ -18,13 +19,14 @@
         cursor: pointer;
         padding: 3px;
         margin: 3px;
+        width: 200%;
         max-width: 98px;
         max-height: 98px;
         border: 1px solid $ItemBorderColor;
-        //@media (min-width: map-get($grid-breakpoints, "md")) {
-        //  max-width: 49px;
-        //  max-height: 49px;
-        //}
+        @media (min-width: map-get($grid-breakpoints, "md")) {
+          max-width: 49px;
+          max-height: 49px;
+        }
 
         &:hover {
           background-color: $hoverItemBackgroundColor;
@@ -53,4 +55,15 @@
       border-radius: 3px;
     }
   }
+
+  .icons-for-canvas {
+    position: fixed;
+    top: 160px;
+    left: 160px;
+  }
+
+  .icons-for-canvas.hide {
+    display: none;
+  }
 }
+
