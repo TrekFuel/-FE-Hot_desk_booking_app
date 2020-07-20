@@ -1,6 +1,6 @@
 export const CANVAS_OPTION = {
   FOR_EDIT: {
-    hoverCursor: 'pointer',
+    hoverCursor: 'move',
     selection: true,
     selectionBorderColor: 'blue',
     allowTouchScrolling: true,
