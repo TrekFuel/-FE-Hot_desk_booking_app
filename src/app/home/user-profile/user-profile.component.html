@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="row justify-content-center mt-4">
+    <p class="name">
+      Elon Musk
+    </p>
+  </div>
+  <div class="row justify-content-center mt-2">
+    <p class="position">
+      CEO
+    </p>
+  </div>
+  <div class="row mt-2 text-center">
+    <div class="col-sm-6">
+      <img class="img-fluid"
+           src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Elon_Musk_Royal_Society.jpg/220px-Elon_Musk_Royal_Society.jpg"
+           width="175"
+           height="262"
+           alt="profile-image"
+           title="profile-image">
+    </div>
+    <div class="col-sm-6 mt-3">
+      <ul class="list-group">
+        <li *ngFor="let userField of userFields"
+            class="list-group-item font-italic">
+          {{userField}}
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="row justify-content-center mt-4">
+    <button type="button" class="btn btn-outline-info">
+      Go to active bookings
+    </button>
+  </div>
+</div>

@@ -13,6 +13,7 @@ import {RoomsManagementModule} from './rooms-management/rooms-management.module'
 import {BookingModule} from './booking/booking.module';
 import {MomentDateModule} from '@angular/material-moment-adapter';
 import {UsersModule} from './users/users.module';
+import {HomeModule} from './home/home.module';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import {UsersModule} from './users/users.module';
     RoomsManagementModule,
     BookingModule,
     MomentDateModule,
+    HomeModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
