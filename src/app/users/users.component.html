@@ -26,11 +26,17 @@
         </thead>
         <tbody>
         <tr
-          *ngFor="let user of users">
+          *ngFor="let user of ( $users | async )">
           <td class="table--row">{{ user.firstName }}</td>
           <td class="table--row">{{ user.lastName }}</td>
           <td class="table--row">{{ user.email }}</td>
-          <td><button type="button" class="table--btn btn btn-sm">open profile</button></td>
+          <td>
+            <button
+              class="table--btn btn btn-sm"
+              id="{{ user.id }}"
+              type="button">open profile
+            </button>
+          </td>
         </tr>
         </tbody>
       </table>
@@ -40,17 +46,23 @@
     <nav aria-label="Page navigation example">
       <ul class="pagination d-flex justify-content-center">
         <li class="page-item">
-          <a class="page-link" href="#" aria-label="Previous">
+          <button aria-label="Previous" class="page-link">
             <span aria-hidden="true">&laquo;</span>
-          </a>
+          </button>
         </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
         <li class="page-item">
-          <a class="page-link" href="#" aria-label="Next">
+          <button class="page-link" disabled>1</button>
+        </li>
+        <li class="page-item">
+          <button class="page-link">2</button>
+        </li>
+        <li class="page-item">
+          <button class="page-link">3</button>
+        </li>
+        <li class="page-item">
+          <button aria-label="Next" class="page-link">
             <span aria-hidden="true">&raquo;</span>
-          </a>
+          </button>
         </li>
       </ul>
     </nav>
