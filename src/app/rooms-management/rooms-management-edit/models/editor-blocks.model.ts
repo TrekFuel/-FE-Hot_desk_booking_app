@@ -1,4 +1,4 @@
-export interface EditorBlocks {
+export interface EditorBlock {
   name: string,
   urls: Array<{
     title: string,

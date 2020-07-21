@@ -2,10 +2,11 @@ import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '
 import { fabric } from 'fabric';
 import { CANVAS_OPTION } from './canvas-option';
 import { EDITOR_NAMES, editorBlocks } from './editorBlocksInfo';
+import { EditorBlock } from './models/editor-blocks.model';
 import { CanvasSize } from './models/canvas-size.model';
-import { EditorBlocks } from './models/editor-blocks.model';
 import { PlaceData } from './models/place-data.model';
 import { PlaceRole } from './models/place-role';
+import { Canvas } from 'fabric/fabric-impl';
 
 @Component({
   selector: 'app-rooms-management-edit',
@@ -22,13 +23,12 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     height: 500,
     zoom: 100
   };
-  editorBlocks: EditorBlocks[] = editorBlocks;
+  editorBlocks: EditorBlock[] = editorBlocks;
   blockedElements: string[] = [];
   placeId: string = '';
   placeDisable: boolean = true;
-  activeElementOnCanvas: boolean = true;
-
-  private canvas: fabric.Canvas;
+  activeElementOnCanvas: { clone: boolean, close: boolean } = { clone: false, close: false };
+  private canvas: Canvas;
 
   constructor(private renderer: Renderer2) {
   }
@@ -43,33 +43,41 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     this.canvas.on({
       'object:selected': (e) => {
         console.log('object:selected');
-        const selectedObject = e.target;
-        if (this.blockedElements.includes(selectedObject?.name)) {
+        const actObj: fabric.Object = e.target;
+        if (this.blockedElements.includes(actObj?.name)) {
           this.discardActiveObject();
-          return;
+        } else {
+          this.positioningCloneAndClose(actObj);
         }
-        this.activeElementOnCanvas = true;
-        this.positioningCloneAndClose(selectedObject);
       },
-      'object:moving': (e) => {
-        // console.log('object:moving');
+      'object:moving': (e) => this.positioningCloneAndClose(e.target),
+      'object:scaling': (e) => this.positioningCloneAndClose(e.target),
+      'object:rotating': (e) => this.positioningCloneAndClose(e.target),
+      'selection:created': (e) => {
+        const actObj: fabric.Object = e.target;
+        if (actObj) {
+          this.objSetStyle(actObj, actObj.left, actObj.top);
+          this.positioningCloneAndClose(actObj);
+        }
       },
+      'selection:cleared': (e) => this.activeElementOnCanvas.clone = this.activeElementOnCanvas.close = false,
       'mouse:over': (e) => {
-        const obj = e.target;
-        if (obj?.name === EDITOR_NAMES.place || obj?.name === EDITOR_NAMES.confRoom)
-          console.log(obj?.data.id);
+        const actObj: fabric.Object = e.target;
+        if (actObj?.name === EDITOR_NAMES.place || actObj?.name === EDITOR_NAMES.confRoom)
+          console.log(actObj?.data.id);
       },
       'mouse:out': (e) => {
-        const obj = e.target;
+        const actObj: fabric.Object = e.target;
       },
       'mouse:down:before': (e) => {
         // console.log('mousedown:before');
-        const curObj = e.target;
-        if (this.blockedElements.includes(curObj?.name)) {
+        const actObj: fabric.Object = e.target;
+        if (this.blockedElements.includes(actObj?.name)) {
           this.discardActiveObject();
           return;
         }
-      }
+        this.positioningCloneAndClose(actObj);
+      },
     });
   }
 
@@ -83,16 +91,8 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   addElementOnCanvas(event: MouseEvent, type: string): void {
     const el: HTMLImageElement = (event.target as HTMLImageElement);
     fabric.loadSVGFromURL(el.src, (objects, options) => {
-      const image = fabric.util.groupSVGElements(objects, options);
-      image.set({
-        left: 20,
-        top: 20,
-        cornerSize: 8,
-        cornerStyle: 'circle',
-        cornerColor: 'blue',
-        transparentCorners: false
-      });
-
+      const image: fabric.Object = fabric.util.groupSVGElements(objects, options);
+      this.objSetStyle(image);
 
       let isPlaces: boolean = (type === EDITOR_NAMES.place || type === EDITOR_NAMES.confRoom);
       this.extendObj(image, isPlaces);
@@ -103,13 +103,12 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
       }
       this.canvas.add(image);
       this.canvas.setActiveObject(image);
-      this.activeElementOnCanvas = true;
-      // console.log(this.canvas.getActiveObject());
+      this.positioningCloneAndClose(image);
       this.canvas.renderAll();
     });
   }
 
-  extendObj(obj: fabric.Object, full: boolean = false) {
+  extendObj(obj: fabric.Object, full: boolean = false): void {
     obj.toObject = ((toObject) => {
       return function() {
         return full
@@ -126,7 +125,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
 
 
   // logik with place data
-  addDataToPlace(obj: fabric.Object) {
+  addDataToPlace(obj: fabric.Object): void {
     const placeData: PlaceData = {
       id: 'some_Id',
       role: PlaceRole.cowork
@@ -135,26 +134,77 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   }
 
   // UI method
-  positioningCloneAndClose(obj: fabric.Object) {
-    let coords = obj.getCoords(true);
-    console.log(this.btnClone.nativeElement);
-    console.log(this.htmlCanvas.nativeElement);
-    // this.renderer.setStyle(this.btnClone?.nativeElement, 'left', 100 + 'px');
-
-
-    // this.btnClone.style.left = (absCoords.left - btnWidth / 2) + 'px';
-    // this.btnClone.style.top = (absCoords.top - btnHeight / 2) + 'px';
+  onClone(): void {
+    const activeObj: fabric.Object = this.canvas.getActiveObject();
+    if (activeObj.type === 'activeSelection') {
+      return;
+    }
+    activeObj.clone((clonedObj: fabric.Object) => {
+      this.canvas.discardActiveObject();
+      this.objSetStyle(clonedObj, clonedObj.left + 10, clonedObj.top + 10);
+      this.canvas.add(clonedObj);
+      this.canvas.setActiveObject(clonedObj);
+      this.canvas.requestRenderAll();
+    });
   }
 
-  onSelected(value: string | undefined) {
+  onClose(): void {
+    const actObjs: fabric.Object[] = this.canvas.getActiveObjects();
+    if (actObjs) {
+      actObjs.forEach((actObj: fabric.Object) => {
+        if (!this.blockedElements.includes(actObj.name)) {
+          this.canvas.remove(actObj);
+        }
+      });
+      this.discardActiveObject();
+    }
+  }
+
+  objSetStyle(obj: fabric.Object, left: number = 20, top: number = 20): void {
+    obj.set({
+      left: left,
+      top: top,
+      cornerSize: 8,
+      cornerStyle: 'circle',
+      cornerColor: 'blue',
+      transparentCorners: false,
+      evented: true
+    });
+  }
+
+  positioningCloneAndClose(obj: fabric.Object): void {
+    if (obj) {
+      if (obj.type === 'activeSelection') {
+        this.activeElementOnCanvas.clone = false;
+        this.activeElementOnCanvas.close = true;
+      } else {
+        this.activeElementOnCanvas.clone = this.activeElementOnCanvas.close = true;
+      }
+      // top left absolute position of canvas
+      let { x: canvasX, y: canvasY } = this.htmlCanvas.nativeElement.getBoundingClientRect();
+      // do adjustment on window scroll
+      canvasX += window.scrollX;
+      canvasY += window.scrollY;
+      obj.setCoords();
+      // top left absolute position of object
+      const { left: objX, top: objY, width: objWidth } = obj.getBoundingRect();
+      // calculate and set position of icons
+      this.renderer.setStyle(this.btnClone?.nativeElement, 'left', (canvasX + objX - 12) + 'px');
+      this.renderer.setStyle(this.btnClone?.nativeElement, 'top', (canvasY + objY - 35) + 'px');
+      this.renderer.setStyle(this.btnClose?.nativeElement, 'left', (canvasX + (objX + objWidth) - 12) + 'px');
+      this.renderer.setStyle(this.btnClose?.nativeElement, 'top', (canvasY + objY - 35) + 'px');
+    }
+  }
+
+  onSelected(value: string | undefined): void {
     console.log(value);
   }
 
-  inputPlaceId(value: string) {
+  inputPlaceId(value: string): void {
     this.placeId = value;
   }
 
-  doLockElements() {
+  doLockElements(): void {
     this.canvas.forEachObject(obj => {
       let isCurrentObjLocked: boolean = this.blockedElements.includes(obj.name);
       obj.lockMovementX = isCurrentObjLocked;
@@ -163,28 +213,28 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
       obj.hasBorders = !isCurrentObjLocked;
     });
     if (this.blockedElements.includes(this.canvas.getActiveObject()?.name)) {
-      this.activeElementOnCanvas = false;
+      this.activeElementOnCanvas.clone = this.activeElementOnCanvas.close = false;
       this.canvas.discardActiveObject();
     }
-    this.canvas.renderAll();
+    this.canvas.requestRenderAll();
   }
 
-  onLockClick(element: string) {
+  onLockClick(element: string): void {
     if (!!element) {
       if (this.blockedElements.includes(element)) {
         this.blockedElements.splice(this.blockedElements.indexOf(element), 1);
       } else {
         this.blockedElements.push(element);
-        this.activeElementOnCanvas = false;
+        this.activeElementOnCanvas.clone = this.activeElementOnCanvas.close = false;
       }
     }
     this.doLockElements();
   }
 
-  discardActiveObject() {
+  discardActiveObject(): void {
     this.canvas.discardActiveObject();
-    this.activeElementOnCanvas = false;
-    this.canvas.renderAll();
+    this.activeElementOnCanvas.clone = this.activeElementOnCanvas.close = false;
+    this.canvas.requestRenderAll();
   }
 
   ngOnDestroy(): void {

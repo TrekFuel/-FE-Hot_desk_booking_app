@@ -1,4 +1,4 @@
-import { EditorBlocks } from './models/editor-blocks.model';
+import { EditorBlock } from './models/editor-blocks.model';
 
 export const EDITOR_NAMES: { [key: string]: string } = {
   room: 'Room`s elements',
@@ -9,7 +9,7 @@ export const EDITOR_NAMES: { [key: string]: string } = {
   other: 'Others elements'
 };
 
-export const editorBlocks: EditorBlocks[] = [
+export const editorBlocks: EditorBlock[] = [
   {
     name: EDITOR_NAMES.room,
     urls: [

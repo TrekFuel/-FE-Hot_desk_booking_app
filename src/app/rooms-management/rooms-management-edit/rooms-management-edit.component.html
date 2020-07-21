@@ -59,8 +59,16 @@
       <app-zoom (zoomChange)="doCanvasZoom($event)" [zoom]="canvasSize.zoom"></app-zoom>
       <canvas #htmlCanvas class="my-3 mx-1 canvas-place"></canvas>
     </div>
-    <mat-icon #clone [ngClass]="{'hide': !activeElementOnCanvas}" class="icons-for-canvas">file_copy</mat-icon>
-    <mat-icon #close [ngClass]="{'hide': !activeElementOnCanvas}" class="icons-for-canvas">close</mat-icon>
+    <mat-icon #clone (click)="onClone()"
+              [ngClass]="{'hide': !activeElementOnCanvas.clone}"
+              class="icons-for-canvas b-clone">
+      file_copy
+    </mat-icon>
+    <mat-icon #close (click)="onClose()"
+              [ngClass]="{'hide': !activeElementOnCanvas.close}"
+              class="icons-for-canvas b-close">
+      close
+    </mat-icon>
 
   </div>
 </div>

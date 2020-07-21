@@ -14,3 +14,12 @@ export const CANVAS_OPTION = {
     backgroundColor: 'white',
   },
 };
+
+export const IMAGE_OPTION = {
+  'left': 20,
+  'top': 20,
+  'cornerSize': 8,
+  'cornerStyle': 'circle',
+  'cornerColor': 'blue',
+  'transparentCorners': false
+};

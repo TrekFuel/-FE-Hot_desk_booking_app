@@ -1,6 +1,12 @@
 @import "main";
 
 :host {
+  mat-icon {
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+  }
+
   .card {
     .card-header {
       mat-icon {
@@ -57,10 +63,28 @@
   }
 
   .icons-for-canvas {
-    position: fixed;
-    top: 160px;
-    left: 160px;
+    position: absolute;
+    cursor: pointer;
+    transition: 0.5s ease transform;
   }
+
+  .icons-for-canvas.b-clone:hover {
+    transition-timing-function: ease;
+    color: $hoverCloneColor;
+    transform: scale(1.1);
+  }
+
+  .icons-for-canvas.b-close:hover {
+    transition-timing-function: ease;
+    color: $hoverCloseColor;
+    transform: scale(1.15);
+  }
+
+  .icons-for-canvas.b-clone:active {
+    transition-timing-function: cubic-bezier(.29, 1.01, 1, -0.68);
+    transform: scale(1.2);
+  }
+
 
   .icons-for-canvas.hide {
     display: none;
