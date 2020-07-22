@@ -8,18 +8,14 @@ export const CANVAS_OPTION = {
   },
   READ_ONLY: {
     hoverCursor: 'pointer',
-    selection: false,
+    selection: true,
     selectionBorderColor: 'transparent',
     allowTouchScrolling: true,
     backgroundColor: 'white',
+    hasControls: false,
+    hasBorders: false,
+    lockMovementX: true,
+    lockMovementY: true,
+    evented: true
   },
-};
-
-export const IMAGE_OPTION = {
-  'left': 20,
-  'top': 20,
-  'cornerSize': 8,
-  'cornerStyle': 'circle',
-  'cornerColor': 'blue',
-  'transparentCorners': false
 };

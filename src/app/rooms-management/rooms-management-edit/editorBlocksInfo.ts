@@ -5,8 +5,13 @@ export const EDITOR_NAMES: { [key: string]: string } = {
   wall: 'Walls',
   doorAndWindow: 'Doors & windows',
   place: 'Places',
-  confRoom: 'Confroom',
   other: 'Others elements'
+};
+
+export const PLACES_TITLES: { [key: string]: string } = {
+  cowork: 'Cowork',
+  confroom: 'Confroom',
+  constant: 'Administration'
 };
 
 export const editorBlocks: EditorBlock[] = [
@@ -65,39 +70,18 @@ export const editorBlocks: EditorBlock[] = [
     name: EDITOR_NAMES.place,
     urls: [
       {
-        title: 'Cowork place',
-        src: '../assets/editor-images/places/cowork-place.svg'
-      },
-      {
-        title: 'Cowork place var2',
-        src: '../assets/editor-images/places/cowork-place2.svg'
-      },
-      {
-        title: 'Cowork place var3',
+        title: PLACES_TITLES.cowork,
         src: '../assets/editor-images/places/cowork-place3.svg'
       },
       {
-        title: 'Cowork place var4',
-        src: '../assets/editor-images/places/cowork-place4.svg'
+        title: PLACES_TITLES.constant,
+        src: '../assets/editor-images/places/cowork-place5.svg'
       },
       {
-        title: 'Cowork place var5',
-        src: '../assets/editor-images/places/cowork-place5.svg'
-      }
-    ],
-  },
-  {
-    name: EDITOR_NAMES.confRoom,
-    urls: [
-      {
-        title: 'Confroom var1',
+        title: PLACES_TITLES.confroom,
         src: '../assets/editor-images/confroom/confroom-sm.svg'
       },
-      {
-        title: 'Confroom var2',
-        src: '../assets/editor-images/confroom/confroom-big.svg'
-      }
-    ]
+    ],
   },
   {
     name: EDITOR_NAMES.other,

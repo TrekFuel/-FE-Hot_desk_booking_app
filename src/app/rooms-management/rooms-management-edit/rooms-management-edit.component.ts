@@ -39,6 +39,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.canvas = new fabric.Canvas(this.htmlCanvas.nativeElement, CANVAS_OPTION.FOR_EDIT);
+
     this.doCanvasZoom();
     this.canvas.on({
       'object:selected': (e) => {
@@ -61,8 +62,9 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
       'selection:cleared': (e) => this.activeElementOnCanvas.clone = this.activeElementOnCanvas.close = false,
       'mouse:over': (e) => {
         const actObj: fabric.Object = e.target;
-        if (actObj?.name === EDITOR_NAMES.place || actObj?.name === EDITOR_NAMES.confRoom)
+        if (actObj?.name === EDITOR_NAMES.place) {
           console.log(actObj?.data.id);
+        }
       },
       'mouse:out': (e) => {
         // const actObj: fabric.Object = e.target;
@@ -77,6 +79,10 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     this.canvas.setWidth(this.canvasSize.width * this.curZoom);
     this.canvas.setHeight(this.canvasSize.height * this.curZoom);
     this.canvas.setZoom(this.curZoom);
+    const actObj = this.canvas.getActiveObject();
+    if (actObj) {
+      this.positioningCloneAndClose(actObj);
+    }
   }
 
   addElementOnCanvas(event: MouseEvent, type: string): void {
@@ -84,12 +90,10 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     fabric.loadSVGFromURL(el.src, (objects, options) => {
       const image: fabric.Object = fabric.util.groupSVGElements(objects, options);
       this.objSetStyle(image);
-
       let isPlaces: boolean = (type === EDITOR_NAMES.place || type === EDITOR_NAMES.confRoom);
       this.extendObj(image, isPlaces);
       image.name = type;
       if (isPlaces) {
-        console.log(el.alt);
         this.addDataToPlace(image);
       }
       this.canvas.add(image);
@@ -167,6 +171,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     });
   }
 
+  //ToDo process case if width of monitor changes
   positioningCloneAndClose(obj: fabric.Object): void {
     if (obj) {
       if (obj.type === 'activeSelection') {
@@ -182,12 +187,20 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
       canvasY += window.scrollY;
       obj.setCoords();
       // top left absolute position of object
-      const { left: objX, top: objY, width: objWidth } = obj.getBoundingRect();
+      let { left: objX, top: objY, width: objWidth } = obj.getBoundingRect();
+      // adjustment if thin object
+      let adjustment: number = 0;
+      if (objWidth < 25) {
+        adjustment = 25 - objWidth;
+      }
+      // move icons a little left and up
+      objX -= 12;
+      objY -= 35;
       // calculate and set position of icons
-      this.renderer.setStyle(this.btnClone?.nativeElement, 'left', (canvasX + objX - 12) + 'px');
-      this.renderer.setStyle(this.btnClone?.nativeElement, 'top', (canvasY + objY - 35) + 'px');
-      this.renderer.setStyle(this.btnClose?.nativeElement, 'left', (canvasX + (objX + objWidth) - 12) + 'px');
-      this.renderer.setStyle(this.btnClose?.nativeElement, 'top', (canvasY + objY - 35) + 'px');
+      this.renderer.setStyle(this.btnClone?.nativeElement, 'left', (canvasX + objX - adjustment) + 'px');
+      this.renderer.setStyle(this.btnClone?.nativeElement, 'top', (canvasY + objY) + 'px');
+      this.renderer.setStyle(this.btnClose?.nativeElement, 'left', (canvasX + (objX + objWidth) + adjustment) + 'px');
+      this.renderer.setStyle(this.btnClose?.nativeElement, 'top', (canvasY + objY) + 'px');
     }
   }
 
@@ -196,7 +209,20 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   }
 
   onSaveClick(): void {
-    console.log(JSON.stringify(this.canvas));
+    // // const obj = this.canvas.toObject();
+    // const dataJSON: string = JSON.stringify(this.canvas);
+    // // console.log(JSON.stringify(datalessJSON));
+    // // console.log(JSON.stringify(this.canvas));
+    // console.log(dataJSON);
+    // this.canvas.clear();
+    //
+    // setTimeout(() => {
+    //   this.canvas.loadFromJSON(dataJSON, () => {
+    //     this.canvas.renderAll();
+    //     console.log('this.canvas.item(0).name: ' + (this.canvas as any).item(0)?.name);
+    //     console.log('this.canvas.item(0).data: ' + (this.canvas as any).item(0)?.data?.id);
+    //   });
+    // }, 3000);
   }
 
   inputPlaceId(value: string): void {
