@@ -42,11 +42,9 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     this.doCanvasZoom();
     this.canvas.on({
       'object:selected': (e) => {
-        console.log('object:selected');
+        // console.log('object:selected');
         const actObj: fabric.Object = e.target;
-        if (this.blockedElements.includes(actObj?.name)) {
-          this.discardActiveObject();
-        } else {
+        if (!this.blockedElements.includes(actObj?.name)) {
           this.positioningCloneAndClose(actObj);
         }
       },
@@ -67,17 +65,10 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
           console.log(actObj?.data.id);
       },
       'mouse:out': (e) => {
-        const actObj: fabric.Object = e.target;
+        // const actObj: fabric.Object = e.target;
       },
-      'mouse:down:before': (e) => {
-        // console.log('mousedown:before');
-        const actObj: fabric.Object = e.target;
-        if (this.blockedElements.includes(actObj?.name)) {
-          this.discardActiveObject();
-          return;
-        }
-        this.positioningCloneAndClose(actObj);
-      },
+      'mouse:down:before': (e) => this.blockedElements.includes(e.target?.name) ? this.discardActObj()
+        : this.positioningCloneAndClose(e.target)
     });
   }
 
@@ -123,7 +114,6 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     })(obj.toObject);
   }
 
-
   // logik with place data
   addDataToPlace(obj: fabric.Object): void {
     const placeData: PlaceData = {
@@ -156,19 +146,24 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
           this.canvas.remove(actObj);
         }
       });
-      this.discardActiveObject();
+      this.discardActObj();
+      this.canvas.requestRenderAll();
     }
   }
 
   objSetStyle(obj: fabric.Object, left: number = 20, top: number = 20): void {
+    let borderColor: string, padding: number;
+    obj.type === 'activeSelection' ? [borderColor, padding] = ['red', 3] : [borderColor, padding] = ['lightblue', 1];
     obj.set({
-      left: left,
-      top: top,
+      left,
+      top,
       cornerSize: 8,
       cornerStyle: 'circle',
       cornerColor: 'blue',
       transparentCorners: false,
-      evented: true
+      perPixelTargetFind: true,
+      borderColor,
+      padding
     });
   }
 
@@ -200,23 +195,23 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     console.log(value);
   }
 
+  onSaveClick(): void {
+    console.log(JSON.stringify(this.canvas));
+  }
+
   inputPlaceId(value: string): void {
     this.placeId = value;
   }
 
   doLockElements(): void {
-    this.canvas.forEachObject(obj => {
+    this.canvas.forEachObject((obj: fabric.Object) => {
       let isCurrentObjLocked: boolean = this.blockedElements.includes(obj.name);
       obj.lockMovementX = isCurrentObjLocked;
       obj.lockMovementY = isCurrentObjLocked;
       obj.hasControls = !isCurrentObjLocked;
       obj.hasBorders = !isCurrentObjLocked;
+      obj.selectable = !isCurrentObjLocked;
     });
-    if (this.blockedElements.includes(this.canvas.getActiveObject()?.name)) {
-      this.activeElementOnCanvas.clone = this.activeElementOnCanvas.close = false;
-      this.canvas.discardActiveObject();
-    }
-    this.canvas.requestRenderAll();
   }
 
   onLockClick(element: string): void {
@@ -225,16 +220,16 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
         this.blockedElements.splice(this.blockedElements.indexOf(element), 1);
       } else {
         this.blockedElements.push(element);
-        this.activeElementOnCanvas.clone = this.activeElementOnCanvas.close = false;
+        this.discardActObj();
       }
     }
     this.doLockElements();
+    this.canvas.requestRenderAll();
   }
 
-  discardActiveObject(): void {
+  discardActObj(): void {
     this.canvas.discardActiveObject();
     this.activeElementOnCanvas.clone = this.activeElementOnCanvas.close = false;
-    this.canvas.requestRenderAll();
   }
 
   ngOnDestroy(): void {
