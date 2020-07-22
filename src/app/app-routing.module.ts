@@ -5,10 +5,11 @@ import { UsersComponent } from './users/users.component';
 import { RoomsManagementEntryComponent } from './rooms-management/rooms-management-entry/rooms-management-entry.component';
 import { RoomsManagementEditComponent } from './rooms-management/rooms-management-edit/rooms-management-edit.component';
 import { BookingPageComponent } from './booking/booking-page/booking-page.component';
+import { AppUsersContainer } from './users/users.container';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'users', component: UsersComponent },
+  { path: 'users', component: AppUsersContainer },
   { path: 'users/:filter', component: UsersComponent },
   { path: 'rooms-management', component: RoomsManagementEntryComponent },
   { path: 'rooms-management/edit', component: RoomsManagementEditComponent },

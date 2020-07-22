@@ -1,35 +1,29 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
-import { AppState } from '../store';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+} from '@angular/core';
+import { Subscription } from 'rxjs';
 import { UserInterface } from '../shared/modules/user.interface';
 import { ActivatedRoute } from '@angular/router';
 import { UsersRequestPathInterface } from './modules/requestPath.interface';
-import {
-  usersListAction,
-  usersListDeleteAction,
-} from '../store/actions/usersList.actions';
 
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UsersComponent implements OnInit, OnDestroy {
-  public $users: Observable<UserInterface[]>;
+export class UsersComponent implements OnInit {
+  @Input() public users: UserInterface[];
   private _path: UsersRequestPathInterface;
   private _subscribeRoute: Subscription;
 
-  constructor(private store$: Store<AppState>, private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.initializeRoutePath();
-    this.initializeStore();
-  }
-
-  initializeStore(): void {
-    this.store$.dispatch(new usersListAction());
-    this.$users = this.store$.select('usersList');
   }
 
   initializeRoutePath(): void {
@@ -38,10 +32,5 @@ export class UsersComponent implements OnInit, OnDestroy {
         this._path = path;
       }
     );
-  }
-
-  ngOnDestroy(): void {
-    this._subscribeRoute.unsubscribe();
-    this.store$.dispatch(new usersListDeleteAction());
   }
 }

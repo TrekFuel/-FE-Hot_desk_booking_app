@@ -11,15 +11,25 @@ export function usersListReducer(
   action: usersListTypeActions
 ) {
   switch (action.type) {
-    case usersListActionType.USERS_LIST:
-      return [...state];
+    case usersListActionType.USERS_LIST_START:
+      return {
+        ...state,
+        loader: true,
+      };
     case usersListActionType.USERS_LIST_SUCCESS:
-      return [...state, ...action.payload.users];
+      return {
+        ...state,
+        users: action.payload.users,
+        loader: false,
+      };
     case usersListActionType.USERS_LIST_FAILURE:
-      return [...state];
-    case usersListActionType.USERS_LIST_DELETE:
-      return [];
+      return {
+        ...state,
+        loader: false,
+      };
     default:
-      return [...state];
+      return {
+        ...state,
+      };
   }
 }

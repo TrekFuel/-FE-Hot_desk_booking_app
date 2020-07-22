@@ -1,22 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../store';
+import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { select, Store } from '@ngrx/store';
+import { AppState } from '../../store';
+import { loaderSelector } from '../../store/selectors/usersList.selectors';
 
 @Component({
   selector: 'app-loader',
   templateUrl: './loader.component.html',
   styleUrls: ['./loader.component.scss'],
 })
-export class LoaderComponent implements OnInit {
-  public $isVisebleLoader: Observable<boolean>;
+export class LoaderComponent {
+  public $visible: Observable<boolean>;
 
-  constructor(private store$: Store<AppState>) {}
-
-  ngOnInit(): void {
-    this.$isVisebleLoader = this.store$
-      .select('stateLoader')
-      .pipe(map(({ viseble }) => viseble));
+  constructor(private store$: Store<AppState>) {
+    this.$visible = this.store$.pipe(select(loaderSelector));
   }
 }

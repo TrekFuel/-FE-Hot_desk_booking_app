@@ -1,15 +1,15 @@
 import { Action } from '@ngrx/store';
 import { UserInterface } from '../../shared/modules/user.interface';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export enum usersListActionType {
-  USERS_LIST = '[Users] UsersList',
+  USERS_LIST_START = '[Users] UsersList start',
   USERS_LIST_SUCCESS = '[Users] LoadUsersList success',
   USERS_LIST_FAILURE = '[Users] LoadUsersList failure',
-  USERS_LIST_DELETE = '[Users] LoadUsersList delete',
 }
 
-export class usersListAction implements Action {
-  readonly type = usersListActionType.USERS_LIST;
+export class usersListStartAction implements Action {
+  readonly type = usersListActionType.USERS_LIST_START;
 }
 
 export class usersListSuccessAction implements Action {
@@ -20,14 +20,11 @@ export class usersListSuccessAction implements Action {
 
 export class usersListFailureAction implements Action {
   readonly type = usersListActionType.USERS_LIST_FAILURE;
-}
 
-export class usersListDeleteAction implements Action {
-  readonly type = usersListActionType.USERS_LIST_DELETE;
+  constructor(public payload: { errors: HttpErrorResponse }) {}
 }
 
 export type usersListTypeActions =
-  | usersListAction
+  | usersListStartAction
   | usersListFailureAction
-  | usersListSuccessAction
-  | usersListDeleteAction;
+  | usersListSuccessAction;

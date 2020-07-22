@@ -26,7 +26,7 @@
         </thead>
         <tbody>
         <tr
-          *ngFor="let user of ( $users | async )">
+          *ngFor="let user of users">
           <td class="table--row">{{ user.firstName }}</td>
           <td class="table--row">{{ user.lastName }}</td>
           <td class="table--row">{{ user.email }}</td>
