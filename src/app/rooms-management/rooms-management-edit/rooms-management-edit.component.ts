@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { fabric } from 'fabric';
 import { CANVAS_OPTION } from './canvas-option';
 import { EDITOR_NAMES, editorBlocks } from './editorBlocksInfo';
@@ -35,6 +35,10 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
 
   get curZoom() {
     return this.canvasSize.zoom / 100;
+  }
+
+  @HostListener('window:resize') onResize() {
+    this.activeElementOnCanvas.clone = this.activeElementOnCanvas.close = false;
   }
 
   ngOnInit(): void {
