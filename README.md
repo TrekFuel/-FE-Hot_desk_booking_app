@@ -1,3 +1,10 @@
+1. Install node.js
+2. Install WebStorm
+3. Clone repo
+4. Open repo in WebStorm
+5. npm install
+6. ng serve
+
 # -FE-Hot_desk_booking_app
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.10.	

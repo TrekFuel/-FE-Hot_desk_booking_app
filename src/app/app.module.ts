@@ -18,6 +18,8 @@ import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { UsersListEffects } from './store/effects/usersList.effects';
 import { AppInterceptors } from './app.interceptors';
+import { HomeModule } from './home/home.module'
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -39,6 +41,7 @@ import { AppInterceptors } from './app.interceptors';
     RoomsManagementModule,
     BookingModule,
     MomentDateModule,
+    HomeModule,
   ],
   providers: [AppInterceptors.interceptors],
   bootstrap: [AppComponent],
