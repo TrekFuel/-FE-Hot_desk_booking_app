@@ -4,21 +4,18 @@ import { UsersComponent } from './users.component';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { AppUsersContainer } from './users.container';
 
 @NgModule({
-  declarations: [
-    UsersComponent
-  ],
+  declarations: [UsersComponent, AppUsersContainer],
   imports: [
     FormsModule,
     MaterialModule,
     RouterModule,
-    CommonModule
+    CommonModule,
+    HttpClientModule,
   ],
-  exports: [
-    UsersComponent
-  ]
+  exports: [UsersComponent],
 })
-
-export class UsersModule {
-}
+export class UsersModule {}
