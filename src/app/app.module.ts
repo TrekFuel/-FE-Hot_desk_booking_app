@@ -14,6 +14,7 @@ import {BookingModule} from './booking/booking.module';
 import {MomentDateModule} from '@angular/material-moment-adapter';
 import {UsersModule} from './users/users.module';
 import {HomeModule} from './home/home.module';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import {HomeModule} from './home/home.module';
     BookingModule,
     MomentDateModule,
     HomeModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

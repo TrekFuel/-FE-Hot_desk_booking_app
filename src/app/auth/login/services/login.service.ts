@@ -5,6 +5,7 @@ import {User} from '../models/user-model';
 import {AuthResponse} from '../models/auth-response.model';
 import {tap} from 'rxjs/operators';
 import {environment} from '../../../../environments/environment';
+import {LoginUser} from '../models/login-user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,9 +21,9 @@ export class LoginService {
   constructor(private http: HttpClient) {
   }
 
-  login(email: string, password: string): Observable<object> {
-    return this.http.post('',
-      {email, password})
+  login(loginData: LoginUser): Observable<AuthResponse> {
+    return this.http.post(`${environment.databaseURL}/api/v1/auth/login`,
+      loginData)
       .pipe(
         tap((response: AuthResponse) => {
           this._loginHandler(response);
@@ -33,9 +34,8 @@ export class LoginService {
   // user creation across all application (via BehaviourSubject + localStorage)
   private _loginHandler(response: AuthResponse) {
     const user = new User(
-      response.email,
-      response._id,
-      response._token,
+      response.username,
+      response.token,
     );
     this._user$.next(user);
     localStorage.setItem(environment.localStorageUser, JSON.stringify(user));
@@ -48,14 +48,17 @@ export class LoginService {
 
   // check if we have user in localStorage and in case we have - user creation from localStorage
   autoLogin() {
-    let user: User;
+    let user: {
+      username: string,
+      _token: string,
+    };
+
     const userFromLocalStorage = localStorage.getItem(environment.localStorageUser);
     if (userFromLocalStorage) {
       user = JSON.parse(userFromLocalStorage);
       const loadedUser = new User(
-        user.email,
-        user.id,
-        user.userToken,
+        user.username,
+        user._token,
       );
       this._user$.next(loadedUser);
     } else {

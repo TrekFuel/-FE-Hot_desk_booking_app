@@ -1,7 +1,6 @@
 export class User {
   constructor(
-    public email: string,
-    public id: string,
+    public username: string,
     // tslint:disable-next-line:variable-name
     private _token: string,
   ) {
@@ -10,5 +9,4 @@ export class User {
   get userToken() {
     return this._token;
   }
-
 }

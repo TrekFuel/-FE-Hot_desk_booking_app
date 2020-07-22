@@ -1,6 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, FormGroupDirective, Validators} from '@angular/forms';
 import {LoginService} from './services/login.service';
+import {LoginUser} from './models/login-user.model';
 
 @Component({
   selector: 'app-login',
@@ -12,6 +13,8 @@ export class LoginComponent implements OnInit {
   @ViewChild(FormGroupDirective, {static: true}) formGroupDirective:
     FormGroupDirective;
   hide = true;
+
+  loginData: LoginUser;
 
   get email() {
     return this.form.get('email');
@@ -31,9 +34,8 @@ export class LoginComponent implements OnInit {
   private _initAuthForm() {
     this.form = new FormGroup({
       email: new FormControl('', [
-        Validators.email,
         Validators.required,
-        Validators.minLength(6),
+        Validators.minLength(5),
         Validators.maxLength(50)
       ]),
       password: new FormControl('', Validators.required)
@@ -41,7 +43,11 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin() {
-    this.loginService.login(this.email.value, this.password.value)
+    this.loginData = {
+      password: this.password.value,
+      username: this.email.value,
+    };
+    this.loginService.login(this.loginData)
       .subscribe(() => {
         this.formGroupDirective.resetForm();
       });
