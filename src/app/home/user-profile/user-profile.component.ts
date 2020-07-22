@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.scss']
 })
-export class UserProfileComponent implements OnInit {
+export class UserProfileComponent {
   userFields: { field: string, value: string }[] = [
     {field: 'Department', value: 'Development'},
     {field: 'Location', value: 'Grodno'},
@@ -17,9 +17,6 @@ export class UserProfileComponent implements OnInit {
   ];
 
   constructor() {
-  }
-
-  ngOnInit(): void {
   }
 
 }
