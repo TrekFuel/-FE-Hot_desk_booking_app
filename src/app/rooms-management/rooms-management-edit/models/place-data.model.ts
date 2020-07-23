@@ -3,7 +3,9 @@ import { PlaceRole } from './place-role';
 export interface PlaceData {
   id: string,
   role: PlaceRole,
-  occupied?: string | string[] | null,
+  isFree: boolean,
+  occupiedBy?: string | string[],
   maxQuantity?: number,
   quantity?: number,
+  infoForAdmins?: any,
 }

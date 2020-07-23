@@ -1,12 +1,12 @@
 import { Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { fabric } from 'fabric';
 import { CANVAS_OPTION } from './canvas-option';
-import { EDITOR_NAMES, editorBlocks } from './editorBlocksInfo';
+import { EDITOR_NAMES, editorBlocks, PLACES_TITLES } from './editorBlocksInfo';
 import { EditorBlock } from './models/editor-blocks.model';
 import { CanvasSize } from './models/canvas-size.model';
-import { PlaceData } from './models/place-data.model';
 import { PlaceRole } from './models/place-role';
 import { Canvas } from 'fabric/fabric-impl';
+import { PlaceData } from './models/place-data.model';
 
 @Component({
   selector: 'app-rooms-management-edit',
@@ -46,6 +46,8 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
 
     this.doCanvasZoom();
     this.canvas.on({
+      'object:added': (e) => {
+      },
       'object:selected': (e) => {
         // console.log('object:selected');
         const actObj: fabric.Object = e.target;
@@ -67,7 +69,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
       'mouse:over': (e) => {
         const actObj: fabric.Object = e.target;
         if (actObj?.name === EDITOR_NAMES.place) {
-          console.log(actObj?.data.id);
+          console.log(actObj.data);
         }
       },
       'mouse:out': (e) => {
@@ -92,17 +94,18 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   addElementOnCanvas(event: MouseEvent, type: string): void {
     const el: HTMLImageElement = (event.target as HTMLImageElement);
     fabric.loadSVGFromURL(el.src, (objects, options) => {
-      const image: fabric.Object = fabric.util.groupSVGElements(objects, options);
-      this.objSetStyle(image);
-      let isPlaces: boolean = (type === EDITOR_NAMES.place || type === EDITOR_NAMES.confRoom);
-      this.extendObj(image, isPlaces);
-      image.name = type;
-      if (isPlaces) {
-        this.addDataToPlace(image);
+      const addedObj: fabric.Object = fabric.util.groupSVGElements(objects, options);
+      this.objSetStyle(addedObj);
+      if (type === EDITOR_NAMES.place) {
+        this.extendObj(addedObj, true);
+        this.createNewDataForPlace(addedObj, el.alt);
+      } else {
+        this.extendObj(addedObj, false);
       }
-      this.canvas.add(image);
-      this.canvas.setActiveObject(image);
-      this.positioningCloneAndClose(image);
+      addedObj.name = type;
+      this.canvas.add(addedObj);
+      this.canvas.setActiveObject(addedObj);
+      this.positioningCloneAndClose(addedObj);
       this.canvas.renderAll();
     });
   }
@@ -123,12 +126,25 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   }
 
   // logik with place data
-  addDataToPlace(obj: fabric.Object): void {
-    const placeData: PlaceData = {
-      id: 'some_Id',
-      role: PlaceRole.cowork
-    };
+  createNewDataForPlace(obj: fabric.Object, type: string): void {
+    let typeOfPlace: string = Object.keys(PLACES_TITLES).filter((key: string) => PLACES_TITLES[key] === type)[0];
+    let role: PlaceRole = PlaceRole[typeOfPlace];
+    this.addDataForPlace(obj, role);
+  }
+
+  addDataForPlace(obj, role, isFree = true) {
+    let id: string = this.generateId();
+    let placeData: PlaceData = { id, role, isFree };
+    if (role === PlaceRole.confroom) {
+      placeData.maxQuantity = 25;
+    }
     obj.data = placeData;
+    console.log(obj.data);
+  }
+
+  // ToDo need more secure id
+  generateId(): string {
+    return `BEGR-${Date.now().toString()}-${(Math.round(Math.random() * 899) + 100).toString()}`;
   }
 
   // UI method
@@ -138,8 +154,18 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
       return;
     }
     activeObj.clone((clonedObj: fabric.Object) => {
+      let role: PlaceRole = activeObj.data?.role;
       this.canvas.discardActiveObject();
       this.objSetStyle(clonedObj, clonedObj.left + 10, clonedObj.top + 10);
+      // add data for place
+      if (clonedObj.name === EDITOR_NAMES.place) {
+        clonedObj.data.id = this.generateId();
+        clonedObj.data.role = role;
+        clonedObj.data.isFree = true;
+        if (role === PlaceRole.confroom) {
+          clonedObj.data.maxQuantity = 25;
+        }
+      }
       this.canvas.add(clonedObj);
       this.canvas.setActiveObject(clonedObj);
       this.canvas.requestRenderAll();
@@ -175,7 +201,6 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  //ToDo process case if width of monitor changes
   positioningCloneAndClose(obj: fabric.Object): void {
     if (obj) {
       if (obj.type === 'activeSelection') {
