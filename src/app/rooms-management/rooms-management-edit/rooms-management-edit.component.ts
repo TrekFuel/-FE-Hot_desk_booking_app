@@ -7,6 +7,7 @@ import { CanvasSize } from './models/canvas-size.model';
 import { PlaceRole } from './models/place-role';
 import { Canvas } from 'fabric/fabric-impl';
 import { PlaceData } from './models/place-data.model';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-rooms-management-edit',
@@ -136,10 +137,9 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     let id: string = this.generateId();
     let placeData: PlaceData = { id, role, isFree };
     if (role === PlaceRole.confroom) {
-      placeData.maxQuantity = 25;
+      placeData.maxQuantity = environment.places.MAX_DEFAULT_QUANTITY_IN_CONFROOM;
     }
     obj.data = placeData;
-    console.log(obj.data);
   }
 
   // ToDo need more secure id
@@ -163,7 +163,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
         clonedObj.data.role = role;
         clonedObj.data.isFree = true;
         if (role === PlaceRole.confroom) {
-          clonedObj.data.maxQuantity = 25;
+          clonedObj.data.maxQuantity = environment.places.MAX_DEFAULT_QUANTITY_IN_CONFROOM;
         }
       }
       this.canvas.add(clonedObj);
