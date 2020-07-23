@@ -1,6 +1,6 @@
 export const CANVAS_OPTION = {
   FOR_EDIT: {
-    hoverCursor: 'pointer',
+    hoverCursor: 'move',
     selection: true,
     selectionBorderColor: 'blue',
     allowTouchScrolling: true,
@@ -8,9 +8,14 @@ export const CANVAS_OPTION = {
   },
   READ_ONLY: {
     hoverCursor: 'pointer',
-    selection: false,
+    selection: true,
     selectionBorderColor: 'transparent',
     allowTouchScrolling: true,
     backgroundColor: 'white',
+    hasControls: false,
+    hasBorders: false,
+    lockMovementX: true,
+    lockMovementY: true,
+    evented: true
   },
 };

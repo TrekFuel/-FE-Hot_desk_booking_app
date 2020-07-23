@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="row">
+  <div class="row rooms-edit">
 
     <div class="col-sm-12 my-2 text-center">
       <h2 class="mt-2 mt-lg-5 mb-2 h1" style="font-size: 2rem">Edit room</h2>
@@ -8,26 +8,67 @@
       </h4>
     </div>
 
+    <div class="col-sm-3 my-1">
+      <button (click)="onSaveClick()" class="btn btn-outline-secondary mr-3">Save to server</button>
+    </div>
+
+    <div class="col-sm-3">
+      <app-clearable-input (inputMessage)="inputPlaceId($event)"
+                           [disableStatus]="placeDisable"
+                           [label]="'Place ID: ' + placeId"
+                           [value]="placeId">
+      </app-clearable-input>
+    </div>
+
+    <div class="col-sm-3">
+      <mat-form-field appearance="outline" class="select-form">
+        <mat-label class="">Choose place type</mat-label>
+        <mat-select (selectionChange)="onSelected($event.value)" [disabled]="placeDisable">
+          <mat-option [value]="0">coworking place</mat-option>
+          <mat-option [value]="1">for administration</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="col-sm-3">
+      <button [disabled]="placeDisable" class="btn btn-outline-dark">apply</button>
+      <button class="btn btn-outline-danger ml-2">clear</button>
+
+    </div>
+
+
     <div class="col-sm-4 my-1">
-      <div class="card mb-2" *ngFor="let editorBlock of editorBlocks">
+      <div *ngFor="let editorBlock of editorBlocks" class="card mb-2">
         <div class="card-header">
-          <mat-icon class="pr-1" (click)="onBlockElementClick(editorBlock.name)">
+          <mat-icon (click)="onLockClick(editorBlock.name)" class="pr-1">
             {{blockedElements.includes(editorBlock.name) ? 'lock' : 'lock_open'}}
           </mat-icon>
           <span>{{editorBlock.name}}</span>
         </div>
         <div class="card-body">
-          <img class="images-item" *ngFor="let url of editorBlock.urls"
-               matTooltip="{{url.title}}" matTooltipPosition="above"
-               (click)="addElementOnCanvas($event, editorBlock.name)"
-               [src]="url.src" [alt]="url.title">
+          <img (click)="addElementOnCanvas($event, editorBlock.name)" *ngFor="let url of editorBlock.urls"
+               [alt]="url.title" [src]="url.src"
+               class="images-item"
+               matTooltip="{{url.title}}"
+               matTooltipPosition="above">
         </div>
       </div>
     </div>
 
     <div class="col-sm-8 my-1 canvas">
       <app-zoom (zoomChange)="doCanvasZoom($event)" [zoom]="canvasSize.zoom"></app-zoom>
-      <canvas class="my-3 mx-1 canvas-place" #htmlCanvas></canvas>
+      <canvas #htmlCanvas class="my-3 mx-1 canvas-place"></canvas>
     </div>
+    <mat-icon #clone (click)="onClone()"
+              [ngClass]="{'hide': !activeElementOnCanvas.clone}"
+              class="icons-for-canvas b-clone">
+      file_copy
+    </mat-icon>
+    <mat-icon #close (click)="onClose()"
+              [ngClass]="{'hide': !activeElementOnCanvas.close}"
+              class="icons-for-canvas b-close">
+      close
+    </mat-icon>
+
   </div>
 </div>

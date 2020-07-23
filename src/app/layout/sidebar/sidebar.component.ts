@@ -15,23 +15,21 @@ interface BtnSidebarInterface {
 })
 export class SidebarComponent implements OnInit {
 
-  private _bodyElement: ElementRef;
-
   public btnValue: BtnSidebarInterface[] = [
     { value: 'List Users', route: 'users' },
     { value: 'Rooms Management', route: 'rooms-management' },
-    { value: 'Rooms Management', route: 'rooms-management' },
-    { value: 'Rooms Management', route: 'rooms-management' }
-  ]
-
-  get isVisibleSidebar() {
-    this.scrollVisible(this.sidebarServices.isVisible);
-    return this.sidebarServices.isVisible;
-  }
+    { value: 'Rooms Edit', route: 'rooms-management/edit' }
+  ];
+  private _bodyElement: ElementRef;
 
   constructor(
     private sidebarServices: SidebarServices,
     private elRef: ElementRef, private renderer: Renderer2) {
+  }
+
+  get isVisibleSidebar() {
+    this.scrollVisible(this.sidebarServices.isVisible);
+    return this.sidebarServices.isVisible;
   }
 
   closeSidebar(event): void {
