@@ -1,5 +1,6 @@
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
-import { SidebarServices } from '../sidebar/sidebar.services';
+import {Component, ElementRef, HostListener, ViewChild} from '@angular/core';
+import {SidebarServices} from '../sidebar/sidebar.services';
+import {LoginService} from '../../auth/login/services/login.service';
 
 @Component({
   selector: 'app-header',
@@ -16,13 +17,17 @@ export class HeaderComponent {
   @HostListener('document:click', ['$event']) clickOut(event) {
     let open: boolean = this.btnSubMenu.nativeElement.contains(event.target);
     let close: boolean = this.subMenu.nativeElement.contains(event.target);
-    if(!open && !close) this.isVisibleSubmenu = false;
+    if (!open && !close) {
+      this.isVisibleSubmenu = false;
+    }
   }
 
   constructor(
     private el: ElementRef,
-    private sidebarServices: SidebarServices
-  ) { }
+    private sidebarServices: SidebarServices,
+    private loginService: LoginService,
+  ) {
+  }
 
   isVisibleSidebar() {
     this.sidebarServices.onClick();
@@ -30,6 +35,10 @@ export class HeaderComponent {
 
   onClickSubmenu() {
     this.isVisibleSubmenu = !this.isVisibleSubmenu;
+  }
+
+  onLogout() {
+    this.loginService.logout();
   }
 
 }

@@ -19,7 +19,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { UsersListEffects } from './store/effects/usersList.effects';
 import { AppInterceptors } from './app.interceptors';
 import { HomeModule } from './home/home.module'
-
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent],
@@ -42,6 +42,7 @@ import { HomeModule } from './home/home.module'
     BookingModule,
     MomentDateModule,
     HomeModule,
+    HttpClientModule,
   ],
   providers: [AppInterceptors.interceptors],
   bootstrap: [AppComponent],
