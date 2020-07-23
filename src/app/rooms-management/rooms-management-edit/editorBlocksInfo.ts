@@ -5,7 +5,7 @@ export const EDITOR_NAMES: { [key: string]: string } = {
   wall: 'Walls',
   doorAndWindow: 'Doors & windows',
   place: 'Places',
-  other: 'Others elements'
+  other: 'Other elements'
 };
 
 export const PLACES_TITLES: { [key: string]: string } = {
