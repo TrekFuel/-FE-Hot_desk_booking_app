@@ -1,4 +1,7 @@
-import { PlaceRole } from './place-role';
+export interface MapDataModel {
+  mapData: string,
+  placesData: PlaceData[]
+}
 
 export interface PlaceData {
   id: string,
@@ -8,4 +11,10 @@ export interface PlaceData {
   maxQuantity?: number,
   quantity?: number,
   infoForAdmins?: any,
+}
+
+export enum PlaceRole {
+  cowork,
+  confroom,
+  constant,
 }
