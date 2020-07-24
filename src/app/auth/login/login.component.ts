@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, FormGroupDirective, Validators} from '@angular/forms';
 import {LoginService} from './services/login.service';
 import {LoginUser} from './models/login-user.model';
@@ -6,7 +6,8 @@ import {LoginUser} from './models/login-user.model';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent implements OnInit {
   form: FormGroup;

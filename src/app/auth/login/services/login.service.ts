@@ -1,11 +1,11 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {User} from '../models/user-model';
-import {AuthResponse} from '../models/auth-response.model';
-import {tap} from 'rxjs/operators';
-import {environment} from '../../../../environments/environment';
-import {LoginUser} from '../models/login-user.model';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { User } from '../models/user-model';
+import { AuthResponse } from '../models/auth-response.model';
+import { map } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment';
+import { LoginUser } from '../models/login-user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,23 +22,13 @@ export class LoginService {
   }
 
   login(loginData: LoginUser): Observable<AuthResponse> {
-    return this.http.post(`${environment.databaseURL}/api/v1/auth/login`,
+    return this.http.post(`${environment.databaseURL}/login`,
       loginData)
       .pipe(
-        tap((response: AuthResponse) => {
-          this._loginHandler(response);
+        map((response: AuthResponse) => {
+          return response;
         })
       );
-  }
-
-  // user creation across all application (via BehaviourSubject + localStorage)
-  private _loginHandler(response: AuthResponse) {
-    const user = new User(
-      response.username,
-      response.token,
-    );
-    this._user$.next(user);
-    localStorage.setItem(environment.localStorageUser, JSON.stringify(user));
   }
 
   logout() {
