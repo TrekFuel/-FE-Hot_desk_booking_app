@@ -6,5 +6,10 @@ export const environment = {
     MAX_DEFAULT_QUANTITY_IN_CONFROOM: 25,
     MIN_QUANTITY_IN_CONFROOM: 2,
     MAX_QUANTITY_IN_CONFROOM: 200
+  },
+  zoomOptions: {
+    MIN: 50,
+    MAX: 200,
+    STEP: 10
   }
 };
