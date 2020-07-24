@@ -60,6 +60,20 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     this.activeElementOnCanvas.clone = this.activeElementOnCanvas.close = false;
   }
 
+  @HostListener('document:keydown', ['$event']) onKeyDown(event: KeyboardEvent) {
+    switch (event.key) {
+      case 'Escape':
+        this.discardActObj();
+        this.canvas.requestRenderAll();
+        break;
+      case 'Delete':
+        this.onDelete();
+        break;
+      default:
+        return;
+    }
+  }
+
   ngOnInit(): void {
     this.canvas = new fabric.Canvas(this.htmlCanvas.nativeElement, CANVAS_OPTION.FOR_EDIT);
     this.doCanvasZoom();
