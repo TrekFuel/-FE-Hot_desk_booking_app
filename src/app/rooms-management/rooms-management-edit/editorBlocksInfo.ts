@@ -1,4 +1,4 @@
-import { EditorBlock } from './models/editor-blocks.model';
+import { EditorBlock } from './models/editor-blocks.models';
 
 export const EDITOR_NAMES: { [key: string]: string } = {
   room: 'Room`s elements',

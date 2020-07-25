@@ -2,12 +2,12 @@ import { Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2, View
 import { fabric } from 'fabric';
 import { CANVAS_OPTION } from './canvas-option';
 import { EDITOR_NAMES, editorBlocks, PLACES_TITLES } from './editorBlocksInfo';
-import { PlaceData, PlaceRole } from '../../shared/modules/map-data.model';
+import { PlaceData, PlaceRole } from '../../shared/models/map-data.model';
 import { Canvas } from 'fabric/fabric-impl';
 import { environment } from '../../../environments/environment';
 import { CanvasSize, Confroom, CurrentPlaceInEditor, EditorBlock } from './models/editor-blocks.models';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { OfficeFullModel } from '../../shared/modules/office-full.model';
+import { OfficeFullModel } from '../../shared/models/office-full.model';
 
 @Component({
   selector: 'app-rooms-management-edit',

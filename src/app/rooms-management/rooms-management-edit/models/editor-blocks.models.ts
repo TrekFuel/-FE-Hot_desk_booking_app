@@ -1,4 +1,4 @@
-import { PlaceData } from '../../../shared/modules/map-data.model';
+import { PlaceData } from '../../../shared/models/map-data.model';
 
 export interface EditorBlock {
   name: string,
