@@ -20,7 +20,7 @@ import { UsersListEffects } from './store/effects/usersList.effects';
 import { AppInterceptors } from './app.interceptors';
 import { HomeModule } from './home/home.module';
 import { HttpClientModule } from '@angular/common/http';
-import { LoginEffects } from './store/effects/login.effects';
+import { AuthEffects } from './store/effects/auth.effects';
 
 @NgModule({
   declarations: [AppComponent],
@@ -32,7 +32,7 @@ import { LoginEffects } from './store/effects/login.effects';
     UsersModule,
     MaterialModule,
     StoreModule.forRoot(reducers),
-    EffectsModule.forRoot([UsersListEffects, LoginEffects]),
+    EffectsModule.forRoot([UsersListEffects, AuthEffects]),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,

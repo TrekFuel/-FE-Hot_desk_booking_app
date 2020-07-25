@@ -8,7 +8,7 @@ import {Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../store';
-import {userTokenSelector} from '../../store/selectors/login.selectors';
+import {userTokenSelector} from '../../store/selectors/auth.selectors';
 import {exhaustMap, take} from 'rxjs/operators';
 
 @Injectable()

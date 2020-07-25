@@ -7,12 +7,12 @@ import { environment } from '../../../../environments/environment';
 import { LoginUser } from '../models/login-user.model';
 import { AppState } from '../../../store';
 import { Store } from '@ngrx/store';
-import { LoginSuccessAction } from '../../../store/actions/login.actions';
+import { LoginSuccessAction } from '../../../store/actions/auth.actions';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LoginService {
+export class AuthService {
 
   constructor(private http: HttpClient, private store$: Store<AppState>) {
   }

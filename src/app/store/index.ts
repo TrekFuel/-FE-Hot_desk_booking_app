@@ -3,7 +3,7 @@ import { environment } from '../../environments/environment';
 import { usersListReducer } from './reducers/usersList.reducer';
 import { UserInterface } from '../shared/modules/user.interface';
 import { AuthResponse } from '../auth/login/models/auth-response.model';
-import { loginReducer } from './reducers/login.reducer';
+import { authReducer } from './reducers/auth.reducer';
 
 export interface AppState {
   usersList: UserInterface[];
@@ -12,7 +12,7 @@ export interface AppState {
 
 export const reducers: ActionReducerMap<AppState> = {
   usersList: usersListReducer,
-  login: loginReducer,
+  login: authReducer,
 };
 
 export const metaReducers: MetaReducer<AppState>[] = !environment.production

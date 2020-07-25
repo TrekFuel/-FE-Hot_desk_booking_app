@@ -3,7 +3,7 @@ import {FormControl, FormGroup, FormGroupDirective, Validators} from '@angular/f
 import {LoginUser} from './models/login-user.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../store';
-import {LoginStartAction} from '../../store/actions/login.actions';
+import {LoginStartAction} from '../../store/actions/auth.actions';
 
 @Component({
   selector: 'app-login',

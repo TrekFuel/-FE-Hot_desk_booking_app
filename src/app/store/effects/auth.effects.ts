@@ -1,20 +1,23 @@
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { LoginService } from '../../auth/login/services/login.service';
+import { Effect, ofType } from '@ngrx/effects';
+import { AuthService } from '../../auth/login/services/auth.service';
 import { Injectable } from '@angular/core';
-import { loginActionType, LoginFailureAction,
-  LoginStartAction, LoginSuccessAction } from '../actions/login.actions';
+import {
+  authActionType, LoginFailureAction,
+  LoginStartAction, LoginSuccessAction, LogoutEndAction,
+} from '../actions/auth.actions';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { AuthResponse } from '../../auth/login/models/auth-response.model';
 import { environment } from '../../../environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { of } from 'rxjs';
+import { Actions } from '@ngrx/effects';
 
 @Injectable()
-export class LoginEffects {
+export class AuthEffects {
   @Effect()
   loggedInUser$ = this.actions$
     .pipe(
-      ofType(loginActionType.LOGIN_START),
+      ofType(authActionType.LOGIN_START),
       switchMap((action: LoginStartAction) => {
         return this.services$.login(action.payload.loginData)
           .pipe(
@@ -34,9 +37,20 @@ export class LoginEffects {
       }),
     );
 
+  @Effect()
+  loggedOutUser$ = this.actions$
+    .pipe(
+      ofType(authActionType.LOGOUT_START),
+      switchMap(() => {
+        localStorage.removeItem(environment.localStorageUser);
+        return of(new LogoutEndAction({loggedInUser: null}));
+      }),
+    );
+
   constructor(
     private actions$: Actions,
-    private services$: LoginService,
+    private services$: AuthService,
   ) {
   }
+
 }

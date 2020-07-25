@@ -2,10 +2,11 @@ import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/c
 import {SidebarServices} from '../sidebar/sidebar.services';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../store';
-import {userSelector} from '../../store/selectors/login.selectors';
+import {userSelector} from '../../store/selectors/auth.selectors';
 import {Observable} from 'rxjs';
 import {AuthResponse} from '../../auth/login/models/auth-response.model';
-import {LoginService} from '../../auth/login/services/login.service';
+import {AuthService} from '../../auth/login/services/auth.service';
+import {LogoutStartAction} from '../../store/actions/auth.actions';
 
 @Component({
   selector: 'app-header',
@@ -31,7 +32,7 @@ export class HeaderComponent implements OnInit {
   constructor(
     private el: ElementRef,
     private sidebarServices: SidebarServices,
-    private loginService: LoginService,
+    private loginService: AuthService,
     private store$: Store<AppState>,
   ) {
   }
@@ -51,7 +52,7 @@ export class HeaderComponent implements OnInit {
   }
 
   onLogout() {
-
+this.store$.dispatch(new LogoutStartAction());
   }
 
 }
