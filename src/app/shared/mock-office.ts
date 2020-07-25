@@ -1,4 +1,4 @@
-import { OfficeFullModel } from './modules/office-full.model';
+import { OfficeFullModel } from './models/office-full.model';
 
 export const MOCK_OFFICE: OfficeFullModel = {
   id: 'Some random unique string',
