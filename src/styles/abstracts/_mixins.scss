@@ -1,0 +1,9 @@
+@mixin marginForRightTopCorner() {
+  margin: 0.4rem 1rem 0 0;
+}
+
+@mixin userSelectNone() {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+}

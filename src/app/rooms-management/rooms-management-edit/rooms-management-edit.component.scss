@@ -1,10 +1,65 @@
 @import "main";
+@import "abstracts/mixins";
 
 :host {
   mat-icon {
-    -moz-user-select: none;
-    -khtml-user-select: none;
-    user-select: none;
+    @include userSelectNone;
+  }
+
+  mat-card {
+    position: absolute;
+    z-index: 6;
+    top: 63px;
+    right: 0;
+    @include marginForRightTopCorner;
+    @include userSelectNone;
+    max-width: 400px;
+    background-color: $cardOfPlaceBackgroundColor;
+
+    .btn-clear {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+    }
+
+    .btn-clear.hide {
+      display: none;
+    }
+
+    mat-card-content {
+      .for-confroom.hide {
+        display: none;
+      }
+
+      mat-form-field {
+        width: 60%;
+        margin-right: 1rem;
+      }
+
+      .state-of-place {
+        position: relative;
+        left: 3rem;
+        font-size: 1.7rem;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      .state-of-place.free {
+        color: $freeColor
+      }
+
+      .state-of-place.occupied {
+        color: $occupiedColor;
+      }
+    }
+
+    .logo-micro {
+      background-size: cover;
+    }
+  }
+
+  mat-card.hide {
+    display: none;
   }
 
   .card {

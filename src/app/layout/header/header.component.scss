@@ -1,4 +1,5 @@
 @import "main";
+@import "abstracts/mixins";
 
 .header {
   background: $header-bg;
@@ -78,7 +79,7 @@
 
     .user-menu {
       background: $dropdown-menu-bg;
-      margin: 0.4rem 1rem 0 0;
+      @include marginForRightTopCorner;
     }
 
   }
