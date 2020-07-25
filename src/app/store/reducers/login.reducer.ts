@@ -1,4 +1,5 @@
-import { AuthResponse } from '../../auth/login/models/auth-response.model';
+import {AuthResponse} from '../../auth/login/models/auth-response.model';
+import {loginActionType, loginTypeActions} from '../actions/login.actions';
 
 const initialState: AuthResponse = {
   username: '',
@@ -7,6 +8,25 @@ const initialState: AuthResponse = {
 
 export function loginReducer(
   state: AuthResponse = initialState,
+  action: loginTypeActions,
 ) {
-  return state;
+  switch (action.type) {
+    case loginActionType.LOGIN_START:
+      return {
+        ...state,
+      };
+    case loginActionType.LOGIN_SUCCESS:
+      return {
+        ...state,
+        loggedInUser: action.payload.loggedInUser,
+      };
+    case loginActionType.LOGIN_FAILURE:
+      return {
+        ...state,
+      };
+    default:
+      return {
+        ...state,
+      };
+  }
 }

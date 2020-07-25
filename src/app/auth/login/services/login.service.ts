@@ -1,24 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { User } from '../models/user-model';
+import { Observable } from 'rxjs';
 import { AuthResponse } from '../models/auth-response.model';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { LoginUser } from '../models/login-user.model';
+import { AppState } from '../../../store';
+import { Store } from '@ngrx/store';
+import { LoginSuccessAction } from '../../../store/actions/login.actions';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
-  // tslint:disable-next-line:variable-name
-  private _user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
-  get loginUser$() {
-    return this._user$;
-  }
-
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private store$: Store<AppState>) {
   }
 
   login(loginData: LoginUser): Observable<AuthResponse> {
@@ -31,26 +27,22 @@ export class LoginService {
       );
   }
 
-  logout() {
-    this._user$.next(null);
-    localStorage.removeItem(environment.localStorageUser);
-  }
-
   // check if we have user in localStorage and in case we have - user creation from localStorage
   autoLogin() {
     let user: {
       username: string,
-      _token: string,
+      token: string,
     };
 
     const userFromLocalStorage = localStorage.getItem(environment.localStorageUser);
     if (userFromLocalStorage) {
       user = JSON.parse(userFromLocalStorage);
-      const loadedUser = new User(
-        user.username,
-        user._token,
-      );
-      this._user$.next(loadedUser);
+      const loadedUser: AuthResponse = {
+        username: user.username,
+        token: user.token,
+      };
+
+      this.store$.dispatch(new LoginSuccessAction({loggedInUser: loadedUser}));
     } else {
       return false;
     }

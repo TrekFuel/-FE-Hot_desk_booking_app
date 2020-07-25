@@ -1,9 +1,9 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { LoginService } from '../../auth/login/services/login.service';
 import { Injectable } from '@angular/core';
-import { loginActionType, LoginFailureAction, LoginSuccessAction } from '../actions/login.actions';
+import { loginActionType, LoginFailureAction,
+  LoginStartAction, LoginSuccessAction } from '../actions/login.actions';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { LoginUser } from '../../auth/login/models/login-user.model';
 import { AuthResponse } from '../../auth/login/models/auth-response.model';
 import { environment } from '../../../environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -15,8 +15,8 @@ export class LoginEffects {
   loggedInUser$ = this.actions$
     .pipe(
       ofType(loginActionType.LOGIN_START),
-      switchMap((loginData: LoginUser) => {
-        return this.services$.login(loginData)
+      switchMap((action: LoginStartAction) => {
+        return this.services$.login(action.payload.loginData)
           .pipe(
             map((response: AuthResponse) => {
 // user creation across all application

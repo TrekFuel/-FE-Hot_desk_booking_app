@@ -4,21 +4,33 @@ import {
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Injectable } from '@angular/core';
+import {Observable} from 'rxjs';
+import {Injectable} from '@angular/core';
+import {select, Store} from '@ngrx/store';
+import {AppState} from '../../store';
+import {userTokenSelector} from '../../store/selectors/login.selectors';
+import {exhaustMap, take} from 'rxjs/operators';
 
 @Injectable()
 export class JwtTokenInterceptor implements HttpInterceptor {
+  constructor(private store$: Store<AppState>) {
+  }
+
   intercept(
-    req: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
-    const cloned = req.clone({
-      headers: req.headers.set(
-        'Authorization',
-        'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNTk1MjgzMzA4LCJleHAiOjE1OTUyODY5MDh9.G1Z2wF9Ld3GsdeQTwaApgTgq1r50OOedlC7ulOZoo8Y'
-      ),
-    });
-    return next.handle(cloned);
+    request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return this.store$
+      .pipe(
+        select(userTokenSelector),
+        take(1),
+        exhaustMap((userToken: string) => {
+          let requestClone = null;
+          if (userToken) {
+            requestClone = request.clone({
+              headers: request.headers.set('-authorize-', `Bearer_${userToken}`)
+            });
+          }
+          return next.handle(requestClone || request);
+        })
+      );
   }
 }

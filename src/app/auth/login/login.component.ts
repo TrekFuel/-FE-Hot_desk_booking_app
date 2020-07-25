@@ -1,7 +1,9 @@
 import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, FormGroupDirective, Validators} from '@angular/forms';
-import {LoginService} from './services/login.service';
 import {LoginUser} from './models/login-user.model';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../store';
+import {LoginStartAction} from '../../store/actions/login.actions';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +17,7 @@ export class LoginComponent implements OnInit {
     FormGroupDirective;
   hide = true;
 
-  loginData: LoginUser;
+  loginUserData: LoginUser;
 
   get email() {
     return this.form.get('email');
@@ -25,7 +27,7 @@ export class LoginComponent implements OnInit {
     return this.form.get('password');
   }
 
-  constructor(private loginService: LoginService) {
+  constructor(private store$: Store<AppState>) {
   }
 
   ngOnInit(): void {
@@ -44,14 +46,12 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin() {
-    this.loginData = {
+    this.loginUserData = {
       password: this.password.value,
       username: this.email.value,
     };
-    this.loginService.login(this.loginData)
-      .subscribe(() => {
-        this.formGroupDirective.resetForm();
-      });
+    this.store$.dispatch(new LoginStartAction({loginData: this.loginUserData}));
+    this.formGroupDirective.resetForm();
   }
 
   onHideShowClick() {
