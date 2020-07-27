@@ -1,0 +1,56 @@
+import { Effect, ofType } from '@ngrx/effects';
+import { AuthService } from '../../auth/login/services/auth.service';
+import { Injectable } from '@angular/core';
+import {
+  authActionType, LoginFailureAction,
+  LoginStartAction, LoginSuccessAction, LogoutEndAction,
+} from '../actions/auth.actions';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { AuthResponse } from '../../auth/login/models/auth-response.model';
+import { environment } from '../../../environments/environment';
+import { HttpErrorResponse } from '@angular/common/http';
+import { of } from 'rxjs';
+import { Actions } from '@ngrx/effects';
+
+@Injectable()
+export class AuthEffects {
+  @Effect()
+  loggedInUser$ = this.actions$
+    .pipe(
+      ofType(authActionType.LOGIN_START),
+      switchMap((action: LoginStartAction) => {
+        return this.services$.login(action.payload.loginData)
+          .pipe(
+            map((response: AuthResponse) => {
+// user creation across all application
+              const user: AuthResponse = {
+                username: response.username,
+                token: response.token,
+              };
+              localStorage.setItem(environment.localStorageUser, JSON.stringify(user));
+              return new LoginSuccessAction({loggedInUser: user});
+            }),
+            catchError((errorResponse: HttpErrorResponse) => {
+              return of(new LoginFailureAction({errors: errorResponse}));
+            }),
+          );
+      }),
+    );
+
+  @Effect()
+  loggedOutUser$ = this.actions$
+    .pipe(
+      ofType(authActionType.LOGOUT_START),
+      switchMap(() => {
+        localStorage.removeItem(environment.localStorageUser);
+        return of(new LogoutEndAction({loggedInUser: null}));
+      }),
+    );
+
+  constructor(
+    private actions$: Actions,
+    private services$: AuthService,
+  ) {
+  }
+
+}

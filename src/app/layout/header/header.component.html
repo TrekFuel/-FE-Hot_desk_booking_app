@@ -18,43 +18,45 @@
     <a class="header--logo" href="#"></a>
 
     <!--Right element menu-->
-    <div class="header--search d-flex align-items-center">
-      <form class="form-inline mr-4">
-        <input class="form-control mr-sm-2"
-               type="search" placeholder="Search"
-               aria-label="Search">
-        <button class="search-btn btn my-2 my-sm-0"
-                type="submit">Search
-        </button>
-      </form>
+    <ng-container *ngIf="isLoggedIn$ | async">
+      <div class="header--search d-flex align-items-center">
+        <form class="form-inline mr-4">
+          <input class="form-control mr-sm-2"
+                 type="search" placeholder="Search"
+                 aria-label="Search">
+          <button class="search-btn btn my-2 my-sm-0"
+                  type="submit">Search
+          </button>
+        </form>
 
-      <div class="header--user-menu">
-        <div
-          #btnSubMenu
-          (click)="onClickSubmenu()"
-          class="d-flex align-items-center">
-          <div class="user-icon">H</div>
-          <div class="ml-1 dropdown-toggle"></div>
-        </div>
-        <div
-          #subMenu
-          [style.display]="isVisibleSubmenu ? 'block' : 'none'"
-          class="user-menu dropdown-menu dropdown-menu-right"
-          aria-labelledby="navbarDropdownMenuLink">
-          <a
+        <div class="header--user-menu">
+          <div
+            #btnSubMenu
             (click)="onClickSubmenu()"
-            class="hover-item dropdown-item" routerLink="/profile">
-            Profile
-          </a>
-          <a
-            (click)="onLogout()"
-            class="hover-item dropdown-item" href="#">
-            Logout
-          </a>
+            class="d-flex align-items-center">
+            <div class="user-icon">H</div>
+            <div class="ml-1 dropdown-toggle"></div>
+          </div>
+          <div
+            #subMenu
+            [style.display]="isVisibleSubmenu ? 'block' : 'none'"
+            class="user-menu dropdown-menu dropdown-menu-right"
+            aria-labelledby="navbarDropdownMenuLink">
+            <a
+              (click)="onClickSubmenu()"
+              class="hover-item dropdown-item" routerLink="/profile">
+              Profile
+            </a>
+            <a
+              (click)="onLogout()"
+              class="hover-item dropdown-item" href="#">
+              Logout
+            </a>
+          </div>
         </div>
-      </div>
 
-    </div>
+      </div>
+    </ng-container>
 
   </nav>
 
