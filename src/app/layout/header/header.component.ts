@@ -1,12 +1,11 @@
-import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
-import {SidebarServices} from '../sidebar/sidebar.services';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../store';
-import {userSelector} from '../../store/selectors/auth.selectors';
-import {Observable} from 'rxjs';
-import {AuthResponse} from '../../auth/login/models/auth-response.model';
-import {AuthService} from '../../auth/login/services/auth.service';
-import {LogoutStartAction} from '../../store/actions/auth.actions';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { SidebarServices } from '../sidebar/sidebar.services';
+import { select, Store } from '@ngrx/store';
+import { AppState } from '../../store';
+import { userTokenSelector } from '../../store/selectors/auth.selectors';
+import { Observable } from 'rxjs';
+import { AuthService } from '../../auth/login/services/auth.service';
+import { LogoutStartAction } from '../../store/actions/auth.actions';
 
 @Component({
   selector: 'app-header',
@@ -16,7 +15,7 @@ import {LogoutStartAction} from '../../store/actions/auth.actions';
 export class HeaderComponent implements OnInit {
 
   public isVisibleSubmenu = false;
-  isLoggedIn$: Observable<AuthResponse>;
+  isLoggedIn$: Observable<string>;
 
   @ViewChild('subMenu') subMenu: ElementRef;
   @ViewChild('btnSubMenu') btnSubMenu: ElementRef;
@@ -39,7 +38,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     this.isLoggedIn$ = this.store$.pipe(
-      select(userSelector)
+      select(userTokenSelector)
     );
   }
 

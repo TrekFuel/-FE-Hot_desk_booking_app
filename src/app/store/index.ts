@@ -2,12 +2,12 @@ import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { environment } from '../../environments/environment';
 import { usersListReducer } from './reducers/usersList.reducer';
 import { UserInterface } from '../shared/modules/user.interface';
-import { AuthResponse } from '../auth/login/models/auth-response.model';
 import { authReducer } from './reducers/auth.reducer';
+import { LoginInterface } from './selectors/auth.selectors';
 
 export interface AppState {
   usersList: UserInterface[];
-  login: AuthResponse;
+  login: LoginInterface;
 }
 
 export const reducers: ActionReducerMap<AppState> = {

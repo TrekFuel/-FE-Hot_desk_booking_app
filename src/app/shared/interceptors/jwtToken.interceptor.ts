@@ -26,7 +26,7 @@ export class JwtTokenInterceptor implements HttpInterceptor {
           let requestClone = null;
           if (userToken) {
             requestClone = request.clone({
-              headers: request.headers.set('-authorize-', `Bearer_${userToken}`)
+              headers: request.headers.set('Authorization', `Bearer_${userToken}`)
             });
           }
           return next.handle(requestClone || request);

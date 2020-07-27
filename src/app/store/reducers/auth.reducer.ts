@@ -1,13 +1,15 @@
-import {AuthResponse} from '../../auth/login/models/auth-response.model';
-import {authActionType, authTypeActions} from '../actions/auth.actions';
+import { authActionType, authTypeActions } from '../actions/auth.actions';
+import { LoginInterface } from '../selectors/auth.selectors';
 
-const initialState: AuthResponse = {
-  username: '',
-  token: '',
+const initialState: LoginInterface = {
+  loggedInUser: {
+    username: null,
+    token: null,
+  }
 };
 
 export function authReducer(
-  state: AuthResponse = initialState,
+  state: LoginInterface = initialState,
   action: authTypeActions,
 ) {
   switch (action.type) {
