@@ -1,0 +1,15 @@
+.message {
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  .alert {
+    border-radius: 0;
+
+    &--message {
+      text-align: center;
+    }
+  }
+}

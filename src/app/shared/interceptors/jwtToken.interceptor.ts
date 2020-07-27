@@ -16,7 +16,7 @@ export class JwtTokenInterceptor implements HttpInterceptor {
     const cloned = req.clone({
       headers: req.headers.set(
         'Authorization',
-        'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNTk1MjgzMzA4LCJleHAiOjE1OTUyODY5MDh9.G1Z2wF9Ld3GsdeQTwaApgTgq1r50OOedlC7ulOZoo8Y'
+        'Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJociIsInJvbGVzIjpbIlJPTEVfSFIiXSwiaWF0IjoxNTk1ODI1NTE2LCJleHAiOjE1OTU4MjkxMTZ9.SYyOm0ApTB8Sp5ZIDlHDS9w3OwoNxznf2n64WTUAMxk'
       ),
     });
     return next.handle(cloned);

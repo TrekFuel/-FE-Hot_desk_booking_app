@@ -3,11 +3,10 @@ import {
   Component,
   Input,
   OnInit,
+  Output,
 } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { UserInterface } from '../shared/modules/user.interface';
-import { ActivatedRoute } from '@angular/router';
-import { UsersRequestPathInterface } from './modules/requestPath.interface';
+import { UserInterface } from '../shared/models/user.interface';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-users',
@@ -17,20 +16,31 @@ import { UsersRequestPathInterface } from './modules/requestPath.interface';
 })
 export class UsersComponent implements OnInit {
   @Input() public users: UserInterface[];
-  private _path: UsersRequestPathInterface;
-  private _subscribeRoute: Subscription;
+  @Output() public $route = '12';
+  public checkRadioBtn: number;
+  public valueRadioBtn: number[];
 
-  constructor(private route: ActivatedRoute) {}
-
-  ngOnInit(): void {
-    this.initializeRoutePath();
+  constructor(private route: ActivatedRoute, private router: Router) {
+    this.queryParams();
   }
 
-  initializeRoutePath(): void {
-    this._subscribeRoute = this.route.queryParams.subscribe(
-      (path: UsersRequestPathInterface) => {
-        this._path = path;
-      }
-    );
+  ngOnInit(): void {
+    this.initializeRadioBtn();
+  }
+
+  initializeRadioBtn(): void {
+    this.valueRadioBtn = [1, 2, 3];
+    this.checkRadioBtn = this.valueRadioBtn[0];
+  }
+
+  onClickRadioBtn(size: number): void {}
+
+  queryParams() {
+    this.router.navigate(['/users'], {
+      queryParams: {
+        size: 1,
+        siz: 1,
+      },
+    });
   }
 }

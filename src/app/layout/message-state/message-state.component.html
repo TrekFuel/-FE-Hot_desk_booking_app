@@ -1,0 +1,12 @@
+<div
+  *ngIf=" $message | async as variable"
+  [@messageStateAnimation]="variable.visible? 'start' : 'end'"
+  class="message">
+  <div
+    [ngClass]="variable.message.stateAlert"
+    class="alert alert-primary" role="alert">
+    <div class="alert--message">
+      {{ variable.message.text }}
+    </div>
+  </div>
+</div>

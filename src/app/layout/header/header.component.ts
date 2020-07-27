@@ -1,18 +1,23 @@
-import {Component, ElementRef, HostListener, ViewChild} from '@angular/core';
-import {SidebarServices} from '../sidebar/sidebar.services';
-import {LoginService} from '../../auth/login/services/login.service';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { SidebarServices } from '../sidebar/sidebar.services';
+import { LoginService } from '../../auth/login/services/login.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent {
-
   public isVisibleSubmenu = false;
 
   @ViewChild('subMenu') subMenu: ElementRef;
   @ViewChild('btnSubMenu') btnSubMenu: ElementRef;
+
+  constructor(
+    private el: ElementRef,
+    private sidebarServices: SidebarServices,
+    private loginService: LoginService
+  ) {}
 
   @HostListener('document:click', ['$event']) clickOut(event) {
     let open: boolean = this.btnSubMenu.nativeElement.contains(event.target);
@@ -20,13 +25,6 @@ export class HeaderComponent {
     if (!open && !close) {
       this.isVisibleSubmenu = false;
     }
-  }
-
-  constructor(
-    private el: ElementRef,
-    private sidebarServices: SidebarServices,
-    private loginService: LoginService,
-  ) {
   }
 
   isVisibleSidebar() {
@@ -40,5 +38,4 @@ export class HeaderComponent {
   onLogout() {
     this.loginService.logout();
   }
-
 }

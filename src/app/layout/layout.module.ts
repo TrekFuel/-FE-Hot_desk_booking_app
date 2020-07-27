@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from '../material/material-module';
 import { RouterModule } from '@angular/router';
 import { LoaderComponent } from './loader/loader.component';
+import { MessageStateComponent } from './message-state/message-state.component';
 
 @NgModule({
   exports: [
@@ -14,6 +15,7 @@ import { LoaderComponent } from './loader/loader.component';
     FooterComponent,
     SidebarComponent,
     LoaderComponent,
+    MessageStateComponent,
   ],
   imports: [BrowserAnimationsModule, FormsModule, MaterialModule, RouterModule],
   declarations: [
@@ -21,6 +23,7 @@ import { LoaderComponent } from './loader/loader.component';
     FooterComponent,
     SidebarComponent,
     LoaderComponent,
+    MessageStateComponent,
   ],
 })
 export class LayoutModule {}

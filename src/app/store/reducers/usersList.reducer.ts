@@ -2,7 +2,7 @@ import {
   usersListActionType,
   usersListTypeActions,
 } from '../actions/usersList.actions';
-import { UserInterface } from '../../shared/modules/user.interface';
+import { UserInterface } from '../../shared/models/user.interface';
 
 const initialState: UserInterface[] = [];
 
@@ -14,18 +14,15 @@ export function usersListReducer(
     case usersListActionType.USERS_LIST_START:
       return {
         ...state,
-        loader: true,
       };
     case usersListActionType.USERS_LIST_SUCCESS:
       return {
         ...state,
         users: action.payload.users,
-        loader: false,
       };
     case usersListActionType.USERS_LIST_FAILURE:
       return {
         ...state,
-        loader: false,
       };
     default:
       return {

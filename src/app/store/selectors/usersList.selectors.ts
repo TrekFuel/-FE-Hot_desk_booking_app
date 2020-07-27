@@ -1,11 +1,7 @@
-import { UserInterface } from '../../shared/modules/user.interface';
+import { UserInterface } from '../../shared/models/user.interface';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { AppState } from '../index';
-
-export interface UsersListInterface {
-  users: UserInterface[];
-  loader: boolean;
-}
+import { UsersListInterface } from '../../users/modules/usersList.interface';
 
 export const usersListSelector = createFeatureSelector<
   AppState,
@@ -19,9 +15,9 @@ export const usersSelector = createSelector(
   }
 );
 
-export const loaderSelector = createSelector(
+export const usersSizePageSelector = createSelector(
   usersListSelector,
-  (usersList: UsersListInterface): boolean => {
-    return usersList.loader;
+  (usersList: UsersListInterface): UserInterface[] => {
+    return usersList.users;
   }
 );
