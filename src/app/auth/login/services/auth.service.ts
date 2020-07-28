@@ -29,19 +29,11 @@ export class AuthService {
 
   // check if we have user in localStorage and in case we have - user creation from localStorage
   autoLogin() {
-    let user: {
-      username: string,
-      token: string,
-    };
+    let loadedUser: AuthResponse;
 
     const userFromLocalStorage = localStorage.getItem(environment.localStorageUser);
     if (userFromLocalStorage) {
-      user = JSON.parse(userFromLocalStorage);
-      const loadedUser: AuthResponse = {
-        username: user.username,
-        token: user.token,
-      };
-
+      loadedUser = JSON.parse(userFromLocalStorage);
       this.store$.dispatch(new LoginSuccessAction({loggedInUser: loadedUser}));
     } else {
       return false;

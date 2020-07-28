@@ -1,9 +1,9 @@
-import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
-import {FormControl, FormGroup, FormGroupDirective, Validators} from '@angular/forms';
-import {LoginUser} from './models/login-user.model';
-import {Store} from '@ngrx/store';
-import {AppState} from '../../store';
-import {LoginStartAction} from '../../store/actions/auth.actions';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
+import { LoginUser } from './models/login-user.model';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store';
+import { LoginStartAction } from '../../store/actions/auth.actions';
 
 @Component({
   selector: 'app-login',
@@ -37,6 +37,7 @@ export class LoginComponent implements OnInit {
   private _initAuthForm() {
     this.form = new FormGroup({
       email: new FormControl('', [
+        Validators.email,
         Validators.required,
         Validators.minLength(5),
         Validators.maxLength(50)
@@ -47,8 +48,8 @@ export class LoginComponent implements OnInit {
 
   onLogin() {
     this.loginUserData = {
+      email: this.email.value,
       password: this.password.value,
-      username: this.email.value,
     };
     this.store$.dispatch(new LoginStartAction({loginData: this.loginUserData}));
     this.formGroupDirective.resetForm();

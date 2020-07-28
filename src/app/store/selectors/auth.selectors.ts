@@ -7,7 +7,7 @@ export interface LoginInterface {
 }
 
 export const loginSelector = createFeatureSelector<AppState, LoginInterface>
-('login');
+('auth');
 
 export const userSelector = createSelector(loginSelector,
   (login: LoginInterface): AuthResponse => {
@@ -17,4 +17,9 @@ export const userSelector = createSelector(loginSelector,
 export const userTokenSelector = createSelector(loginSelector,
   (login: LoginInterface): string => {
     return login.loggedInUser.token;
+  });
+
+export const userRoleSelector = createSelector(loginSelector,
+  (login: LoginInterface): string[] => {
+    return login.loggedInUser.userInfo.roleNames;
   });

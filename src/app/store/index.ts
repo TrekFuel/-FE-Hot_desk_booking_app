@@ -7,12 +7,12 @@ import { LoginInterface } from './selectors/auth.selectors';
 
 export interface AppState {
   usersList: UserInterface[];
-  login: LoginInterface;
+  auth: LoginInterface;
 }
 
 export const reducers: ActionReducerMap<AppState> = {
   usersList: usersListReducer,
-  login: authReducer,
+  auth: authReducer,
 };
 
 export const metaReducers: MetaReducer<AppState>[] = !environment.production

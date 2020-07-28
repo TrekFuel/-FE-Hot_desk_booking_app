@@ -3,7 +3,15 @@ import { LoginInterface } from '../selectors/auth.selectors';
 
 const initialState: LoginInterface = {
   loggedInUser: {
-    username: null,
+    userInfo: {
+      id: null,
+      email: null,
+      username: null,
+      firstName: null,
+      lastName: null,
+      isActive: null,
+      roleNames: null,
+    },
     token: null,
   }
 };
