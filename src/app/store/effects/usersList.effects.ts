@@ -1,19 +1,15 @@
-import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {Actions, Effect, ofType} from '@ngrx/effects';
+import {catchError, map, switchMap} from 'rxjs/operators';
 import * as usersListTypeActions from '../actions/usersList.actions';
-import {
-  usersListActionType,
-  usersListFailureAction,
-  usersListSuccessAction,
-} from '../actions/usersList.actions';
-import { UsersServices } from '../../users/users.services';
-import { HttpErrorResponse } from '@angular/common/http';
-import { of } from 'rxjs';
-import { MessageStateInterface } from '../../layout/message-state/modules/message.interface';
-import { UsersRequestPathInterface } from '../../users/modules/requestPath.interface';
-import { GetAllUsersInterface } from '../../shared/models/getAllUsers.interface';
-import { UserInterface } from '../../shared/models/user.interface';
+import {usersListActionType, usersListFailureAction, usersListSuccessAction} from '../actions/usersList.actions';
+import {UsersServices} from '../../users/users.services';
+import {HttpErrorResponse} from '@angular/common/http';
+import {of} from 'rxjs';
+import {MessageStateInterface} from '../../layout/message-state/modules/message.interface';
+import {UsersRequestPathInterface} from '../../users/modules/requestPath.interface';
+import {GetAllUsersInterface} from '../../shared/models/getAllUsers.interface';
+import {UserInterface} from '../../shared/models/user.interface';
 
 @Injectable()
 export class UsersListEffects {
@@ -28,7 +24,6 @@ export class UsersListEffects {
           const arrUsers: { users: UserInterface[] } = {
             users: data.content,
           };
-          console.log(arrUsers);
           return new usersListSuccessAction(arrUsers);
         }),
         catchError((errorResponse: HttpErrorResponse) => {
