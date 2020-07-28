@@ -2,7 +2,7 @@ import { Action } from '@ngrx/store';
 
 export enum loaderActionType {
   LOADER_START = '[Loader] Loader start',
-  LOADER_FINISH = '[Users] Loader finish',
+  LOADER_FINISH = '[Loader] Loader finish',
 }
 
 export class loaderStartAction implements Action {

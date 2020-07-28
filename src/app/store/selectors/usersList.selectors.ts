@@ -14,10 +14,3 @@ export const usersSelector = createSelector(
     return usersList.users;
   }
 );
-
-export const usersSizePageSelector = createSelector(
-  usersListSelector,
-  (usersList: UsersListInterface): UserInterface[] => {
-    return usersList.users;
-  }
-);

@@ -1,6 +1,7 @@
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { SidebarServices } from '../sidebar/sidebar.services';
 import { LoginService } from '../../auth/login/services/login.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-header',
@@ -12,6 +13,7 @@ export class HeaderComponent {
 
   @ViewChild('subMenu') subMenu: ElementRef;
   @ViewChild('btnSubMenu') btnSubMenu: ElementRef;
+  @ViewChild('form') form: NgForm;
 
   constructor(
     private el: ElementRef,
@@ -38,4 +40,6 @@ export class HeaderComponent {
   onLogout() {
     this.loginService.logout();
   }
+
+  onFormSubmit() {}
 }

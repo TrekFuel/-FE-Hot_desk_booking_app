@@ -8,12 +8,12 @@ import {
   usersListSuccessAction,
 } from '../actions/usersList.actions';
 import { UsersServices } from '../../users/users.services';
-import { UserInterface } from '../../shared/models/user.interface';
-import { UsersListInterface } from '../../users/modules/usersList.interface';
 import { HttpErrorResponse } from '@angular/common/http';
 import { of } from 'rxjs';
 import { MessageStateInterface } from '../../layout/message-state/modules/message.interface';
-import { Params } from '@angular/router';
+import { UsersRequestPathInterface } from '../../users/modules/requestPath.interface';
+import { GetAllUsersInterface } from '../../shared/models/getAllUsers.interface';
+import { UserInterface } from '../../shared/models/user.interface';
 
 @Injectable()
 export class UsersListEffects {
@@ -21,12 +21,14 @@ export class UsersListEffects {
   loadUsersList$ = this.actions$.pipe(
     ofType(usersListActionType.USERS_LIST_START),
     switchMap((data: usersListTypeActions.usersListStartAction) => {
-      const queryParam: Params = data.payload.queryParams;
+      const queryParam: UsersRequestPathInterface = data.payload.queryParams;
 
       return this.usersServices.getUsersList(queryParam).pipe(
-        map((data: UserInterface[]) => {
-          const arrUsers: UsersListInterface = { users: data };
-
+        map((data: GetAllUsersInterface) => {
+          const arrUsers: { users: UserInterface[] } = {
+            users: data.content,
+          };
+          console.log(arrUsers);
           return new usersListSuccessAction(arrUsers);
         }),
         catchError((errorResponse: HttpErrorResponse) => {

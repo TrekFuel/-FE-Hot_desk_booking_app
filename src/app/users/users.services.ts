@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { UserInterface } from '../shared/models/user.interface';
 import { environment } from '../../environments/environment';
+import { UsersRequestPathInterface } from './modules/requestPath.interface';
+import { GetAllUsersInterface } from '../shared/models/getAllUsers.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -10,10 +11,10 @@ import { environment } from '../../environments/environment';
 export class UsersServices {
   constructor(private http: HttpClient) {}
 
-  getUsersList(data) {
-    console.log(data);
-    return this.http.get(`${environment.databaseURL}/users`).pipe(
-      map((users: UserInterface[]) => {
+  getUsersList(data: UsersRequestPathInterface) {
+    let path = data.path;
+    return this.http.get(`${environment.databaseURL}${path}`).pipe(
+      map((users: GetAllUsersInterface) => {
         return users;
       })
     );
