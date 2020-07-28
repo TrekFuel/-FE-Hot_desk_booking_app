@@ -1,16 +1,16 @@
-import { Effect, ofType } from '@ngrx/effects';
-import { AuthService } from '../../auth/login/services/auth.service';
-import { Injectable } from '@angular/core';
+import {Effect, ofType} from '@ngrx/effects';
+import {AuthService} from '../../auth/login/services/auth.service';
+import {Injectable} from '@angular/core';
 import {
   authActionType, LoginFailureAction,
   LoginStartAction, LoginSuccessAction, LogoutEndAction,
 } from '../actions/auth.actions';
-import { catchError, map, switchMap } from 'rxjs/operators';
-import { AuthResponse } from '../../auth/login/models/auth-response.model';
-import { environment } from '../../../environments/environment';
-import { HttpErrorResponse } from '@angular/common/http';
-import { of } from 'rxjs';
-import { Actions } from '@ngrx/effects';
+import {catchError, map, switchMap} from 'rxjs/operators';
+import {AuthResponse} from '../../auth/login/models/auth-response.model';
+import {environment} from '../../../environments/environment';
+import {HttpErrorResponse} from '@angular/common/http';
+import {of} from 'rxjs';
+import {Actions} from '@ngrx/effects';
 
 @Injectable()
 export class AuthEffects {
@@ -24,7 +24,15 @@ export class AuthEffects {
             map((response: AuthResponse) => {
 // user creation across all application
               const user: AuthResponse = {
-                username: response.username,
+                userInfo: {
+                  id: response.userInfo.id,
+                  email: response.userInfo.email,
+                  username: response.userInfo.username,
+                  firstName: response.userInfo.firstName,
+                  lastName: response.userInfo.lastName,
+                  isActive: response.userInfo.isActive,
+                  roleNames: [...response.userInfo.roleNames],
+                },
                 token: response.token,
               };
               localStorage.setItem(environment.localStorageUser, JSON.stringify(user));
