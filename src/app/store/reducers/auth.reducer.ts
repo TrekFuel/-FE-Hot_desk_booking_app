@@ -10,9 +10,7 @@ const initialState: LoginInterface = {
       firstName: null,
       lastName: null,
       isActive: null,
-      roleNames: [
-        null
-      ]
+      roleNames: null,
     },
     token: null,
   }
