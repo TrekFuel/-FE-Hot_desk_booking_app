@@ -5,7 +5,12 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   template: `
     <mat-form-field appearance="outline">
       <mat-label>{{label}}</mat-label>
-      <input matInput type="text" [(ngModel)]="value" [disabled]="disableStatus" (change)="onChange(value)">
+      <input matInput
+             type="text"
+             [(ngModel)]="value"
+             [disabled]="disableStatus"
+             (change)="onChange(value)"
+             [hasFocus]="focusStatus">
       <button mat-button *ngIf="value && !disableStatus" matSuffix mat-icon-button aria-label="Clear" (click)="clear()">
         <mat-icon>close</mat-icon>
       </button>
@@ -17,6 +22,7 @@ export class ClearableInputComponent {
   @Input() value: string = '';
   @Input() label: string = '';
   @Input() disableStatus: boolean = false;
+  @Input() focusStatus: boolean = false;
   @Output() inputMessage = new EventEmitter<string>();
   onChange(value: string) {
     this.inputMessage.emit(value);
