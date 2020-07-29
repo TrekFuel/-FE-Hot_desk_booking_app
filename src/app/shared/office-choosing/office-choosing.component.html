@@ -57,22 +57,23 @@
       <mat-label>{{!!newSelected ? 'Please enter a new ' + newSelected : ''}}</mat-label>
       <input (change)="onInputMessage($event)"
              (input)="checkInputErrors()"
+             [errorStateMatcher]="matcher"
              [hasFocus]="currentFocus === 'new'"
-             autocomplete="off"
-             formControlName="inputNew"
+             autocomplete="off" formControlName="inputNew"
              matInput
              type="text">
-      <button (click)="inputValue = ''"
-              *ngIf="!!inputValue && !!newSelected"
+      <button (click)="selectOfficeForm.patchValue({inputNew: ''})"
+              *ngIf="!!inputNew && !!newSelected"
               aria-label="Clear"
               mat-button
               mat-icon-button
               matSuffix>
         <mat-icon>close</mat-icon>
       </button>
+      <mat-error *ngIf="inputNewState.hasError('sameName')">
+        You entered an <strong>existing {{newSelected}}.</strong> Please change it.
+      </mat-error>
 
-
-      <mat-error *ngIf="errorOnInput.isShow">Any text</mat-error>
     </mat-form-field>
 
   </div>

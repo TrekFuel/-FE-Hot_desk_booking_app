@@ -1,6 +1,15 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, FormGroupDirective, NgForm } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
+import { ValidateSameName } from '../validators/same-name.validator';
+import { ErrorStateMatcher } from '@angular/material/core';
+
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+  }
+}
 
 @Component({
   selector: 'app-office-choosing',
@@ -9,17 +18,15 @@ import { MatSelectChange } from '@angular/material/select';
 })
 export class OfficeChoosingComponent implements OnInit {
   selectOfficeForm: FormGroup;
+  matcher = new MyErrorStateMatcher();
   @Output() showMap: EventEmitter<boolean> = new EventEmitter<boolean>();
   isShowMap: boolean = false;
   currentFocus: string = 'country';
   newSelected: string | null = null;
-  inputValue: string;
   buttonsDisable: { apply: boolean, edit: boolean, delete: boolean } = { apply: true, edit: true, delete: true };
   errorOnInput: { isShow: boolean, text: string } = { isShow: false, text: '' };
+  checkingInputNames: string[] = ['Belarus', 'Ukraine', 'Russia'];
   countryArr: string[] = ['Belarus', 'Ukraine', 'Russia'];
-  officeFull = {
-    country: 'Belarus'
-  };
 
   adminMode = true;
 
@@ -45,6 +52,11 @@ export class OfficeChoosingComponent implements OnInit {
   public get inputNew(): string {
     return this.selectOfficeForm?.get('inputNew').value || '';
   }
+
+  public get inputNewState(): AbstractControl {
+    return this.selectOfficeForm.get('inputNew');
+  }
+
 
   public get countryOptions(): string[] {
     const country = [...this.countryArr];
@@ -98,7 +110,6 @@ export class OfficeChoosingComponent implements OnInit {
     this.selectOfficeForm.controls['inputNew'].enable();
     this.currentFocus = 'new';
     this.newSelected = source;
-    this.inputValue = '';
     this.errorOnInput.isShow = false;
   }
 
@@ -118,24 +129,13 @@ export class OfficeChoosingComponent implements OnInit {
   }
 
   onInputMessage(message: string): void {
-    if (message !== '' && this.errorOnInput.isShow) {
-      this.newSelected = null;
-      console.log('afterInputMessage');
-      console.log(message);
-    } else {
-      this.errorOnInput.text = 'Please enter correct information';
-    }
+    console.log('afterInputMessage');
 
   }
 
   checkInputErrors() {
-    console.log(this.inputValue);
 
-    if (this.inputValue === '1') {
-      console.log('error');
-      this.errorOnInput.isShow = true;
-      console.log(this.errorOnInput.isShow);
-    }
+
   }
 
   addNewToSelect(arr: string[]): void {
@@ -154,7 +154,7 @@ export class OfficeChoosingComponent implements OnInit {
       address: new FormControl({ value: '', disabled: true }),
       floor: new FormControl({ value: '', disabled: true }),
       inputNew: new FormControl({ value: '', disabled: true }, [
-        Validators.required
+        ValidateSameName(this.checkingInputNames)
       ])
     });
   }
