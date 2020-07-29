@@ -17,8 +17,7 @@ export class SidebarComponent implements OnInit {
 
   public btnValue: BtnSidebarInterface[] = [
     { value: 'List Users', route: 'users' },
-    { value: 'Rooms Management', route: 'rooms-management' },
-    { value: 'Rooms Edit', route: 'rooms-management/edit' }
+    { value: 'Rooms Management', route: 'rooms-management' }
   ];
   private _bodyElement: ElementRef;
 
