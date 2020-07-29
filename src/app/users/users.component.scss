@@ -1,11 +1,15 @@
 @import "main";
 
+.brn-bg {
+  background-color: $btn-bg;
+}
+
 th {
   min-width: 140px;
 }
 
 .users {
-  margin: 2.5rem 0 calc(2.5rem * 2 ) 0;
+  margin: 2.5rem 0 calc(2.5rem * 2) 0;
 
   &--table {
     overflow-x: auto;

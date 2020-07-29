@@ -1,13 +1,7 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnInit,
-} from '@angular/core';
-import { Subscription } from 'rxjs';
-import { UserInterface } from '../shared/modules/user.interface';
-import { ActivatedRoute } from '@angular/router';
-import { UsersRequestPathInterface } from './modules/requestPath.interface';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { UserInterface } from '../shared/models/user.interface';
+import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-users',
@@ -15,22 +9,48 @@ import { UsersRequestPathInterface } from './modules/requestPath.interface';
   styleUrls: ['./users.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent {
   @Input() public users: UserInterface[];
-  private _path: UsersRequestPathInterface;
-  private _subscribeRoute: Subscription;
+  @Input() public usersLength: number;
+  public checkRadioBtn: number;
+  public numberPage: number;
+  public valueRadioBtn: number[];
+  public disabledNext: boolean;
 
-  constructor(private route: ActivatedRoute) {}
-
-  ngOnInit(): void {
-    this.initializeRoutePath();
+  constructor(private route: ActivatedRoute, private router: Router) {
+    this.initializeRadioBtn();
+    this.queryParams();
   }
 
-  initializeRoutePath(): void {
-    this._subscribeRoute = this.route.queryParams.subscribe(
-      (path: UsersRequestPathInterface) => {
-        this._path = path;
-      }
-    );
+  initializeRadioBtn(): void {
+    this.valueRadioBtn = [1, 2, 3];
+    this.checkRadioBtn = this.valueRadioBtn[0];
+    this.numberPage = 1;
+  }
+
+  queryParams(): void {
+    this.router.navigate([environment.usersComponentRoute], {
+      queryParams: {
+        size: this.checkRadioBtn,
+        page: this.numberPage - 1,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  onClickRadioBtn(size: number): void {
+    this.numberPage = 1;
+    this.checkRadioBtn = size;
+    this.queryParams();
+  }
+
+  previousPage(): void {
+    this.numberPage--;
+    this.queryParams();
+  }
+
+  nextPage(): void {
+    this.numberPage++;
+    this.queryParams();
   }
 }

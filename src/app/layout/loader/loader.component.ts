@@ -1,18 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../../store';
-import { loaderSelector } from '../../store/selectors/usersList.selectors';
+import { loaderStateSelector } from '../../store/selectors/loader.selector';
 
 @Component({
   selector: 'app-loader',
   templateUrl: './loader.component.html',
   styleUrls: ['./loader.component.scss'],
 })
-export class LoaderComponent {
+export class LoaderComponent implements OnInit {
   public $visible: Observable<boolean>;
 
-  constructor(private store$: Store<AppState>) {
-    this.$visible = this.store$.pipe(select(loaderSelector));
+  constructor(private store$: Store<AppState>) {}
+
+  ngOnInit(): void {
+    this.$visible = this.store$.pipe(select(loaderStateSelector));
   }
 }

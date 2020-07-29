@@ -1,4 +1,4 @@
-import { UserInterface } from '../../shared/modules/user.interface';
+import { UserInterface } from '../../shared/models/user.interface';
 
 export interface UsersListInterface {
   users: UserInterface[];

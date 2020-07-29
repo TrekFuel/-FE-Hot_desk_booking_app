@@ -1,5 +1,7 @@
 <div class="users">
-  <div class="container">
+  <div
+    #index
+    class="container">
     <div class="d-flex justify-content-center mb-3">
       <h1 class="font-weight-bold">Users list</h1>
     </div>
@@ -7,9 +9,21 @@
     <!-- Filter for chose pagination count -->
     <div class="d-flex justify-content-end">
       <mat-radio-group aria-label="Select an option">
-        <mat-radio-button checked value="1">10</mat-radio-button>
-        <mat-radio-button value="2">20</mat-radio-button>
-        <mat-radio-button value="3">30</mat-radio-button>
+        <mat-radio-button
+          (click)="onClickRadioBtn(valueRadioBtn[0])"
+          [checked]="checkRadioBtn === valueRadioBtn[0]"
+          value="1">{{ valueRadioBtn[0] }}
+        </mat-radio-button>
+        <mat-radio-button
+          (click)="onClickRadioBtn(valueRadioBtn[1])"
+          [checked]="checkRadioBtn === valueRadioBtn[1]"
+          value="2">{{ valueRadioBtn[1] }}
+        </mat-radio-button>
+        <mat-radio-button
+          (click)="onClickRadioBtn(valueRadioBtn[2])"
+          [checked]="checkRadioBtn === valueRadioBtn[2]"
+          value="3">{{ valueRadioBtn[2] }}
+        </mat-radio-button>
       </mat-radio-group>
     </div>
 
@@ -46,21 +60,25 @@
     <nav aria-label="Page navigation example">
       <ul class="pagination d-flex justify-content-center">
         <li class="page-item">
-          <button aria-label="Previous" class="page-link">
+          <button
+            (click)="previousPage()"
+            [disabled]="numberPage <= 1"
+            aria-label="Previous"
+            class="page-link">
             <span aria-hidden="true">&laquo;</span>
           </button>
         </li>
         <li class="page-item">
-          <button class="page-link" disabled>1</button>
+          <span class="page-link">
+            {{ numberPage }}
+          </span>
         </li>
         <li class="page-item">
-          <button class="page-link">2</button>
-        </li>
-        <li class="page-item">
-          <button class="page-link">3</button>
-        </li>
-        <li class="page-item">
-          <button aria-label="Next" class="page-link">
+          <button
+            (click)="nextPage()"
+            [disabled]="disabledNext"
+            aria-label="Next"
+            class="page-link">
             <span aria-hidden="true">&raquo;</span>
           </button>
         </li>
@@ -68,4 +86,3 @@
     </nav>
   </div>
 </div>
-

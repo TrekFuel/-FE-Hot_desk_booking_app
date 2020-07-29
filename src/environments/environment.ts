@@ -2,6 +2,7 @@ export const environment = {
   production: false,
   localStorageUser: 'user',
   databaseURL: '/api',
+  usersComponentRoute: '/users',
   places: {
     MAX_DEFAULT_QUANTITY_IN_CONFROOM: 25,
     MIN_QUANTITY_IN_CONFROOM: 2,
@@ -11,5 +12,5 @@ export const environment = {
     MIN: 50,
     MAX: 200,
     STEP: 10
-  }
+  },
 };
