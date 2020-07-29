@@ -1,9 +1,10 @@
+$mainThemeColor: #40bfef;
 $commonBorderColor: black;
 $canvasBorderColor: lightgrey;
 $hoverItemBackgroundColor: lightblue;
 $ItemBorderColor: grey;
-$editorLockColor: #40bfef;
-$hoverCloneColor: #40bfef;
+$editorLockColor: $mainThemeColor;
+$hoverCloneColor: $mainThemeColor;
 $hoverCloseColor: red;
 $cardOfPlaceBackgroundColor: #f9f9f9;
 $freeColor: #16ee32;

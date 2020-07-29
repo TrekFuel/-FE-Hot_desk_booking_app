@@ -5,6 +5,7 @@ import { AfterViewInit, Directive, ElementRef, Input, OnChanges, SimpleChanges }
 })
 export class HasFocusDirective implements AfterViewInit, OnChanges {
   @Input("hasFocus") hasFocus: boolean;
+
   constructor(private elementRef: ElementRef) {}
 
   ngAfterViewInit() {

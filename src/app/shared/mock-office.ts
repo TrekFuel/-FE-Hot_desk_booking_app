@@ -2,10 +2,10 @@ import { OfficeFullModel } from './models/office-full.model';
 
 export const MOCK_OFFICE: OfficeFullModel = {
   id: 'Some random unique string',
-  address: {
+  officeAddress: {
     country: 'Belarus',
     city: 'Grodno',
-    office: 'Somewhere str. 1'
+    address: 'Somewhere str. 1'
   },
   map: {
     placesData: [

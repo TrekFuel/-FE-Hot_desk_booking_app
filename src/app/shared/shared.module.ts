@@ -5,12 +5,14 @@ import { MaterialModule } from '../material/material-module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClearableInputComponent } from './components/clearable-input/clearable-input.component';
 import { ZoomComponent } from './components/zoom/zoom.component';
+import { HasFocusDirective } from './directives/has-focus.directive';
 
 @NgModule({
   declarations: [
     OfficeChoosingComponent,
     ClearableInputComponent,
     ZoomComponent,
+    HasFocusDirective
   ],
   imports: [
     CommonModule,
@@ -22,6 +24,7 @@ import { ZoomComponent } from './components/zoom/zoom.component';
     OfficeChoosingComponent,
     ClearableInputComponent,
     ZoomComponent,
+    HasFocusDirective
   ]
 })
 export class SharedModule {
