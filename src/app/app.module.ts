@@ -16,10 +16,10 @@ import { UsersModule } from './users/users.module';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
-import { UsersListEffects } from './store/effects/usersList.effects';
 import { AppInterceptors } from './app.interceptors';
-import { HomeModule } from './home/home.module'
+import { HomeModule } from './home/home.module';
 import { HttpClientModule } from '@angular/common/http';
+import { indexEffects } from './store/effects/index.effects';
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,7 +31,7 @@ import { HttpClientModule } from '@angular/common/http';
     UsersModule,
     MaterialModule,
     StoreModule.forRoot(reducers),
-    EffectsModule.forRoot([UsersListEffects]),
+    EffectsModule.forRoot(indexEffects),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,

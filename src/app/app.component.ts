@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {LoginService} from './auth/login/services/login.service';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from './auth/login/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +9,7 @@ import {LoginService} from './auth/login/services/login.service';
 export class AppComponent implements OnInit {
   title = 'hot-desk-booking-app';
 
-  constructor(private loginService: LoginService) {
+  constructor(private loginService: AuthService) {
   }
 
   ngOnInit() {
