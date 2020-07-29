@@ -70,13 +70,13 @@
         </li>
         <li class="page-item">
           <span class="page-link">
-            {{ numberPage }}
+            {{ pageNumberVisible }}
           </span>
         </li>
         <li class="page-item">
           <button
             (click)="nextPage()"
-            [disabled]="disabledNext"
+            [disabled]="pageNumberVisible === pagesTotal"
             aria-label="Next"
             class="page-link">
             <span aria-hidden="true">&raquo;</span>
