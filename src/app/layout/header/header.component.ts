@@ -54,4 +54,6 @@ export class HeaderComponent implements OnInit {
 this.store$.dispatch(new LogoutStartAction());
   }
 
+  onFormSubmit() {}
+
 }
