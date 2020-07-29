@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RoomsManagementEntryComponent implements OnInit {
 
+  showMap: boolean;
+
   constructor() { }
 
   ngOnInit(): void {

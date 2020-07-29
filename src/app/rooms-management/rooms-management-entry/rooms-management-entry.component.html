@@ -1,13 +1,21 @@
 <div class="container">
-
-  <app-office-choosing></app-office-choosing>
-
-  <div class="text-center">
-    <img
-      src="https://static.tildacdn.com/tild3938-3732-4866-b233-623966336431/move1.jpg"
-      alt="office-map"
-      title="office-map"
-      class="img-fluid">
+  <div class="row">
+    <div class="col-sm-12 my-2 text-center">
+      <h2 class="mt-2 mt-lg-5 mb-2 h1" style="font-size: 2rem">Create or edit office</h2>
+      <h4 class="mt-3">
+        <div *ngIf="showMap; else noMap">
+          Country: <span class="choosing-span">Belarus</span>
+          City: <span class="choosing-span">Grodno</span>
+          Address: <span class="choosing-span">Sverdlova str.2</span>
+          floor: <span class="choosing-span">1</span>
+        </div>
+        <ng-template #noMap>Please choose an office</ng-template>
+      </h4>
+    </div>
   </div>
+
+  <app-office-choosing (showMap)="showMap = $event"></app-office-choosing>
+
+  <app-rooms-management-edit *ngIf="showMap"></app-rooms-management-edit>
 
 </div>

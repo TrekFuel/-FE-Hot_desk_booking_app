@@ -1,11 +1,11 @@
-<form class="row mt-4 justify-content-center"
-      [formGroup]="form">
+<form [formGroup]="selectOfficeForm" class="row mt-4 justify-content-center">
 
-  <mat-form-field appearance="outline" class="col-sm-4 my-1 select-form">
-    <mat-label class="">Choose a country</mat-label>
-    <mat-select formControlName="country"
-                (selectionChange)="onSelected($event.value)">
-      <mat-option>--</mat-option>
+  <mat-form-field appearance="outline" class="col-sm-6 col-md-3 my-1 select-form">
+    <mat-label class="">Country</mat-label>
+    <mat-hint>Please choose a country</mat-hint>
+    <mat-select (selectionChange)="onSelected($event)"
+                [hasFocus]="currentFocus === 'country'"
+                formControlName="country">
       <mat-option *ngFor="let option of countryOptions"
                   [value]="option | lowercase">
         {{option}}
@@ -13,11 +13,12 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="col-sm-4 my-1 select-form">
-    <mat-label>Choose a city</mat-label>
-    <mat-select formControlName="city"
-                (selectionChange)="onSelected($event.value)">
-      <mat-option>--</mat-option>
+  <mat-form-field appearance="outline" class="col-sm-6 col-md-3 my-1 select-form">
+    <mat-label>City</mat-label>
+    <mat-hint *ngIf="!!country && country.toLowerCase() !=='new'">Please choose a city</mat-hint>
+    <mat-select (selectionChange)="onSelected($event)"
+                [hasFocus]="currentFocus === 'city'"
+                formControlName="city">
       <mat-option *ngFor="let option of cityOptions"
                   [value]="option | lowercase">
         {{option}}
@@ -25,29 +26,75 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="col-sm-4 my-1 select-form">
-    <mat-label>Choose an office</mat-label>
-    <mat-select formControlName="office"
-                (selectionChange)="onSelected($event.value)">
-      <mat-option>--</mat-option>
-      <mat-option *ngFor="let option of officeOptions"
+  <mat-form-field appearance="outline" class="col-sm-6 col-md-3 my-1 select-form">
+    <mat-label>Address</mat-label>
+    <mat-hint *ngIf="!!city && city.toLowerCase() !=='new'">Please choose an address</mat-hint>
+    <mat-select (selectionChange)="onSelected($event)"
+                [hasFocus]="currentFocus === 'address'"
+                formControlName="address">
+      <mat-option *ngFor="let option of addressOptions"
                   [value]="option | lowercase">
         {{option}}
       </mat-option>
     </mat-select>
   </mat-form-field>
 
-  <div class="col-sm-4">
-    <app-clearable-input (inputMessage)="onInputMessage($event)"
-                         [label]="'Any'"
-                         [disableStatus]="true"
-                         [value]="'some value'">
-    </app-clearable-input>
+  <mat-form-field appearance="outline" class="col-sm-6 col-md-3 mt-1 mb-2 select-form">
+    <mat-label>Floor</mat-label>
+    <mat-hint *ngIf="!!address && address.toLowerCase() !=='new'">Please choose a floor</mat-hint>
+    <mat-select (selectionChange)="onSelected($event)"
+                [hasFocus]="currentFocus === 'floor'"
+                formControlName="floor">
+      <mat-option *ngFor="let option of floorOptions"
+                  [value]="option | lowercase">
+        {{option}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div class="col-sm-6 col-md-3">
+    <mat-form-field appearance="outline">
+      <mat-label>{{!!newSelected ? 'Please enter a new ' + newSelected : ''}}</mat-label>
+      <input (change)="onInputMessage($event)"
+             (input)="checkInputErrors()"
+             [hasFocus]="currentFocus === 'new'"
+             autocomplete="off"
+             formControlName="inputNew"
+             matInput
+             type="text">
+      <button (click)="inputValue = ''"
+              *ngIf="!!inputValue && !!newSelected"
+              aria-label="Clear"
+              mat-button
+              mat-icon-button
+              matSuffix>
+        <mat-icon>close</mat-icon>
+      </button>
+
+
+      <mat-error *ngIf="errorOnInput.isShow">Any text</mat-error>
+    </mat-form-field>
+
   </div>
 
-  <div class="text-center col-sm-8 my-1">
-    <button type="button" class="btn btn-outline-warning mx-3">Edit</button>
-    <button type="button" class="btn btn-outline-danger mx-3">Delete</button>
+  <div class="col-sm-6 col-md-3 btn-div">
+    <button [disabled]="buttonsDisable.apply" class="btn btn-block btn-outline-secondary" type="button">
+      Apply
+    </button>
   </div>
+
+  <div class="col-sm-6 col-md-3 btn-div">
+    <button (click)="onClickShowHide()"
+
+            class="btn btn-block btn-outline-warning"
+            type="button">
+      Edit
+    </button>
+  </div>
+
+  <div class="col-sm-6 col-md-3 btn-div">
+    <button [disabled]="buttonsDisable.delete" class="btn btn-block btn-outline-danger" type="button">Delete</button>
+  </div>
+
 
 </form>

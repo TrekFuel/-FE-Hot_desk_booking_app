@@ -1,5 +1,13 @@
-button {
-  min-width: 100px;
+:host {
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  .btn-div {
+    margin-top: 11px;
+  }
 }
+
 
 
