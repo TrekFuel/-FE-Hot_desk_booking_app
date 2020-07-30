@@ -29,13 +29,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @ViewChild('subMenu') subMenu: ElementRef;
   @ViewChild('btnSubMenu') btnSubMenu: ElementRef;
 
-  // @HostListener('document:click', ['$event']) clickOut(event) {
-  //   let open: boolean = this.btnSubMenu.nativeElement.contains(event.target);
-  //   let close: boolean = this.subMenu.nativeElement.contains(event.target);
-  //   if (!open && !close) {
-  //     this.isVisibleSubmenu = false;
-  //   }
-  // }
+  @HostListener('document:click', ['$event']) clickOut(event) {
+    if (this.btnSubMenu) {
+      let open: boolean = this.btnSubMenu.nativeElement.contains(event.target);
+      let close: boolean = this.subMenu.nativeElement.contains(event.target);
+      if (!open && !close) {
+        this.isVisibleSubmenu = false;
+      }
+    }
+  }
 
   constructor(
     private el: ElementRef,
