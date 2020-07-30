@@ -77,7 +77,7 @@
               matSuffix>
         <mat-icon>close</mat-icon>
       </button>
-      <mat-error *ngIf="inputNewState.hasError('sameName')">
+      <mat-error *ngIf="inputNew.hasError('sameName')">
         You entered an <strong>existing {{newSelected}}.</strong> Please change it.
       </mat-error>
 

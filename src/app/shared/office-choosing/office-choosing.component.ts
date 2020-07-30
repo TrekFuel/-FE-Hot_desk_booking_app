@@ -46,10 +46,6 @@ export class OfficeChoosingComponent implements OnInit {
     return this.selectOfficeForm?.get('inputNew');
   }
 
-  public get inputNewState(): AbstractControl {
-    return this.selectOfficeForm.get('inputNew');
-  }
-
   public get countryOptions(): string[] {
     const country = [...this.countryArr];
     if (this.adminMode) {
@@ -103,21 +99,20 @@ export class OfficeChoosingComponent implements OnInit {
 
   inputNewDataFor(source: string): void {
     console.log('inputNewData');
-    this.inputNewState.enable();
+    this.inputNew.enable();
     this.currentFocus = SelectorsName.new;
     this.newSelected = source;
   }
 
   enableNextSelection(): void {
-    console.log('1');
     if (this.country?.value && this.country.value.toLowerCase() !== SelectorsName.new) {
-      this.selectOfficeForm.controls['city'].enable();
+      this.city.enable();
       this.currentFocus = SelectorsName.city;
       if (this.city?.value && this.city.value.toLowerCase() !== SelectorsName.new) {
-        this.selectOfficeForm.controls['address'].enable();
+        this.address.enable();
         this.currentFocus = SelectorsName.address;
         if (this.address?.value && this.address.value.toLowerCase() !== SelectorsName.new) {
-          this.selectOfficeForm.controls['floor'].enable();
+          this.floor.enable();
           this.currentFocus = SelectorsName.floor;
         }
       }
