@@ -1,15 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, FormGroupDirective, NgForm } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
-import { ValidateSameName } from '../validators/same-name.validator';
-import { ErrorStateMatcher } from '@angular/material/core';
-
-export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
-  }
-}
+import { MyErrorStateMatcher, ValidateSameName } from '../validators/same-name.validator';
+import { SelectorsName } from './selectors-name';
 
 @Component({
   selector: 'app-office-choosing',
@@ -17,14 +10,14 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   styleUrls: ['./office-choosing.component.scss']
 })
 export class OfficeChoosingComponent implements OnInit {
+  SelectorsName = SelectorsName;
   selectOfficeForm: FormGroup;
   matcher = new MyErrorStateMatcher();
   @Output() showMap: EventEmitter<boolean> = new EventEmitter<boolean>();
   isShowMap: boolean = false;
-  currentFocus: string = 'country';
+  currentFocus: string = SelectorsName.country;
   newSelected: string | null = null;
   buttonsDisable: { apply: boolean, edit: boolean, delete: boolean } = { apply: true, edit: true, delete: true };
-  errorOnInput: { isShow: boolean, text: string } = { isShow: false, text: '' };
   checkingInputNames: string[] = ['Belarus', 'Ukraine', 'Russia'];
   countryArr: string[] = ['Belarus', 'Ukraine', 'Russia'];
 
@@ -33,30 +26,29 @@ export class OfficeChoosingComponent implements OnInit {
   constructor() {
   }
 
-  public get country(): string {
-    return this.selectOfficeForm?.get('country').value || '';
+  public get country(): AbstractControl {
+    return this.selectOfficeForm?.get('country');
   }
 
-  public get city(): string {
-    return this.selectOfficeForm?.get('city').value || '';
+  public get city(): AbstractControl {
+    return this.selectOfficeForm?.get('city');
   }
 
-  public get address(): string {
-    return this.selectOfficeForm?.get('address').value || '';
+  public get address(): AbstractControl {
+    return this.selectOfficeForm?.get('address');
   }
 
-  public get floor(): string {
-    return this.selectOfficeForm?.get('floor').value || '';
+  public get floor(): AbstractControl {
+    return this.selectOfficeForm?.get('floor');
   }
 
-  public get inputNew(): string {
-    return this.selectOfficeForm?.get('inputNew').value || '';
+  public get inputNew(): AbstractControl {
+    return this.selectOfficeForm?.get('inputNew');
   }
 
   public get inputNewState(): AbstractControl {
     return this.selectOfficeForm.get('inputNew');
   }
-
 
   public get countryOptions(): string[] {
     const country = [...this.countryArr];
@@ -94,11 +86,15 @@ export class OfficeChoosingComponent implements OnInit {
     this._initChoosingForm();
   }
 
+  onOpenselect(source: string) {
+    console.log(source);
+  }
+
   onSelected(selection: MatSelectChange) {
     let value: string = selection.value.toString().toLowerCase() || '';
     let source: string = selection.source.ngControl.name.toString().toLowerCase() || '';
     this.enableNextSelection();
-    if (value === 'new') {
+    if (value === SelectorsName.new) {
       this.inputNewDataFor(source);
     }
     console.log(this.currentFocus);
@@ -107,22 +103,22 @@ export class OfficeChoosingComponent implements OnInit {
 
   inputNewDataFor(source: string): void {
     console.log('inputNewData');
-    this.selectOfficeForm.controls['inputNew'].enable();
-    this.currentFocus = 'new';
+    this.inputNewState.enable();
+    this.currentFocus = SelectorsName.new;
     this.newSelected = source;
-    this.errorOnInput.isShow = false;
   }
 
   enableNextSelection(): void {
-    if (!!this.country && this.country.toLowerCase() !== 'new') {
+    console.log('1');
+    if (this.country?.value && this.country.value.toLowerCase() !== SelectorsName.new) {
       this.selectOfficeForm.controls['city'].enable();
-      this.currentFocus = 'city';
-      if (!!this.city && this.city.toLowerCase() !== 'new') {
+      this.currentFocus = SelectorsName.city;
+      if (this.city?.value && this.city.value.toLowerCase() !== SelectorsName.new) {
         this.selectOfficeForm.controls['address'].enable();
-        this.currentFocus = 'address';
-        if (!!this.address && this.address.toLowerCase() !== 'new') {
+        this.currentFocus = SelectorsName.address;
+        if (this.address?.value && this.address.value.toLowerCase() !== SelectorsName.new) {
           this.selectOfficeForm.controls['floor'].enable();
-          this.currentFocus = 'floor';
+          this.currentFocus = SelectorsName.floor;
         }
       }
     }
@@ -133,13 +129,8 @@ export class OfficeChoosingComponent implements OnInit {
 
   }
 
-  checkInputErrors() {
-
-
-  }
-
   addNewToSelect(arr: string[]): void {
-    arr.unshift('New');
+    arr.unshift(SelectorsName.new[0].toUpperCase() + SelectorsName.new.substring(1));
   }
 
   onClickShowHide() {

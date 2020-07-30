@@ -1,10 +1,11 @@
 <form [formGroup]="selectOfficeForm" class="row mt-4 justify-content-center">
 
   <mat-form-field appearance="outline" class="col-sm-6 col-md-3 my-1 select-form">
-    <mat-label class="">Country</mat-label>
-    <mat-hint>Please choose a country</mat-hint>
-    <mat-select (selectionChange)="onSelected($event)"
-                [hasFocus]="currentFocus === 'country'"
+    <mat-label>{{SelectorsName.country | titlecase}}</mat-label>
+    <mat-hint>Please choose a {{SelectorsName.country}}</mat-hint>
+    <mat-select (opened)="onOpenselect(SelectorsName.country)"
+                (selectionChange)="onSelected($event)"
+                [hasFocus]="currentFocus === SelectorsName.country"
                 formControlName="country">
       <mat-option *ngFor="let option of countryOptions"
                   [value]="option | lowercase">
@@ -14,10 +15,12 @@
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="col-sm-6 col-md-3 my-1 select-form">
-    <mat-label>City</mat-label>
-    <mat-hint *ngIf="!!country && country.toLowerCase() !=='new'">Please choose a city</mat-hint>
+    <mat-label>{{SelectorsName.city | titlecase}}</mat-label>
+    <mat-hint *ngIf="!!country.value && country.value.toLowerCase() !=='new'">
+      Please choose a {{SelectorsName.city}}
+    </mat-hint>
     <mat-select (selectionChange)="onSelected($event)"
-                [hasFocus]="currentFocus === 'city'"
+                [hasFocus]="currentFocus === SelectorsName.city"
                 formControlName="city">
       <mat-option *ngFor="let option of cityOptions"
                   [value]="option | lowercase">
@@ -27,10 +30,12 @@
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="col-sm-6 col-md-3 my-1 select-form">
-    <mat-label>Address</mat-label>
-    <mat-hint *ngIf="!!city && city.toLowerCase() !=='new'">Please choose an address</mat-hint>
+    <mat-label>{{SelectorsName.address | titlecase}}</mat-label>
+    <mat-hint *ngIf="!!city.value && city.value.toLowerCase() !==SelectorsName.new">
+      Please choose an {{SelectorsName.address}}
+    </mat-hint>
     <mat-select (selectionChange)="onSelected($event)"
-                [hasFocus]="currentFocus === 'address'"
+                [hasFocus]="currentFocus === SelectorsName.address"
                 formControlName="address">
       <mat-option *ngFor="let option of addressOptions"
                   [value]="option | lowercase">
@@ -40,10 +45,12 @@
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="col-sm-6 col-md-3 mt-1 mb-2 select-form">
-    <mat-label>Floor</mat-label>
-    <mat-hint *ngIf="!!address && address.toLowerCase() !=='new'">Please choose a floor</mat-hint>
+    <mat-label>{{SelectorsName.floor | titlecase}}</mat-label>
+    <mat-hint *ngIf="!!address.value && address.value.toLowerCase() !==SelectorsName.new">
+      Please choose a {{SelectorsName.floor}}
+    </mat-hint>
     <mat-select (selectionChange)="onSelected($event)"
-                [hasFocus]="currentFocus === 'floor'"
+                [hasFocus]="currentFocus === SelectorsName.floor"
                 formControlName="floor">
       <mat-option *ngFor="let option of floorOptions"
                   [value]="option | lowercase">
@@ -52,13 +59,13 @@
     </mat-select>
   </mat-form-field>
 
+
   <div class="col-sm-6 col-md-3">
     <mat-form-field appearance="outline">
       <mat-label>{{!!newSelected ? 'Please enter a new ' + newSelected : ''}}</mat-label>
       <input (change)="onInputMessage($event)"
-             (input)="checkInputErrors()"
              [errorStateMatcher]="matcher"
-             [hasFocus]="currentFocus === 'new'"
+             [hasFocus]="currentFocus === SelectorsName.new"
              autocomplete="off" formControlName="inputNew"
              matInput
              type="text">
@@ -85,17 +92,14 @@
   </div>
 
   <div class="col-sm-6 col-md-3 btn-div">
-    <button (click)="onClickShowHide()"
-
-            class="btn btn-block btn-outline-warning"
-            type="button">
-      Edit
+    <button (click)="onClickShowHide()" class="btn btn-block btn-outline-warning" type="button">
+      Edit room
     </button>
   </div>
 
   <div class="col-sm-6 col-md-3 btn-div">
-    <button [disabled]="buttonsDisable.delete" class="btn btn-block btn-outline-danger" type="button">Delete</button>
+    <button [disabled]="buttonsDisable.delete" class="btn btn-block btn-outline-danger" type="button">
+      Delete room
+    </button>
   </div>
-
-
 </form>
