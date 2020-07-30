@@ -2,29 +2,35 @@
   <div class="row text-center mt-4">
     <div class="col-sm-12">
       <p class="name">
-        Elon Musk
+        {{user.userInfo.firstName}} {{user.userInfo.lastName}}
       </p>
     </div>
     <div class="col-sm-12 mt-2">
       <p class="position">
-        CEO
+        Position:
       </p>
     </div>
   </div>
   <div class="row mt-2 text-center">
-    <div class="col-sm-6">
-      <img class="img-fluid"
-           src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Elon_Musk_Royal_Society.jpg/220px-Elon_Musk_Royal_Society.jpg"
-           width="175"
-           height="262"
-           alt="profile-image"
-           title="profile-image">
-    </div>
-    <div class="col-sm-6 mt-3">
+    <div class="col-sm-12 mt-3">
       <ul class="list-group">
-        <li *ngFor="let userField of userFields"
-            class="list-group-item font-italic">
-          {{userField.field}} : {{userField.value}}
+        <li class="list-group-item font-italic">
+          Department:
+        </li>
+        <li class="list-group-item font-italic">
+          Location:
+        </li>
+        <li class="list-group-item font-italic">
+          HR:
+        </li>
+        <li class="list-group-item font-italic">
+          Email: {{user.userInfo.email}}
+        </li>
+        <li class="list-group-item font-italic">
+          Skype:
+        </li>
+        <li class="list-group-item font-italic">
+          Phone:
         </li>
       </ul>
     </div>
