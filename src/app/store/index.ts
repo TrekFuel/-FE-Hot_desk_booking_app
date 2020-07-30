@@ -7,11 +7,10 @@ import { LoaderInterface } from '../layout/loader/models/loader.interface';
 import { loaderReducer } from './reducers/loader.reducer';
 import { MessageStateInterface } from '../layout/message-state/modules/message.interface';
 import { messageStateReducer } from './reducers/messageState.reducer';
-import { UserInterface } from '../shared/models/user.interface';
-
+import { UsersListInterface } from '../users/modules/usersList.interface';
 
 export interface AppState {
-  usersList: UserInterface[];
+  usersList: UsersListInterface;
   auth: LoginInterface;
   loader: LoaderInterface;
   messageState: MessageStateInterface;
