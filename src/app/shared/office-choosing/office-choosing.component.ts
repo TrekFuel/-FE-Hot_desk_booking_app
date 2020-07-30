@@ -24,7 +24,6 @@ export class OfficeChoosingComponent implements OnInit {
   addressArr: string[] = ['Sverdlova str.2', 'Koroleva str.34', 'Svetlova str. 30'];
   floorArr: string[] = ['1', '2'];
 
-
   canEditMode = true;
 
   constructor() {
@@ -187,7 +186,6 @@ export class OfficeChoosingComponent implements OnInit {
           break;
       }
       this.resetInput();
-      this.toggleInputValidators(false);
 
       this.enableNextSelection();
     }
@@ -197,6 +195,7 @@ export class OfficeChoosingComponent implements OnInit {
     this.newSelected = null;
     this.inputNew.disable();
     this.inputNew.reset(null);
+    this.toggleInputValidators(false);
   }
 
 
