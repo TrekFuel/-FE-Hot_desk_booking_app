@@ -1,5 +1,15 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  FormGroupDirective,
+  Validators,
+} from '@angular/forms';
 import { LoginUser } from './models/login-user.model';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
@@ -13,11 +23,13 @@ import { LoginStartAction } from '../../store/actions/auth.actions';
 })
 export class LoginComponent implements OnInit {
   form: FormGroup;
-  @ViewChild(FormGroupDirective, {static: true}) formGroupDirective:
-    FormGroupDirective;
+  @ViewChild(FormGroupDirective, { static: true })
+  formGroupDirective: FormGroupDirective;
   hide = true;
 
   loginUserData: LoginUser;
+
+  constructor(private store$: Store<AppState>) {}
 
   get email() {
     return this.form.get('email');
@@ -27,23 +39,8 @@ export class LoginComponent implements OnInit {
     return this.form.get('password');
   }
 
-  constructor(private store$: Store<AppState>) {
-  }
-
   ngOnInit(): void {
     this._initAuthForm();
-  }
-
-  private _initAuthForm() {
-    this.form = new FormGroup({
-      email: new FormControl('', [
-        Validators.email,
-        Validators.required,
-        Validators.minLength(5),
-        Validators.maxLength(50)
-      ]),
-      password: new FormControl('', Validators.required)
-    });
   }
 
   onLogin() {
@@ -51,7 +48,9 @@ export class LoginComponent implements OnInit {
       email: this.email.value,
       password: this.password.value,
     };
-    this.store$.dispatch(new LoginStartAction({loginData: this.loginUserData}));
+    this.store$.dispatch(
+      new LoginStartAction({ loginData: this.loginUserData })
+    );
     this.formGroupDirective.resetForm();
   }
 
@@ -60,4 +59,15 @@ export class LoginComponent implements OnInit {
     return false;
   }
 
+  private _initAuthForm() {
+    this.form = new FormGroup({
+      email: new FormControl('', [
+        Validators.email,
+        Validators.required,
+        Validators.minLength(5),
+        Validators.maxLength(50),
+      ]),
+      password: new FormControl('', Validators.required),
+    });
+  }
 }

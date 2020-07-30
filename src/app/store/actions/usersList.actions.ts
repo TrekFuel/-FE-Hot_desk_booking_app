@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
-import { MessageStateInterface } from '../../layout/message-state/modules/message.interface';
+import { MessageStateInterface } from '../../layout/message-state/models/message.interface';
 import { UsersRequestPathInterface } from '../../users/modules/requestPath.interface';
 import { GetAllUsersInterface } from '../../shared/models/getAllUsers.interface';
 
