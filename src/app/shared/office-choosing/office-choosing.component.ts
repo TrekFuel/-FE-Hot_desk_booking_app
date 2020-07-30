@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { MyErrorStateMatcher, ValidateSameName } from '../validators/same-name.validator';
 import { SelectorsName } from './selectors-name';
@@ -17,13 +17,49 @@ export class OfficeChoosingComponent implements OnInit {
   isShowMap: boolean = false;
   currentFocus: string = SelectorsName.country;
   newSelected: string | null = null;
-  buttonsDisable: { apply: boolean, edit: boolean, delete: boolean } = { apply: true, edit: true, delete: true };
+  buttonsDisable: { apply: boolean, edit: boolean, delete: boolean } = { apply: false, edit: true, delete: true };
   checkingInputNames: string[] = ['Belarus', 'Ukraine', 'Russia'];
   countryArr: string[] = ['Belarus', 'Ukraine', 'Russia'];
+  cityArr: string[] = ['Minsk', 'Grodno'];
+  addressArr: string[] = ['Sverdlova str.2', 'Koroleva str.34', 'Svetlova str. 30'];
+  floorArr: string[] = ['1', '2'];
 
-  adminMode = true;
+
+  canEditMode = true;
 
   constructor() {
+  }
+
+  public get countryOptions(): string[] {
+    const country = [...this.countryArr];
+    if (this.canEditMode) {
+      this.addNewToSelect(country);
+    }
+    return country;
+  }
+
+  public get cityOptions(): string[] {
+    const city = [...this.cityArr];
+    if (this.canEditMode) {
+      this.addNewToSelect(city);
+    }
+    return city;
+  }
+
+  public get addressOptions(): string[] {
+    const address = [...this.addressArr];
+    if (this.canEditMode) {
+      this.addNewToSelect(address);
+    }
+    return address;
+  }
+
+  public get floorOptions(): string[] {
+    const floor = [...this.floorArr];
+    if (this.canEditMode) {
+      this.addNewToSelect(floor);
+    }
+    return floor;
   }
 
   public get country(): AbstractControl {
@@ -46,55 +82,61 @@ export class OfficeChoosingComponent implements OnInit {
     return this.selectOfficeForm?.get('inputNew');
   }
 
-  public get countryOptions(): string[] {
-    const country = [...this.countryArr];
-    if (this.adminMode) {
-      this.addNewToSelect(country);
-    }
-    return country;
-  }
-
-  public get cityOptions(): string[] {
-    const city = ['Minsk', 'Grodno'];
-    if (this.adminMode) {
-      this.addNewToSelect(city);
-    }
-    return city;
-  }
-
-  public get addressOptions(): string[] {
-    const address = ['Sverdlova str.2', 'Koroleva str.34', 'Svetlova str. 30'];
-    if (this.adminMode) {
-      this.addNewToSelect(address);
-    }
-    return address;
-  }
-
-  public get floorOptions(): string[] {
-    const floor = ['1', '2'];
-    if (this.adminMode) {
-      this.addNewToSelect(floor);
-    }
-    return floor;
-  }
-
   ngOnInit() {
     this._initChoosingForm();
   }
 
-  onOpenselect(source: string) {
-    console.log(source);
+  toggleInputValidators(enable: boolean): void {
+    const inputValidators: ValidatorFn[] = [
+      Validators.required,
+      ValidateSameName(this.checkingInputNames)
+    ];
+    enable ? this.inputNew.setValidators(inputValidators) : this.inputNew.clearValidators();
+    this.inputNew.updateValueAndValidity();
   }
 
-  onSelected(selection: MatSelectChange) {
+  onOpenselect(source: string): void {
+    switch (source) {
+      case this.SelectorsName.country:
+        this.country.setValue(null);
+        break;
+      case this.SelectorsName.city:
+        this.city.setValue(null);
+        break;
+      case this.SelectorsName.address:
+        this.address.setValue(null);
+        break;
+      case this.SelectorsName.floor:
+        this.floor.setValue(null);
+        break;
+      default:
+        break;
+    }
+
+    this.currentFocus = null;
+    this.resetInput();
+
+    if (source !== SelectorsName.floor) {
+      this.floor.setValue(null);
+      this.floor.disable();
+      if (source !== SelectorsName.address) {
+        this.address.setValue(null);
+        this.address.disable();
+        if (source !== SelectorsName.city) {
+          this.city.setValue(null);
+          this.city.disable();
+        }
+      }
+    }
+  }
+
+  onSelected(selection: MatSelectChange): void {
     let value: string = selection.value.toString().toLowerCase() || '';
     let source: string = selection.source.ngControl.name.toString().toLowerCase() || '';
     this.enableNextSelection();
-    if (value === SelectorsName.new) {
+    if (value === SelectorsName.new && this.canEditMode) {
       this.inputNewDataFor(source);
     }
-    console.log(this.currentFocus);
-
   }
 
   inputNewDataFor(source: string): void {
@@ -102,6 +144,7 @@ export class OfficeChoosingComponent implements OnInit {
     this.inputNew.enable();
     this.currentFocus = SelectorsName.new;
     this.newSelected = source;
+    this.toggleInputValidators(true);
   }
 
   enableNextSelection(): void {
@@ -119,10 +162,43 @@ export class OfficeChoosingComponent implements OnInit {
     }
   }
 
-  onInputMessage(message: string): void {
-    console.log('afterInputMessage');
+  onInputMessage(source: string): void {
+    console.log('onInput');
+    const value = this.inputNew?.value;
+    if (this.selectOfficeForm.valid) {
+      switch (source) {
+        case this.SelectorsName.country:
+          this.countryArr.push(value);
+          this.country.setValue(value);
+          break;
+        case this.SelectorsName.city:
+          this.cityArr.push(value);
+          this.city.setValue(value);
+          break;
+        case this.SelectorsName.address:
+          this.addressArr.push(value);
+          this.address.setValue(value);
+          break;
+        case this.SelectorsName.floor:
+          this.floorArr.push(value);
+          this.floor.setValue(value);
+          break;
+        default:
+          break;
+      }
+      this.resetInput();
+      this.toggleInputValidators(false);
 
+      this.enableNextSelection();
+    }
   }
+
+  resetInput(): void {
+    this.newSelected = null;
+    this.inputNew.disable();
+    this.inputNew.reset(null);
+  }
+
 
   addNewToSelect(arr: string[]): void {
     arr.unshift(SelectorsName.new[0].toUpperCase() + SelectorsName.new.substring(1));
@@ -133,17 +209,20 @@ export class OfficeChoosingComponent implements OnInit {
     this.showMap.emit(this.isShowMap);
   }
 
-  private _initChoosingForm() {
-    this.selectOfficeForm = new FormGroup({
-      country: new FormControl({ value: '', disabled: false }),
-      city: new FormControl({ value: '', disabled: true }),
-      address: new FormControl({ value: '', disabled: true }),
-      floor: new FormControl({ value: '', disabled: true }),
-      inputNew: new FormControl({ value: '', disabled: true }, [
-        ValidateSameName(this.checkingInputNames)
-      ])
-    });
+  onSubmit() {
+    console.log(this.selectOfficeForm.value);
   }
 
-
+  private _initChoosingForm(): void {
+    this.selectOfficeForm = new FormGroup({
+      country: new FormControl({ value: null, disabled: false }),
+      city: new FormControl({ value: null, disabled: true }),
+      address: new FormControl({ value: null, disabled: true }),
+      floor: new FormControl({ value: null, disabled: true }),
+      inputNew: new FormControl({ value: null, disabled: true })
+    });
+    if (!this.canEditMode) {
+      this.selectOfficeForm.removeControl('inputNew');
+    }
+  }
 }
