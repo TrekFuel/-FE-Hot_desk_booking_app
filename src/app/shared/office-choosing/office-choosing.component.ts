@@ -104,6 +104,25 @@ export class OfficeChoosingComponent implements OnInit {
   }
 
   onOpenselect(source: string): void {
+    this.clearSelect(source);
+    this.currentFocus = null;
+    this.resetInput();
+
+    if (source !== SelectorsName.floor) {
+      this.selectOfficeForm.patchValue({ floor: null });
+      this.floor.disable();
+      if (source !== SelectorsName.address) {
+        this.selectOfficeForm.patchValue({ address: null });
+        this.address.disable();
+        if (source !== SelectorsName.city) {
+          this.selectOfficeForm.patchValue({ city: null });
+          this.city.disable();
+        }
+      }
+    }
+  }
+
+  clearSelect(source: string): void {
     // for correct work of double click on same select to (selectionChange) work
     switch (source) {
       case this.SelectorsName.country:
@@ -120,22 +139,6 @@ export class OfficeChoosingComponent implements OnInit {
         break;
       default:
         break;
-    }
-
-    this.currentFocus = null;
-    this.resetInput();
-
-    if (source !== SelectorsName.floor) {
-      this.selectOfficeForm.patchValue({ floor: null });
-      this.floor.disable();
-      if (source !== SelectorsName.address) {
-        this.selectOfficeForm.patchValue({ address: null });
-        this.address.disable();
-        if (source !== SelectorsName.city) {
-          this.selectOfficeForm.patchValue({ city: null });
-          this.city.disable();
-        }
-      }
     }
   }
 
