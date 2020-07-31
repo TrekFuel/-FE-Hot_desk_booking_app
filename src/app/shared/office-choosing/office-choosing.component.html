@@ -3,7 +3,7 @@
   <mat-form-field appearance="outline" class="col-sm-6 col-md-3 my-1 select-form">
     <mat-label>{{SelectorsName.country | titlecase}}</mat-label>
     <mat-hint>Please choose a {{SelectorsName.country}}</mat-hint>
-    <mat-select (opened)="onOpenselect(SelectorsName.country)"
+    <mat-select (opened)="onOpenSelect(SelectorsName.country)"
                 (selectionChange)="onSelected($event)"
                 [hasFocus]="currentFocus === SelectorsName.country"
                 formControlName="country">
@@ -19,7 +19,7 @@
     <mat-hint *ngIf="!!country.value && country.value.toLowerCase() !=='new'">
       Please choose a {{SelectorsName.city}}
     </mat-hint>
-    <mat-select (opened)="onOpenselect(SelectorsName.city)"
+    <mat-select (opened)="onOpenSelect(SelectorsName.city)"
                 (selectionChange)="onSelected($event)"
                 [hasFocus]="currentFocus === SelectorsName.city"
                 formControlName="city">
@@ -35,7 +35,7 @@
     <mat-hint *ngIf="!!city.value && city.value.toLowerCase() !==SelectorsName.new">
       Please choose an {{SelectorsName.address}}
     </mat-hint>
-    <mat-select (opened)="onOpenselect(SelectorsName.address)"
+    <mat-select (opened)="onOpenSelect(SelectorsName.address)"
                 (selectionChange)="onSelected($event)"
                 [hasFocus]="currentFocus === SelectorsName.address"
                 formControlName="address">
@@ -51,7 +51,7 @@
     <mat-hint *ngIf="!!address.value && address.value.toLowerCase() !==SelectorsName.new">
       Please choose a {{SelectorsName.floor}}
     </mat-hint>
-    <mat-select (opened)="onOpenselect(SelectorsName.floor)"
+    <mat-select (opened)="onOpenSelect(SelectorsName.floor)"
                 (selectionChange)="onSelected($event)"
                 [hasFocus]="currentFocus === SelectorsName.floor"
                 formControlName="floor">
@@ -90,9 +90,9 @@
   </div>
 
   <div [ngClass]="{'offset-sm-6': !canEditMode, 'offset-md-9': !canEditMode }" class="btn-div col-sm-6 col-md-3">
-    <button [disabled]="!floor.value"
-            class="btn btn-block btn-secondary"
-            type="submit">
+    <button
+      class="btn btn-block btn-secondary"
+      type="submit">
       Choose
     </button>
   </div>

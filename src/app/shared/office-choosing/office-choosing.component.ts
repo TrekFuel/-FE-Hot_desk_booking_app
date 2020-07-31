@@ -27,12 +27,14 @@ export class OfficeChoosingComponent implements OnInit {
   buttonsDisable: { edit: boolean, delete: boolean } = { edit: true, delete: true };
 
   countryArr: string[] = ['Belarus', 'Ukraine', 'Russia'];
-  cityArr: string[] = ['Grodno'];
+  cityArr: string[] = ['Grodno', 'Minsk'];
+  cityArr2: string[] = ['Kiev', 'Lvov'];
+  cityArr3: string[] = ['Moskva', 'St-Peterburg'];
   addressArr: string[] = ['Sverdlova str.2', 'Koroleva str.34', 'Svetlova str. 30'];
   floorArr: string[] = ['1', '2'];
   // -------------------
 
-  canEditMode = false;
+  canEditMode = true;
 
   constructor(private router: Router, private route: ActivatedRoute) {
   }
@@ -103,26 +105,7 @@ export class OfficeChoosingComponent implements OnInit {
     this.inputNew.updateValueAndValidity();
   }
 
-  onOpenselect(source: string): void {
-    this.clearSelect(source);
-    this.currentFocus = null;
-    this.resetInput();
-
-    if (source !== SelectorsName.floor) {
-      this.selectOfficeForm.patchValue({ floor: null });
-      this.floor.disable();
-      if (source !== SelectorsName.address) {
-        this.selectOfficeForm.patchValue({ address: null });
-        this.address.disable();
-        if (source !== SelectorsName.city) {
-          this.selectOfficeForm.patchValue({ city: null });
-          this.city.disable();
-        }
-      }
-    }
-  }
-
-  clearSelect(source: string): void {
+  onOpenSelect(source: string): void {
     // for correct work of double click on same select to (selectionChange) work
     switch (source) {
       case this.SelectorsName.country:
@@ -140,23 +123,39 @@ export class OfficeChoosingComponent implements OnInit {
       default:
         break;
     }
+
+    this.currentFocus = null;
+    if (this.canEditMode) {
+      this.resetInput();
+    }
+
+    if (source !== SelectorsName.floor) {
+      this.selectOfficeForm.patchValue({ floor: null });
+      this.floor.disable();
+      if (source !== SelectorsName.address) {
+        this.selectOfficeForm.patchValue({ address: null });
+        this.address.disable();
+        if (source !== SelectorsName.city) {
+          this.selectOfficeForm.patchValue({ city: null });
+          this.city.disable();
+        }
+      }
+    }
   }
 
   onSelected(selection: MatSelectChange): void {
     let value: string = selection.value.toString().toLowerCase() || '';
     let source: string = selection.source.ngControl.name.toString().toLowerCase() || '';
-    this.enableNextSelection();
-    if (value === SelectorsName.new && this.canEditMode) {
-      this.inputNewDataFor(source);
-    }
-  }
 
-  inputNewDataFor(source: string): void {
-    console.log('inputNewData');
-    this.inputNew.enable();
-    this.currentFocus = SelectorsName.new;
-    this.newSelected = source;
-    this.toggleInputValidators(true);
+
+    if (value === SelectorsName.new && this.canEditMode) {
+      this.newSelected = source;
+      this.inputNew.enable();
+      this.currentFocus = SelectorsName.new;
+      this.toggleInputValidators(true);
+    } else {
+      this.enableNextSelection();
+    }
   }
 
   enableNextSelection(): void {
@@ -175,41 +174,37 @@ export class OfficeChoosingComponent implements OnInit {
   }
 
   onInputMessage(source: string): void {
-    console.log('onInput');
     const value = this.inputNew?.value;
     if (this.selectOfficeForm.valid) {
       switch (source) {
         case this.SelectorsName.country:
           this.countryArr.push(value);
-          this.selectOfficeForm.patchValue({ country: value });
+          this.selectOfficeForm.patchValue({ country: null });
           break;
         case this.SelectorsName.city:
           this.cityArr.push(value);
-          this.selectOfficeForm.patchValue({ city: value });
+          this.selectOfficeForm.patchValue({ city: null });
           break;
         case this.SelectorsName.address:
           this.addressArr.push(value);
-          this.selectOfficeForm.patchValue({ address: value });
+          this.selectOfficeForm.patchValue({ address: null });
           break;
         case this.SelectorsName.floor:
           this.floorArr.push(value);
-          this.selectOfficeForm.patchValue({ floor: value });
+          this.selectOfficeForm.patchValue({ floor: null });
           break;
         default:
           break;
       }
-      this.resetInput();
-
       this.enableNextSelection();
+      this.resetInput();
     }
   }
 
   resetInput(): void {
-    if (this.canEditMode) {
-      this.inputNew.disable();
-      this.inputNew.reset(null);
-      this.toggleInputValidators(false);
-    }
+    this.inputNew.disable();
+    this.inputNew.reset(null);
+    this.toggleInputValidators(false);
     this.newSelected = null;
   }
 
@@ -223,21 +218,27 @@ export class OfficeChoosingComponent implements OnInit {
   }
 
   onSubmit() {
-    this.router.navigate(['.'], {
-      relativeTo: this.route,
-      queryParams: { ...this.selectOfficeForm.value },
-      queryParamsHandling: 'merge' // remove to replace all query params by provided
-      // replaceUrl: true // If we want to replace it in the history instead of adding new value there
-    });
-    console.log(this.selectOfficeForm.value);
+    if (this.selectOfficeForm.valid && !this.newSelected) {
+      const queryParams = { ...this.selectOfficeForm.value };
+      if (this.canEditMode) {
+        delete queryParams.inputNew;
+      }
+      this.router.navigate(['.'], {
+        relativeTo: this.route,
+        queryParams,
+        queryParamsHandling: 'merge' // remove to replace all query params by provided
+        // replaceUrl: true // If we want to replace it in the history instead of adding new value there
+      });
+      console.log(queryParams);
+    }
   }
 
   private _initChoosingForm(): void {
     this.selectOfficeForm = new FormGroup({
-      country: new FormControl({ value: null, disabled: false }),
-      city: new FormControl({ value: null, disabled: true }),
-      address: new FormControl({ value: null, disabled: true }),
-      floor: new FormControl({ value: null, disabled: true }),
+      country: new FormControl({ value: null, disabled: false }, Validators.required),
+      city: new FormControl({ value: null, disabled: true }, Validators.required),
+      address: new FormControl({ value: null, disabled: true }, Validators.required),
+      floor: new FormControl({ value: null, disabled: true }, Validators.required),
       inputNew: new FormControl({ value: null, disabled: true })
     });
     if (!this.canEditMode) {
