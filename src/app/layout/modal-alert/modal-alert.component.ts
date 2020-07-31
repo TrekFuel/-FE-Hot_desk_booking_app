@@ -1,10 +1,14 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   Input,
-  OnInit,
+  ViewChild,
 } from '@angular/core';
 import { ModalAlertInterface } from './models/modal-alert.interface';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store';
+import { modalAlertFinishesAction } from '../../store/actions/modalAlert.action';
 
 @Component({
   selector: 'app-modal-alert',
@@ -12,10 +16,15 @@ import { ModalAlertInterface } from './models/modal-alert.interface';
   styleUrls: ['./modal-alert.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ModalAlertComponent implements OnInit {
-  @Input() public message: ModalAlertInterface;
+export class ModalAlertComponent {
+  @Input() public visibleModal: boolean;
+  @Input() public messageData: ModalAlertInterface;
+  @ViewChild('btnTrue') public btnTrue: ElementRef;
+  @ViewChild('btnFalse') public btnFalse: ElementRef;
 
-  constructor() {}
+  constructor(private store$: Store<AppState>) {}
 
-  ngOnInit(): void {}
+  onClick(): void {
+    this.store$.dispatch(new modalAlertFinishesAction());
+  }
 }

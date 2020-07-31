@@ -19,7 +19,7 @@ import { LogoutStartAction } from '../../store/actions/auth.actions';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
-  public isVisibleSubmenu = false;
+  public isVisibleSubmenu: boolean = false;
   isLoggedIn$: Observable<string>;
 
   @ViewChild('subMenu') subMenu: ElementRef;
@@ -42,21 +42,19 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.isLoggedIn$ = this.store$.pipe(select(userTokenSelector));
   }
 
-  isVisibleSidebar() {
+  isVisibleSidebar(): void {
     this.sidebarServices.onClick();
   }
 
-  onClickSubmenu() {
+  onClickSubmenu(): void {
     this.isVisibleSubmenu = !this.isVisibleSubmenu;
   }
 
-  onLogout() {
+  onLogout(): void {
     this.store$.dispatch(new LogoutStartAction());
   }
-
-  onFormSubmit() {}
 }
