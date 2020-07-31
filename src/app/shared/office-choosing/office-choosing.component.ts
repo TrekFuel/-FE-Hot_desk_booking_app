@@ -3,6 +3,7 @@ import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from
 import { MatSelectChange } from '@angular/material/select';
 import { MyErrorStateMatcher, ValidateSameName } from '../validators/same-name.validator';
 import { SelectorsName } from './selectors-name';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-office-choosing',
@@ -23,7 +24,7 @@ export class OfficeChoosingComponent implements OnInit {
   // temporary variables
   @Output() showMap: EventEmitter<boolean> = new EventEmitter<boolean>();
   isShowMap: boolean = false;
-  buttonsDisable: { apply: boolean, edit: boolean, delete: boolean } = { apply: false, edit: true, delete: true };
+  buttonsDisable: { edit: boolean, delete: boolean } = { edit: true, delete: true };
 
   countryArr: string[] = ['Belarus', 'Ukraine', 'Russia'];
   cityArr: string[] = ['Grodno'];
@@ -33,7 +34,7 @@ export class OfficeChoosingComponent implements OnInit {
 
   canEditMode = false;
 
-  constructor() {
+  constructor(private router: Router, private route: ActivatedRoute) {
   }
 
   public get countryOptions(): string[] {
@@ -209,7 +210,6 @@ export class OfficeChoosingComponent implements OnInit {
     this.newSelected = null;
   }
 
-
   addNewToSelect(arr: string[]): void {
     arr.unshift(SelectorsName.new[0].toUpperCase() + SelectorsName.new.substring(1));
   }
@@ -220,6 +220,12 @@ export class OfficeChoosingComponent implements OnInit {
   }
 
   onSubmit() {
+    this.router.navigate(['.'], {
+      relativeTo: this.route,
+      queryParams: { ...this.selectOfficeForm.value },
+      queryParamsHandling: 'merge' // remove to replace all query params by provided
+      // replaceUrl: true // If we want to replace it in the history instead of adding new value there
+    });
     console.log(this.selectOfficeForm.value);
   }
 
