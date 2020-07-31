@@ -12,19 +12,26 @@ import { SelectorsName } from './selectors-name';
 export class OfficeChoosingComponent implements OnInit {
   SelectorsName = SelectorsName;
   selectOfficeForm: FormGroup;
+  currentFocus: string = SelectorsName.country;
+  checkingInputNames: string[] = ['Belarus', 'Ukraine', 'Russia'];
+
+  // variables for edit only here
   matcher = new MyErrorStateMatcher();
+  newSelected: string | null = null;
+  // ------------------
+
+  // temporary variables
   @Output() showMap: EventEmitter<boolean> = new EventEmitter<boolean>();
   isShowMap: boolean = false;
-  currentFocus: string = SelectorsName.country;
-  newSelected: string | null = null;
   buttonsDisable: { apply: boolean, edit: boolean, delete: boolean } = { apply: false, edit: true, delete: true };
-  checkingInputNames: string[] = ['Belarus', 'Ukraine', 'Russia'];
+
   countryArr: string[] = ['Belarus', 'Ukraine', 'Russia'];
-  cityArr: string[] = ['Minsk', 'Grodno'];
+  cityArr: string[] = ['Grodno'];
   addressArr: string[] = ['Sverdlova str.2', 'Koroleva str.34', 'Svetlova str. 30'];
   floorArr: string[] = ['1', '2'];
+  // -------------------
 
-  canEditMode = true;
+  canEditMode = false;
 
   constructor() {
   }
@@ -85,6 +92,7 @@ export class OfficeChoosingComponent implements OnInit {
     this._initChoosingForm();
   }
 
+  // ToDo in some case when you back your choice on selects, validators don`t turn off
   toggleInputValidators(enable: boolean): void {
     const inputValidators: ValidatorFn[] = [
       Validators.required,
@@ -95,18 +103,19 @@ export class OfficeChoosingComponent implements OnInit {
   }
 
   onOpenselect(source: string): void {
+    // for correct work of double click on same select to (selectionChange) work
     switch (source) {
       case this.SelectorsName.country:
-        this.country.setValue(null);
+        this.selectOfficeForm.patchValue({ country: null });
         break;
       case this.SelectorsName.city:
-        this.city.setValue(null);
+        this.selectOfficeForm.patchValue({ city: null });
         break;
       case this.SelectorsName.address:
-        this.address.setValue(null);
+        this.selectOfficeForm.patchValue({ address: null });
         break;
       case this.SelectorsName.floor:
-        this.floor.setValue(null);
+        this.selectOfficeForm.patchValue({ floor: null });
         break;
       default:
         break;
@@ -116,13 +125,13 @@ export class OfficeChoosingComponent implements OnInit {
     this.resetInput();
 
     if (source !== SelectorsName.floor) {
-      this.floor.setValue(null);
+      this.selectOfficeForm.patchValue({ floor: null });
       this.floor.disable();
       if (source !== SelectorsName.address) {
-        this.address.setValue(null);
+        this.selectOfficeForm.patchValue({ address: null });
         this.address.disable();
         if (source !== SelectorsName.city) {
-          this.city.setValue(null);
+          this.selectOfficeForm.patchValue({ city: null });
           this.city.disable();
         }
       }
@@ -168,19 +177,19 @@ export class OfficeChoosingComponent implements OnInit {
       switch (source) {
         case this.SelectorsName.country:
           this.countryArr.push(value);
-          this.country.setValue(value);
+          this.selectOfficeForm.patchValue({ country: value });
           break;
         case this.SelectorsName.city:
           this.cityArr.push(value);
-          this.city.setValue(value);
+          this.selectOfficeForm.patchValue({ city: value });
           break;
         case this.SelectorsName.address:
           this.addressArr.push(value);
-          this.address.setValue(value);
+          this.selectOfficeForm.patchValue({ address: value });
           break;
         case this.SelectorsName.floor:
           this.floorArr.push(value);
-          this.floor.setValue(value);
+          this.selectOfficeForm.patchValue({ floor: value });
           break;
         default:
           break;
@@ -192,10 +201,12 @@ export class OfficeChoosingComponent implements OnInit {
   }
 
   resetInput(): void {
+    if (this.canEditMode) {
+      this.inputNew.disable();
+      this.inputNew.reset(null);
+      this.toggleInputValidators(false);
+    }
     this.newSelected = null;
-    this.inputNew.disable();
-    this.inputNew.reset(null);
-    this.toggleInputValidators(false);
   }
 
 

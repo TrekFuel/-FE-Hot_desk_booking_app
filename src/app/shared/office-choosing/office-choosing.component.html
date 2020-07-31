@@ -87,16 +87,14 @@
       <mat-error *ngIf="inputNew.hasError('required')">
         Value should't be <strong>empty</strong>!
       </mat-error>
-
     </mat-form-field>
-
   </div>
 
-  <div *ngIf="canEditMode" class="col-sm-6 col-md-3 btn-div">
-    <button [disabled]="buttonsDisable.apply"
-            class="btn btn-block btn-outline-secondary"
+  <div [ngClass]="{'offset-sm-6': !canEditMode, 'offset-md-9': !canEditMode }" class="btn-div col-sm-6 col-md-3">
+    <button [disabled]="!floor.value"
+            class="btn btn-block btn-secondary"
             type="submit">
-      Submit
+      Choose
     </button>
   </div>
 
