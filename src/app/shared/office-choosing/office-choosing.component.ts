@@ -1,13 +1,19 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
-import { MyErrorStateMatcher, ValidateSameName } from '../validators/same-name.validator';
+import {
+  MyErrorStateMatcher,
+  ValidateSameName,
+} from '../validators/same-name.validator';
 import { SelectorsName } from './selectors-name';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store';
+import { modalAlertStartAction } from '../../store/actions/modalAlert.action';
 
 @Component({
   selector: 'app-office-choosing',
   templateUrl: './office-choosing.component.html',
-  styleUrls: ['./office-choosing.component.scss']
+  styleUrls: ['./office-choosing.component.scss'],
 })
 export class OfficeChoosingComponent implements OnInit {
   SelectorsName = SelectorsName;
@@ -17,14 +23,17 @@ export class OfficeChoosingComponent implements OnInit {
   isShowMap: boolean = false;
   currentFocus: string = SelectorsName.country;
   newSelected: string | null = null;
-  buttonsDisable: { apply: boolean, edit: boolean, delete: boolean } = { apply: true, edit: true, delete: true };
+  buttonsDisable: { apply: boolean; edit: boolean; delete: boolean } = {
+    apply: true,
+    edit: true,
+    delete: true,
+  };
   checkingInputNames: string[] = ['Belarus', 'Ukraine', 'Russia'];
   countryArr: string[] = ['Belarus', 'Ukraine', 'Russia'];
 
   adminMode = true;
 
-  constructor() {
-  }
+  constructor(private store$: Store<AppState>) {}
 
   public get country(): AbstractControl {
     return this.selectOfficeForm?.get('country');
@@ -88,13 +97,13 @@ export class OfficeChoosingComponent implements OnInit {
 
   onSelected(selection: MatSelectChange) {
     let value: string = selection.value.toString().toLowerCase() || '';
-    let source: string = selection.source.ngControl.name.toString().toLowerCase() || '';
+    let source: string =
+      selection.source.ngControl.name.toString().toLowerCase() || '';
     this.enableNextSelection();
     if (value === SelectorsName.new) {
       this.inputNewDataFor(source);
     }
     console.log(this.currentFocus);
-
   }
 
   inputNewDataFor(source: string): void {
@@ -105,13 +114,22 @@ export class OfficeChoosingComponent implements OnInit {
   }
 
   enableNextSelection(): void {
-    if (this.country?.value && this.country.value.toLowerCase() !== SelectorsName.new) {
+    if (
+      this.country?.value &&
+      this.country.value.toLowerCase() !== SelectorsName.new
+    ) {
       this.city.enable();
       this.currentFocus = SelectorsName.city;
-      if (this.city?.value && this.city.value.toLowerCase() !== SelectorsName.new) {
+      if (
+        this.city?.value &&
+        this.city.value.toLowerCase() !== SelectorsName.new
+      ) {
         this.address.enable();
         this.currentFocus = SelectorsName.address;
-        if (this.address?.value && this.address.value.toLowerCase() !== SelectorsName.new) {
+        if (
+          this.address?.value &&
+          this.address.value.toLowerCase() !== SelectorsName.new
+        ) {
           this.floor.enable();
           this.currentFocus = SelectorsName.floor;
         }
@@ -121,16 +139,30 @@ export class OfficeChoosingComponent implements OnInit {
 
   onInputMessage(message: string): void {
     console.log('afterInputMessage');
-
   }
 
   addNewToSelect(arr: string[]): void {
-    arr.unshift(SelectorsName.new[0].toUpperCase() + SelectorsName.new.substring(1));
+    arr.unshift(
+      SelectorsName.new[0].toUpperCase() + SelectorsName.new.substring(1)
+    );
   }
 
   onClickShowHide() {
     this.isShowMap = !this.isShowMap;
     this.showMap.emit(this.isShowMap);
+    this.store$.dispatch(
+      new modalAlertStartAction({
+        messageModal: {
+          message: 'Hello',
+          btnTrue: 'Yes',
+          btnFalse: 'No',
+          btnStyle: {
+            btnFalse: 'alert-warning',
+            btnTrue: 'alert-success',
+          },
+        },
+      })
+    );
   }
 
   private _initChoosingForm() {
@@ -140,10 +172,8 @@ export class OfficeChoosingComponent implements OnInit {
       address: new FormControl({ value: '', disabled: true }),
       floor: new FormControl({ value: '', disabled: true }),
       inputNew: new FormControl({ value: '', disabled: true }, [
-        ValidateSameName(this.checkingInputNames)
-      ])
+        ValidateSameName(this.checkingInputNames),
+      ]),
     });
   }
-
-
 }

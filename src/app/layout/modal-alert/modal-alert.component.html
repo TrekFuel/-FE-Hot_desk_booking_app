@@ -1,15 +1,31 @@
-<div class="modal-alert">
-
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-body">
-        <p>{{ message.message }}</p>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" type="button">No</button>
-        <button class="btn btn-secondary" data-dismiss="modal" type="button">Yes</button>
+<ng-container *ngIf="messageData.visible">
+  <div class="modal-alert">
+    <div class="modal-alert--content" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <p>{{ messageData.message }}</p>
+        </div>
+        <div class="modal-footer">
+          <button
+            #btnTrue
+            (click)="onClick()"
+            [ngClass]="messageData.btnStyle.btnTrue"
+            class="btn"
+            type="button">
+            {{ messageData.btnTrue }}
+          </button>
+          <button
+            #btnFalse
+            (click)="onClick()"
+            [ngClass]="messageData.btnStyle.btnFalse"
+            class="btn"
+            data-dismiss="modal"
+            type="button">
+            {{ messageData.btnFalse }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
+</ng-container>
 
-</div>
