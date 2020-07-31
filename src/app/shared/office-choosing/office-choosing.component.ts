@@ -4,6 +4,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { MyErrorStateMatcher, ValidateSameName } from '../validators/same-name.validator';
 import { SelectorsName } from './selectors-name';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SelectorsModel } from '../models/selectors.model';
 
 @Component({
   selector: 'app-office-choosing',
@@ -11,6 +12,45 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./office-choosing.component.scss']
 })
 export class OfficeChoosingComponent implements OnInit {
+
+  selectorsModel: SelectorsModel = {
+    country: ['Belarus', 'Russia', 'USA'],
+    city: [
+      { country: 'Belarus', city: 'Minsk' },
+      { country: 'Belarus', city: 'Grodno' },
+      { country: 'Belarus', city: 'Mogilev' },
+      { country: 'Russia', city: 'Moskva' },
+      { country: 'Russia', city: 'St-Peterburg' },
+      { country: 'Russia', city: 'Ufa' },
+      { country: 'USA', city: 'New York' },
+      { country: 'USA', city: 'Atlanta' },
+      { country: 'USA', city: 'Las Vegas' }
+    ],
+    address: [
+      { city: 'Minsk', address: 'Lenina str. 1', addressId: '1' },
+      { city: 'Minsk', address: 'Sverdlova str. 15/1', addressId: '2' },
+      { city: 'Minsk', address: 'Kazinca str. 134', addressId: '3' },
+      { city: 'Grodno', address: 'Mira str. 13', addressId: '4' },
+      { city: 'Grodno', address: 'Repina str. 33', addressId: '5' },
+      { city: 'Grodno', address: 'Tavlaya str. 7', addressId: '6' },
+      { city: 'Mogilev', address: 'Frunze str. 5', addressId: '7' },
+      { city: 'Mogilev', address: 'Vpered str. 12', addressId: '8' },
+      { city: 'Mogilev', address: 'Glavnaya str. 5', addressId: '9' },
+      { city: 'Moskva', address: 'Kr. Plochad str. 1', addressId: '0' },
+      { city: 'Moskva', address: 'Gagarina str. 1-15', addressId: 'v' },
+      { city: 'St-Peterburg', address: '1-aya str. 1', addressId: 'g' },
+      { city: 'St-Peterburg', address: '2-aya str. 1', addressId: 'f' },
+      { city: 'Ufa', address: 'Some str. 1', addressId: 'f' },
+      { city: 'Ufa', address: 'D2R2 str. 1', addressId: 'r2' },
+      { city: 'New York', address: 'Cross str. 1', addressId: 'r4' },
+      { city: 'New York', address: 'Super str. 4', addressId: 'r6' },
+      { city: 'Atlanta', address: '4e5 str. 4', addressId: 'r2432' },
+      { city: 'Atlanta', address: 'Obama str. 4', addressId: 'r234' },
+      { city: 'Las Vegas', address: 'Gambling str. 4', addressId: '2346' },
+      { city: 'Las Vegas', address: 'Casino#1 str. 4', addressId: '2346' }
+    ]
+  };
+
   SelectorsName = SelectorsName;
   selectOfficeForm: FormGroup;
   currentFocus: string = SelectorsName.country;
