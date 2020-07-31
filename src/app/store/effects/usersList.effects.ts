@@ -10,7 +10,7 @@ import {
 import { UsersServices } from '../../users/users.services';
 import { HttpErrorResponse } from '@angular/common/http';
 import { of } from 'rxjs';
-import { MessageStateInterface } from '../../layout/message-state/modules/message.interface';
+import { MessageStateInterface } from '../../layout/message-state/models/message.interface';
 import { UsersRequestPathInterface } from '../../users/modules/requestPath.interface';
 import { GetAllUsersInterface } from '../../shared/models/getAllUsers.interface';
 

@@ -3,7 +3,7 @@ import { messageStateAnimation } from './message-state.animation';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { Observable } from 'rxjs';
-import { MessageStateInterface } from './modules/message.interface';
+import { MessageStateInterface } from './models/message.interface';
 import { messageSelector } from '../../store/selectors/messageState.selector';
 
 @Component({

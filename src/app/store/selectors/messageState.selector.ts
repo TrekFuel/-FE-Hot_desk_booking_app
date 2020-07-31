@@ -1,6 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { AppState } from '../index';
-import { MessageStateInterface } from '../../layout/message-state/modules/message.interface';
+import { MessageStateInterface } from '../../layout/message-state/models/message.interface';
 
 export const messageStateSelector = createFeatureSelector<
   AppState,

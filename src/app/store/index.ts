@@ -5,7 +5,7 @@ import { authReducer } from './reducers/auth.reducer';
 import { LoginInterface } from './selectors/auth.selectors';
 import { LoaderInterface } from '../layout/loader/models/loader.interface';
 import { loaderReducer } from './reducers/loader.reducer';
-import { MessageStateInterface } from '../layout/message-state/modules/message.interface';
+import { MessageStateInterface } from '../layout/message-state/models/message.interface';
 import { messageStateReducer } from './reducers/messageState.reducer';
 import { UsersListInterface } from '../users/modules/usersList.interface';
 

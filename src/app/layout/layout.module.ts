@@ -8,6 +8,8 @@ import { MaterialModule } from '../material/material-module';
 import { RouterModule } from '@angular/router';
 import { LoaderComponent } from './loader/loader.component';
 import { MessageStateComponent } from './message-state/message-state.component';
+import { ModalAlertContainer } from './modal-alert/modal-alert.container';
+import { ModalAlertComponent } from './modal-alert/modal-alert.component';
 
 @NgModule({
   exports: [
@@ -16,6 +18,7 @@ import { MessageStateComponent } from './message-state/message-state.component';
     SidebarComponent,
     LoaderComponent,
     MessageStateComponent,
+    ModalAlertContainer,
   ],
   imports: [BrowserAnimationsModule, FormsModule, MaterialModule, RouterModule],
   declarations: [
@@ -24,6 +27,8 @@ import { MessageStateComponent } from './message-state/message-state.component';
     SidebarComponent,
     LoaderComponent,
     MessageStateComponent,
+    ModalAlertComponent,
+    ModalAlertContainer,
   ],
 })
 export class LayoutModule {}

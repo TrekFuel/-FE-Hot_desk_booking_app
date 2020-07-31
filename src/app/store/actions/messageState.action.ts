@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { MessageStateInterface } from '../../layout/message-state/modules/message.interface';
+import { MessageStateInterface } from '../../layout/message-state/models/message.interface';
 
 export enum messageSateActionType {
   MESSAGE_START = '[MessageState] Message start',
