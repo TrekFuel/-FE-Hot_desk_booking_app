@@ -1,10 +1,15 @@
-import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { SidebarServices } from './sidebar.services';
 import { sidebarAnimation } from './sidebar.animation';
+import { Observable, Subscription } from 'rxjs';
+import { AuthResponse } from '../../auth/login/models/auth-response.model';
+import { AppState } from '../../store';
+import { Store } from '@ngrx/store';
+import { userSelector } from '../../store/selectors/auth.selectors';
 
 interface BtnSidebarInterface {
-  value: string,
-  route: string,
+  value: string;
+  route: string;
 }
 
 @Component({
@@ -13,18 +18,26 @@ interface BtnSidebarInterface {
   styleUrls: ['./sidebar.component.scss'],
   animations: [sidebarAnimation]
 })
-export class SidebarComponent implements OnInit {
+
+export class SidebarComponent implements OnInit, OnDestroy {
 
   public btnValue: BtnSidebarInterface[] = [
-    { value: 'List Users', route: 'users' },
-    { value: 'Rooms Management', route: 'rooms-management' },
-    { value: 'Rooms Edit', route: 'rooms-management/edit' }
+    {value: 'List Users', route: 'users'},
+    {value: 'Rooms Management', route: 'rooms-management'},
+    {value: 'Rooms Edit', route: 'rooms-management/edit'}
   ];
+
   private _bodyElement: ElementRef;
+
+  user$: Observable<AuthResponse>;
+  subscription$: Subscription;
+  userData: AuthResponse;
 
   constructor(
     private sidebarServices: SidebarServices,
-    private elRef: ElementRef, private renderer: Renderer2) {
+    private elRef: ElementRef,
+    private renderer: Renderer2,
+    private store$: Store<AppState>) {
   }
 
   get isVisibleSidebar() {
@@ -33,21 +46,33 @@ export class SidebarComponent implements OnInit {
   }
 
   closeSidebar(event): void {
-    if(event.target.id === 'component' || event.target.id === 'btnSidebar') {
-     this.sidebarServices.onClick();
+      if (event.target.id === 'component' || event.target.id === 'btnSidebar') {
+        this.sidebarServices.onClick();
     }
   }
 
   ngOnInit(): void {
     this._bodyElement = this.elRef.nativeElement.offsetParent;
+
+    this.user$ = this.store$.select(userSelector);
+    this.subscription$ = this.user$
+      .subscribe((user: AuthResponse) => {
+        if (user && user.token) {
+          this.userData = user;
+        }
+    });
   }
 
   scrollVisible(flag: boolean): void {
-    if(flag) {
+    if (flag) {
       this.renderer.setStyle(this._bodyElement, 'overflow-y', 'hidden');
     } else {
       this.renderer.removeStyle(this._bodyElement, 'overflow-y');
     }
+  }
+
+  ngOnDestroy() {
+    this.subscription$.unsubscribe();
   }
 
 }

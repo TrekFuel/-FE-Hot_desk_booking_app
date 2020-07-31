@@ -1,16 +1,17 @@
-import {Effect, ofType} from '@ngrx/effects';
-import {AuthService} from '../../auth/login/services/auth.service';
-import {Injectable} from '@angular/core';
+import { Effect, ofType } from '@ngrx/effects';
+import { AuthService } from '../../auth/login/services/auth.service';
+import { Injectable } from '@angular/core';
 import {
   authActionType, LoginFailureAction,
   LoginStartAction, LoginSuccessAction, LogoutEndAction,
 } from '../actions/auth.actions';
-import {catchError, map, switchMap} from 'rxjs/operators';
-import {AuthResponse} from '../../auth/login/models/auth-response.model';
-import {environment} from '../../../environments/environment';
-import {HttpErrorResponse} from '@angular/common/http';
-import {of} from 'rxjs';
-import {Actions} from '@ngrx/effects';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { AuthResponse } from '../../auth/login/models/auth-response.model';
+import { environment } from '../../../environments/environment';
+import { HttpErrorResponse } from '@angular/common/http';
+import { of } from 'rxjs';
+import { Actions } from '@ngrx/effects';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthEffects {
@@ -36,6 +37,7 @@ export class AuthEffects {
                 token: response.token,
               };
               localStorage.setItem(environment.localStorageUser, JSON.stringify(user));
+              this.router.navigate(['/profile']);
               return new LoginSuccessAction({loggedInUser: user});
             }),
             catchError((errorResponse: HttpErrorResponse) => {
@@ -51,6 +53,7 @@ export class AuthEffects {
       ofType(authActionType.LOGOUT_START),
       switchMap(() => {
         localStorage.removeItem(environment.localStorageUser);
+        this.router.navigate(['/login']);
         return of(new LogoutEndAction({loggedInUser: null}));
       }),
     );
@@ -58,6 +61,7 @@ export class AuthEffects {
   constructor(
     private actions$: Actions,
     private services$: AuthService,
+    private router: Router,
   ) {
   }
 
