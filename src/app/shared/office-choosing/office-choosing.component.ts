@@ -51,7 +51,6 @@ export class OfficeChoosingComponent implements OnInit {
       { city: 'Las Vegas', address: 'Casino#1 str. 4', addressId: '2346' }
     ]
   };
-
   SelectorsName = SelectorsName;
   selectOfficeForm: FormGroup;
   currentFocus: string = SelectorsName.country;
@@ -67,18 +66,9 @@ export class OfficeChoosingComponent implements OnInit {
   isShowMap: boolean = false;
   buttonsDisable: { edit: boolean, delete: boolean } = { edit: true, delete: true };
 
-  countryArr: string[] = ['Belarus', 'Ukraine', 'Russia'];
-  cityArr: string[] = ['Grodno', 'Minsk'];
-  cityArr2: string[] = ['Kiev', 'Lvov'];
-  cityArr3: string[] = ['Moskva', 'St-Peterburg'];
-  addressArr: string[] = ['Sverdlova str.2', 'Koroleva str.34', 'Svetlova str. 30'];
-  floorArr: string[] = ['1', '2'];
   // -------------------
 
   // new Life
-  currentChoice: { country: string | null, city: string | null, address: string | null, addressId: string } = {
-    country: null, city: null, address: null, addressId: ''
-  };
 
   canEditMode = true;
 
@@ -86,16 +76,14 @@ export class OfficeChoosingComponent implements OnInit {
   }
 
   public get countryOptions(): string[] {
-    const country = [...this.selectorsModel.country];
-    return country;
+    return [...this.selectorsModel.country];
   }
 
   public get cityOptions(): string[] {
     const city = [];
-    if (!!this.currentChoice.country) {
-      let country = this.currentChoice.country.toLowerCase();
+    if (!!this.country.value) {
       this.selectorsModel.city.forEach((item: SelectorsCity) => {
-        if (item.country.toLowerCase() === country) {
+        if (item.country === this.country.value) {
           city.push(item.city);
         }
       });
@@ -105,10 +93,9 @@ export class OfficeChoosingComponent implements OnInit {
 
   public get addressOptions(): string[] {
     const address = [];
-    if (!!this.currentChoice.city) {
-      let city = this.currentChoice.city.toLowerCase();
+    if (!!this.city.value) {
       this.selectorsModel.address.forEach((item: SelectorsAddress) => {
-        if (item.city.toLowerCase() === city) {
+        if (item.city === this.city.value) {
           address.push(item.address);
         }
       });
@@ -128,6 +115,7 @@ export class OfficeChoosingComponent implements OnInit {
     return this.selectOfficeForm?.get('address');
   }
 
+
   // public get floor(): AbstractControl {
   //   return this.selectOfficeForm?.get('floor');
   // }
@@ -138,13 +126,18 @@ export class OfficeChoosingComponent implements OnInit {
 
   ngOnInit() {
     this._initChoosingForm();
-    this.country.valueChanges.pipe(distinctUntilChanged())
-      .subscribe((country: string) => this.currentChoice = { country, city: null, address: null, addressId: '' });
-    this.city.valueChanges.pipe(distinctUntilChanged())
-      .subscribe((city: string) => this.currentChoice = { ...this.currentChoice, city, address: null, addressId: '' });
-    this.address.valueChanges.pipe(distinctUntilChanged())
-      .subscribe((city: string) => this.currentChoice = { ...this.currentChoice, city, address: null, addressId: '' });
 
+    this.country.valueChanges.pipe(distinctUntilChanged())
+      .subscribe((country: string) => this.selectOfficeForm.patchValue({ city: null, address: null }));
+
+    this.city.valueChanges.pipe(distinctUntilChanged())
+      .subscribe((city: string) => this.selectOfficeForm.patchValue({ address: null }));
+
+  }
+
+  getAddressIdByAddress(): string {
+    return (!!this.country.value && !!this.city.value && !!this.address.value) ? this.selectorsModel.address
+      .filter((item: SelectorsAddress) => item.city === this.city.value && item.address === this.address.value)[0].addressId : '';
   }
 
   // toggleInputValidators(enable: boolean): void {
@@ -272,21 +265,19 @@ export class OfficeChoosingComponent implements OnInit {
   // }
   //
   onSubmit() {
-    console.log(this.selectOfficeForm.value);
-
-    // if (this.selectOfficeForm.valid && !this.newSelected) {
-    //   const queryParams = { ...this.selectOfficeForm.value };
-    //   if (this.canEditMode) {
-    //     delete queryParams.inputNew;
-    //   }
-    //   this.router.navigate(['.'], {
-    //     relativeTo: this.route,
-    //     queryParams,
-    //     queryParamsHandling: 'merge' // remove to replace all query params by provided
-    //     // replaceUrl: true // If we want to replace it in the history instead of adding new value there
-    //   });
-    //   console.log(queryParams);
-    // }
+    if (this.selectOfficeForm.valid && !this.newSelected) {
+      const queryParams = { ...this.selectOfficeForm.value, addressId: this.getAddressIdByAddress() };
+      // if (this.canEditMode) {
+      //   delete queryParams.inputNew;
+      // }
+      this.router.navigate(['.'], {
+        relativeTo: this.route,
+        queryParams,
+        queryParamsHandling: 'merge' // remove to replace all query params by provided
+        // replaceUrl: true // If we want to replace it in the history instead of adding new value there
+      });
+      console.log(queryParams);
+    }
   }
 
   private _initChoosingForm(): void {

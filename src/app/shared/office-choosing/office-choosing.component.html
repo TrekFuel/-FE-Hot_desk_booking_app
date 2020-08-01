@@ -5,41 +5,32 @@
     <mat-hint>Please choose a {{SelectorsName.country}}</mat-hint>
     <mat-select [hasFocus]="currentFocus === SelectorsName.country"
                 formControlName="country">
-      <mat-option *ngFor="let option of countryOptions" [value]="option | lowercase">{{option}}</mat-option>
+      <mat-option *ngFor="let option of countryOptions" [value]="option">{{option}}</mat-option>
     </mat-select>
+    <mat-error *ngIf="country.hasError('required')">You need to choose {{SelectorsName.country}}</mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="col-sm-6 col-md-3 my-1 select-form">
     <mat-label>{{SelectorsName.city | titlecase}}</mat-label>
-    <mat-hint *ngIf="!!currentChoice.country">Please choose a {{SelectorsName.city}}</mat-hint>
+    <mat-hint *ngIf="!!country.value">Please choose a {{SelectorsName.city}}</mat-hint>
     <mat-select formControlName="city">
-      <mat-option *ngFor="let option of cityOptions" [value]="option | lowercase">{{option}}</mat-option>
+      <mat-option *ngFor="let option of cityOptions" [value]="option">{{option}}</mat-option>
     </mat-select>
+    <mat-error *ngIf="city.hasError('required')">You need to choose {{SelectorsName.city}}</mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="col-sm-6 col-md-3 my-1 select-form">
     <mat-label>{{SelectorsName.address | titlecase}}</mat-label>
-    <mat-hint *ngIf="!!currentChoice.city">Please choose an {{SelectorsName.address}}</mat-hint>
+    <mat-hint *ngIf="!!city.value">Please choose an {{SelectorsName.address}}</mat-hint>
     <mat-select formControlName="address">
-      <mat-option *ngFor="let option of addressOptions" [value]="option | lowercase">{{option}}</mat-option>
+      <mat-option *ngFor="let option of addressOptions" [value]="option">{{option}}</mat-option>
     </mat-select>
+    <mat-error *ngIf="address.hasError('required')">You need to choose {{SelectorsName.address}}</mat-error>
   </mat-form-field>
 
-  <!--  <mat-form-field appearance="outline" class="col-sm-6 col-md-3 mt-1 mb-2 select-form">-->
-  <!--    <mat-label>{{SelectorsName.floor | titlecase}}</mat-label>-->
-  <!--    <mat-hint *ngIf="!!address.value && address.value.toLowerCase() !==SelectorsName.new">-->
-  <!--      Please choose a {{SelectorsName.floor}}-->
-  <!--    </mat-hint>-->
-  <!--    <mat-select (opened)="onOpenSelect(SelectorsName.floor)"-->
-  <!--                (selectionChange)="onSelected($event)"-->
-  <!--                [hasFocus]="currentFocus === SelectorsName.floor"-->
-  <!--                formControlName="floor">-->
-  <!--      <mat-option *ngFor="let option of floorOptions"-->
-  <!--                  [value]="option | lowercase">-->
-  <!--        {{option}}-->
-  <!--      </mat-option>-->
-  <!--    </mat-select>-->
-  <!--  </mat-form-field>-->
+  <div class="btn-div col-sm-6 col-md-3">
+    <button class="btn btn-block btn-outline-secondary" type="submit">Choose</button>
+  </div>
 
   <!--  <div *ngIf="canEditMode" class="col-sm-6 col-md-3">-->
   <!--    <mat-form-field appearance="outline">-->
