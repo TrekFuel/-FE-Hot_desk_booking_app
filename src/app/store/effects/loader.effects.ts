@@ -6,12 +6,18 @@ import {
   loaderFinishAction,
   loaderStartAction,
 } from '../actions/loader.action';
+import { officeChoosingActionType } from '../actions/officeChoosing.action';
 
-const showLoaderAction = [usersListActionType.USERS_LIST_START];
+const showLoaderAction = [
+  usersListActionType.USERS_LIST_START,
+  officeChoosingActionType.SELECTORS_DATA_START,
+];
 
 const hideLoaderAction = [
   usersListActionType.USERS_LIST_FAILURE,
   usersListActionType.USERS_LIST_SUCCESS,
+  officeChoosingActionType.SELECTORS_DATA_SUCCESS,
+  officeChoosingActionType.SELECTORS_DATA_FAILURE,
 ];
 
 @Injectable()
