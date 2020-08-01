@@ -32,55 +32,45 @@
     <button class="btn btn-block btn-outline-secondary" type="submit">Choose</button>
   </div>
 
-  <!--  <div *ngIf="canEditMode" class="col-sm-6 col-md-3">-->
-  <!--    <mat-form-field appearance="outline">-->
-  <!--      <mat-label>{{!!newSelected ? 'Please enter a new ' + newSelected : ''}}</mat-label>-->
-  <!--      <input (keydown.enter)="onInputMessage(newSelected)"-->
-  <!--             [errorStateMatcher]="matcher"-->
-  <!--             [hasFocus]="currentFocus === SelectorsName.new"-->
-  <!--             autocomplete="off" formControlName="inputNew"-->
-  <!--             matInput-->
-  <!--             type="text">-->
+  <div *ngIf="canEditMode" class="col-sm-6 col-md-3">
+    <mat-form-field appearance="outline">
+      <mat-label>{{!!newSelected ? 'Please enter a new ' + newSelected : ''}}</mat-label>
+      <input (keydown.enter)="onInputMessage(newSelected)"
+             [errorStateMatcher]="matcher"
+             [hasFocus]="currentFocus === SelectorsName.new"
+             autocomplete="off" formControlName="inputNew"
+             matInput
+             type="text">
 
-  <!--      <button (click)="selectOfficeForm.patchValue({inputNew: ''})"-->
-  <!--              *ngIf="!!inputNew.value && !!newSelected"-->
-  <!--              aria-label="Clear"-->
-  <!--              mat-button-->
-  <!--              mat-icon-button-->
-  <!--              matSuffix>-->
-  <!--        <mat-icon>close</mat-icon>-->
-  <!--      </button>-->
-  <!--      <mat-error *ngIf="inputNew.hasError('sameName')">-->
-  <!--        You entered an <strong>existing {{newSelected}}.</strong> Please change it.-->
-  <!--      </mat-error>-->
-  <!--      <mat-error *ngIf="inputNew.hasError('required')">-->
-  <!--        Value should't be <strong>empty</strong>!-->
-  <!--      </mat-error>-->
-  <!--    </mat-form-field>-->
-  <!--  </div>-->
+      <button (click)="selectOfficeForm.patchValue({inputNew: ''})"
+              *ngIf="!!inputNew.value && !!newSelected"
+              aria-label="Clear"
+              mat-button
+              mat-icon-button
+              matSuffix>
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-error *ngIf="inputNew.hasError('sameName')">
+        You entered an <strong>existing {{newSelected}}.</strong> Please change it.
+      </mat-error>
+      <mat-error *ngIf="inputNew.hasError('required')">
+        Value should't be <strong>empty</strong>!
+      </mat-error>
+    </mat-form-field>
+  </div>
 
-  <!--  <div [ngClass]="{'offset-sm-6': !canEditMode, 'offset-md-9': !canEditMode }" class="btn-div col-sm-6 col-md-3">-->
-  <!--    <button-->
-  <!--      class="btn btn-block btn-secondary"-->
-  <!--      type="submit">-->
-  <!--      Choose-->
-  <!--    </button>-->
-  <!--  </div>-->
+  <div *ngIf="canEditMode" class="col-sm-6 col-md-3 btn-div offset-md-3">
+    <button
+      class="btn btn-block btn-outline-warning"
+      type="button">
+      Edit room
+    </button>
+  </div>
 
-  <!--  <div *ngIf="canEditMode" class="col-sm-6 col-md-3 btn-div">-->
-  <!--    <button (click)="onClickShowHide()"-->
-  <!--            [disabled]="buttonsDisable.edit"-->
-  <!--            class="btn btn-block btn-outline-warning"-->
-  <!--            type="button">-->
-  <!--      Edit room-->
-  <!--    </button>-->
-  <!--  </div>-->
-
-  <!--  <div *ngIf="canEditMode" class="col-sm-6 col-md-3 btn-div">-->
-  <!--    <button [disabled]="buttonsDisable.delete"-->
-  <!--            class="btn btn-block btn-outline-danger"-->
-  <!--            type="button">-->
-  <!--      Delete room-->
-  <!--    </button>-->
-  <!--  </div>-->
+  <div *ngIf="canEditMode" class="col-sm-6 col-md-3 btn-div">
+    <button class="btn btn-block btn-outline-danger"
+            type="button">
+      Delete room
+    </button>
+  </div>
 </form>

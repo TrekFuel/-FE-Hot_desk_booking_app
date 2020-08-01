@@ -115,14 +115,9 @@ export class OfficeChoosingComponent implements OnInit {
     return this.selectOfficeForm?.get('address');
   }
 
-
-  // public get floor(): AbstractControl {
-  //   return this.selectOfficeForm?.get('floor');
-  // }
-  //
-  // public get inputNew(): AbstractControl {
-  //   return this.selectOfficeForm?.get('inputNew');
-  // }
+  public get inputNew(): AbstractControl {
+    return this.selectOfficeForm?.get('inputNew');
+  }
 
   ngOnInit() {
     this._initChoosingForm();
@@ -220,7 +215,7 @@ export class OfficeChoosingComponent implements OnInit {
   }
 
   //
-  // onInputMessage(source: string): void {
+  onInputMessage(source: string): void {
   //   const value = this.inputNew?.value;
   //   if (this.selectOfficeForm.valid) {
   //     switch (source) {
@@ -262,14 +257,14 @@ export class OfficeChoosingComponent implements OnInit {
   // onClickShowHide() {
   //   this.isShowMap = !this.isShowMap;
   //   this.showMap.emit(this.isShowMap);
-  // }
-  //
+  }
+
   onSubmit() {
-    if (this.selectOfficeForm.valid && !this.newSelected) {
+    if (this.selectOfficeForm.valid) {
       const queryParams = { ...this.selectOfficeForm.value, addressId: this.getAddressIdByAddress() };
-      // if (this.canEditMode) {
-      //   delete queryParams.inputNew;
-      // }
+      if (this.canEditMode) {
+        delete queryParams.inputNew;
+      }
       this.router.navigate(['.'], {
         relativeTo: this.route,
         queryParams,
@@ -285,11 +280,9 @@ export class OfficeChoosingComponent implements OnInit {
       country: new FormControl(null, Validators.required),
       city: new FormControl(null, Validators.required),
       address: new FormControl(null, Validators.required)
-      // floor: new FormControl({ value: null, disabled: true }, Validators.required),
-      // inputNew: new FormControl({ value: null, disabled: true })
     });
-    // if (!this.canEditMode) {
-    //   this.selectOfficeForm.removeControl('inputNew');
-    // }
+    if (this.canEditMode) {
+      this.selectOfficeForm.addControl('inputNew', new FormControl(''));
+    }
   }
 }
