@@ -1,7 +1,7 @@
 export interface SelectorsModel {
-  country: string[],
-  city: SelectorsCity[],
-  address: SelectorsAddress[]
+  country: string[] | null,
+  city: SelectorsCity[] | null,
+  address: SelectorsAddress[] | null
 }
 
 export interface SelectorsCity {
