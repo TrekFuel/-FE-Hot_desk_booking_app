@@ -3,114 +3,93 @@
   <mat-form-field appearance="outline" class="col-sm-6 col-md-3 my-1 select-form">
     <mat-label>{{SelectorsName.country | titlecase}}</mat-label>
     <mat-hint>Please choose a {{SelectorsName.country}}</mat-hint>
-    <mat-select (opened)="onOpenSelect(SelectorsName.country)"
-                (selectionChange)="onSelected($event)"
-                [hasFocus]="currentFocus === SelectorsName.country"
+    <mat-select [hasFocus]="currentFocus === SelectorsName.country"
                 formControlName="country">
-      <mat-option *ngFor="let option of countryOptions"
-                  [value]="option | lowercase">
-        {{option}}
-      </mat-option>
+      <mat-option *ngFor="let option of countryOptions" [value]="option | lowercase">{{option}}</mat-option>
     </mat-select>
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="col-sm-6 col-md-3 my-1 select-form">
     <mat-label>{{SelectorsName.city | titlecase}}</mat-label>
-    <mat-hint *ngIf="!!country.value && country.value.toLowerCase() !=='new'">
-      Please choose a {{SelectorsName.city}}
-    </mat-hint>
-    <mat-select (opened)="onOpenSelect(SelectorsName.city)"
-                (selectionChange)="onSelected($event)"
-                [hasFocus]="currentFocus === SelectorsName.city"
-                formControlName="city">
-      <mat-option *ngFor="let option of cityOptions"
-                  [value]="option | lowercase">
-        {{option}}
-      </mat-option>
+    <mat-hint *ngIf="!!currentChoice.country">Please choose a {{SelectorsName.city}}</mat-hint>
+    <mat-select formControlName="city">
+      <mat-option *ngFor="let option of cityOptions" [value]="option | lowercase">{{option}}</mat-option>
     </mat-select>
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="col-sm-6 col-md-3 my-1 select-form">
     <mat-label>{{SelectorsName.address | titlecase}}</mat-label>
-    <mat-hint *ngIf="!!city.value && city.value.toLowerCase() !==SelectorsName.new">
-      Please choose an {{SelectorsName.address}}
-    </mat-hint>
-    <mat-select (opened)="onOpenSelect(SelectorsName.address)"
-                (selectionChange)="onSelected($event)"
-                [hasFocus]="currentFocus === SelectorsName.address"
-                formControlName="address">
-      <mat-option *ngFor="let option of addressOptions"
-                  [value]="option | lowercase">
-        {{option}}
-      </mat-option>
+    <mat-hint *ngIf="!!currentChoice.city">Please choose an {{SelectorsName.address}}</mat-hint>
+    <mat-select formControlName="address">
+      <mat-option *ngFor="let option of addressOptions" [value]="option | lowercase">{{option}}</mat-option>
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="col-sm-6 col-md-3 mt-1 mb-2 select-form">
-    <mat-label>{{SelectorsName.floor | titlecase}}</mat-label>
-    <mat-hint *ngIf="!!address.value && address.value.toLowerCase() !==SelectorsName.new">
-      Please choose a {{SelectorsName.floor}}
-    </mat-hint>
-    <mat-select (opened)="onOpenSelect(SelectorsName.floor)"
-                (selectionChange)="onSelected($event)"
-                [hasFocus]="currentFocus === SelectorsName.floor"
-                formControlName="floor">
-      <mat-option *ngFor="let option of floorOptions"
-                  [value]="option | lowercase">
-        {{option}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+  <!--  <mat-form-field appearance="outline" class="col-sm-6 col-md-3 mt-1 mb-2 select-form">-->
+  <!--    <mat-label>{{SelectorsName.floor | titlecase}}</mat-label>-->
+  <!--    <mat-hint *ngIf="!!address.value && address.value.toLowerCase() !==SelectorsName.new">-->
+  <!--      Please choose a {{SelectorsName.floor}}-->
+  <!--    </mat-hint>-->
+  <!--    <mat-select (opened)="onOpenSelect(SelectorsName.floor)"-->
+  <!--                (selectionChange)="onSelected($event)"-->
+  <!--                [hasFocus]="currentFocus === SelectorsName.floor"-->
+  <!--                formControlName="floor">-->
+  <!--      <mat-option *ngFor="let option of floorOptions"-->
+  <!--                  [value]="option | lowercase">-->
+  <!--        {{option}}-->
+  <!--      </mat-option>-->
+  <!--    </mat-select>-->
+  <!--  </mat-form-field>-->
 
-  <div *ngIf="canEditMode" class="col-sm-6 col-md-3">
-    <mat-form-field appearance="outline">
-      <mat-label>{{!!newSelected ? 'Please enter a new ' + newSelected : ''}}</mat-label>
-      <input (keydown.enter)="onInputMessage(newSelected)"
-             [errorStateMatcher]="matcher"
-             [hasFocus]="currentFocus === SelectorsName.new"
-             autocomplete="off" formControlName="inputNew"
-             matInput
-             type="text">
+  <!--  <div *ngIf="canEditMode" class="col-sm-6 col-md-3">-->
+  <!--    <mat-form-field appearance="outline">-->
+  <!--      <mat-label>{{!!newSelected ? 'Please enter a new ' + newSelected : ''}}</mat-label>-->
+  <!--      <input (keydown.enter)="onInputMessage(newSelected)"-->
+  <!--             [errorStateMatcher]="matcher"-->
+  <!--             [hasFocus]="currentFocus === SelectorsName.new"-->
+  <!--             autocomplete="off" formControlName="inputNew"-->
+  <!--             matInput-->
+  <!--             type="text">-->
 
-      <button (click)="selectOfficeForm.patchValue({inputNew: ''})"
-              *ngIf="!!inputNew.value && !!newSelected"
-              aria-label="Clear"
-              mat-button
-              mat-icon-button
-              matSuffix>
-        <mat-icon>close</mat-icon>
-      </button>
-      <mat-error *ngIf="inputNew.hasError('sameName')">
-        You entered an <strong>existing {{newSelected}}.</strong> Please change it.
-      </mat-error>
-      <mat-error *ngIf="inputNew.hasError('required')">
-        Value should't be <strong>empty</strong>!
-      </mat-error>
-    </mat-form-field>
-  </div>
+  <!--      <button (click)="selectOfficeForm.patchValue({inputNew: ''})"-->
+  <!--              *ngIf="!!inputNew.value && !!newSelected"-->
+  <!--              aria-label="Clear"-->
+  <!--              mat-button-->
+  <!--              mat-icon-button-->
+  <!--              matSuffix>-->
+  <!--        <mat-icon>close</mat-icon>-->
+  <!--      </button>-->
+  <!--      <mat-error *ngIf="inputNew.hasError('sameName')">-->
+  <!--        You entered an <strong>existing {{newSelected}}.</strong> Please change it.-->
+  <!--      </mat-error>-->
+  <!--      <mat-error *ngIf="inputNew.hasError('required')">-->
+  <!--        Value should't be <strong>empty</strong>!-->
+  <!--      </mat-error>-->
+  <!--    </mat-form-field>-->
+  <!--  </div>-->
 
-  <div [ngClass]="{'offset-sm-6': !canEditMode, 'offset-md-9': !canEditMode }" class="btn-div col-sm-6 col-md-3">
-    <button
-      class="btn btn-block btn-secondary"
-      type="submit">
-      Choose
-    </button>
-  </div>
+  <!--  <div [ngClass]="{'offset-sm-6': !canEditMode, 'offset-md-9': !canEditMode }" class="btn-div col-sm-6 col-md-3">-->
+  <!--    <button-->
+  <!--      class="btn btn-block btn-secondary"-->
+  <!--      type="submit">-->
+  <!--      Choose-->
+  <!--    </button>-->
+  <!--  </div>-->
 
-  <div *ngIf="canEditMode" class="col-sm-6 col-md-3 btn-div">
-    <button (click)="onClickShowHide()"
-            [disabled]="buttonsDisable.edit"
-            class="btn btn-block btn-outline-warning"
-            type="button">
-      Edit room
-    </button>
-  </div>
+  <!--  <div *ngIf="canEditMode" class="col-sm-6 col-md-3 btn-div">-->
+  <!--    <button (click)="onClickShowHide()"-->
+  <!--            [disabled]="buttonsDisable.edit"-->
+  <!--            class="btn btn-block btn-outline-warning"-->
+  <!--            type="button">-->
+  <!--      Edit room-->
+  <!--    </button>-->
+  <!--  </div>-->
 
-  <div *ngIf="canEditMode" class="col-sm-6 col-md-3 btn-div">
-    <button [disabled]="buttonsDisable.delete"
-            class="btn btn-block btn-outline-danger"
-            type="button">
-      Delete room
-    </button>
-  </div>
+  <!--  <div *ngIf="canEditMode" class="col-sm-6 col-md-3 btn-div">-->
+  <!--    <button [disabled]="buttonsDisable.delete"-->
+  <!--            class="btn btn-block btn-outline-danger"-->
+  <!--            type="button">-->
+  <!--      Delete room-->
+  <!--    </button>-->
+  <!--  </div>-->
 </form>
