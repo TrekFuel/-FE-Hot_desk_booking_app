@@ -35,7 +35,7 @@
   <div *ngIf="canEditMode" class="col-sm-6 col-md-3">
     <mat-form-field appearance="outline">
       <mat-label>{{!!newSelected ? 'Please enter a new ' + newSelected : ''}}</mat-label>
-      <input (keydown.enter)="onInputMessage(newSelected)"
+      <input (keydown.enter)="onInputMessage(newSelected, $event)"
              [errorStateMatcher]="matcher"
              [hasFocus]="currentFocus === SelectorsName.new"
              autocomplete="off" formControlName="inputNew"
