@@ -1,18 +1,37 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
-import { MyErrorStateMatcher, ValidateSameName } from '../validators/same-name.validator';
+import {
+  MyErrorStateMatcher,
+  ValidateSameName,
+} from '../validators/same-name.validator';
 import { SelectorsName } from './selectors-name';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SelectorsModel } from '../models/selectors.model';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store';
+import { officeChoosingStartAction } from '../../store/actions/officeChoosing.action';
+import { selectorsData } from '../../store/selectors/officeChosing.selectors';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-office-choosing',
   templateUrl: './office-choosing.component.html',
-  styleUrls: ['./office-choosing.component.scss']
+  styleUrls: ['./office-choosing.component.scss'],
 })
-export class OfficeChoosingComponent implements OnInit {
-
+export class OfficeChoosingComponent implements OnInit, OnDestroy {
   selectorsModel: SelectorsModel = {
     country: ['Belarus', 'Russia', 'USA'],
     city: [
@@ -24,7 +43,7 @@ export class OfficeChoosingComponent implements OnInit {
       { country: 'Russia', city: 'Ufa' },
       { country: 'USA', city: 'New York' },
       { country: 'USA', city: 'Atlanta' },
-      { country: 'USA', city: 'Las Vegas' }
+      { country: 'USA', city: 'Las Vegas' },
     ],
     address: [
       { city: 'Minsk', address: 'Lenina str. 1', addressId: '1' },
@@ -47,8 +66,8 @@ export class OfficeChoosingComponent implements OnInit {
       { city: 'Atlanta', address: '4e5 str. 4', addressId: 'r2432' },
       { city: 'Atlanta', address: 'Obama str. 4', addressId: 'r234' },
       { city: 'Las Vegas', address: 'Gambling str. 4', addressId: '2346' },
-      { city: 'Las Vegas', address: 'Casino#1 str. 4', addressId: '2346' }
-    ]
+      { city: 'Las Vegas', address: 'Casino#1 str. 4', addressId: '2346' },
+    ],
   };
 
   SelectorsName = SelectorsName;
@@ -64,19 +83,34 @@ export class OfficeChoosingComponent implements OnInit {
   // temporary variables
   @Output() showMap: EventEmitter<boolean> = new EventEmitter<boolean>();
   isShowMap: boolean = false;
-  buttonsDisable: { edit: boolean, delete: boolean } = { edit: true, delete: true };
+  buttonsDisable: { edit: boolean; delete: boolean } = {
+    edit: true,
+    delete: true,
+  };
 
   countryArr: string[] = ['Belarus', 'Ukraine', 'Russia'];
   cityArr: string[] = ['Grodno', 'Minsk'];
   cityArr2: string[] = ['Kiev', 'Lvov'];
   cityArr3: string[] = ['Moskva', 'St-Peterburg'];
-  addressArr: string[] = ['Sverdlova str.2', 'Koroleva str.34', 'Svetlova str. 30'];
+  addressArr: string[] = [
+    'Sverdlova str.2',
+    'Koroleva str.34',
+    'Svetlova str. 30',
+  ];
   floorArr: string[] = ['1', '2'];
   // -------------------
 
   canEditMode = true;
 
-  constructor(private router: Router, private route: ActivatedRoute) {
+  private _selectsDataSubscription: Subscription;
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private store$: Store<AppState>
+  ) {
+    // Start action
+    this.initStore();
   }
 
   public get countryOptions(): string[] {
@@ -131,6 +165,14 @@ export class OfficeChoosingComponent implements OnInit {
     return this.selectOfficeForm?.get('inputNew');
   }
 
+  // here all you need to retrieve the data
+  initStore(): void {
+    this.store$.dispatch(new officeChoosingStartAction());
+    this._selectsDataSubscription = this.store$
+      .select(selectorsData)
+      .subscribe(console.log);
+  }
+
   ngOnInit() {
     this._initChoosingForm();
   }
@@ -139,9 +181,11 @@ export class OfficeChoosingComponent implements OnInit {
   toggleInputValidators(enable: boolean): void {
     const inputValidators: ValidatorFn[] = [
       Validators.required,
-      ValidateSameName(this.checkingInputNames)
+      ValidateSameName(this.checkingInputNames),
     ];
-    enable ? this.inputNew.setValidators(inputValidators) : this.inputNew.clearValidators();
+    enable
+      ? this.inputNew.setValidators(inputValidators)
+      : this.inputNew.clearValidators();
     this.inputNew.updateValueAndValidity();
   }
 
@@ -185,8 +229,8 @@ export class OfficeChoosingComponent implements OnInit {
 
   onSelected(selection: MatSelectChange): void {
     let value: string = selection.value.toString().toLowerCase() || '';
-    let source: string = selection.source.ngControl.name.toString().toLowerCase() || '';
-
+    let source: string =
+      selection.source.ngControl.name.toString().toLowerCase() || '';
 
     if (value === SelectorsName.new && this.canEditMode) {
       this.newSelected = source;
@@ -199,13 +243,22 @@ export class OfficeChoosingComponent implements OnInit {
   }
 
   enableNextSelection(): void {
-    if (this.country?.value && this.country.value.toLowerCase() !== SelectorsName.new) {
+    if (
+      this.country?.value &&
+      this.country.value.toLowerCase() !== SelectorsName.new
+    ) {
       this.city.enable();
       this.currentFocus = SelectorsName.city;
-      if (this.city?.value && this.city.value.toLowerCase() !== SelectorsName.new) {
+      if (
+        this.city?.value &&
+        this.city.value.toLowerCase() !== SelectorsName.new
+      ) {
         this.address.enable();
         this.currentFocus = SelectorsName.address;
-        if (this.address?.value && this.address.value.toLowerCase() !== SelectorsName.new) {
+        if (
+          this.address?.value &&
+          this.address.value.toLowerCase() !== SelectorsName.new
+        ) {
           this.floor.enable();
           this.currentFocus = SelectorsName.floor;
         }
@@ -249,7 +302,9 @@ export class OfficeChoosingComponent implements OnInit {
   }
 
   addNewToSelect(arr: string[]): void {
-    arr.unshift(SelectorsName.new[0].toUpperCase() + SelectorsName.new.substring(1));
+    arr.unshift(
+      SelectorsName.new[0].toUpperCase() + SelectorsName.new.substring(1)
+    );
   }
 
   onClickShowHide() {
@@ -266,20 +321,36 @@ export class OfficeChoosingComponent implements OnInit {
       this.router.navigate(['.'], {
         relativeTo: this.route,
         queryParams,
-        queryParamsHandling: 'merge' // remove to replace all query params by provided
+        queryParamsHandling: 'merge', // remove to replace all query params by provided
         // replaceUrl: true // If we want to replace it in the history instead of adding new value there
       });
       console.log(queryParams);
     }
   }
 
+  ngOnDestroy(): void {
+    this._selectsDataSubscription.unsubscribe();
+  }
+
   private _initChoosingForm(): void {
     this.selectOfficeForm = new FormGroup({
-      country: new FormControl({ value: null, disabled: false }, Validators.required),
-      city: new FormControl({ value: null, disabled: true }, Validators.required),
-      address: new FormControl({ value: null, disabled: true }, Validators.required),
-      floor: new FormControl({ value: null, disabled: true }, Validators.required),
-      inputNew: new FormControl({ value: null, disabled: true })
+      country: new FormControl(
+        { value: null, disabled: false },
+        Validators.required
+      ),
+      city: new FormControl(
+        { value: null, disabled: true },
+        Validators.required
+      ),
+      address: new FormControl(
+        { value: null, disabled: true },
+        Validators.required
+      ),
+      floor: new FormControl(
+        { value: null, disabled: true },
+        Validators.required
+      ),
+      inputNew: new FormControl({ value: null, disabled: true }),
     });
     if (!this.canEditMode) {
       this.selectOfficeForm.removeControl('inputNew');
