@@ -48,9 +48,9 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
           city.push(item.city);
         }
       });
-    }
-    if (this.canEditMode) {
-      city.unshift(SelectorsName.new);
+      if (this.canEditMode && this.country.value !== SelectorsName.new) {
+        city.unshift(SelectorsName.new);
+      }
     }
     return Array.from(new Set(city));
   }
@@ -63,9 +63,9 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
           address.push(item.address);
         }
       });
-    }
-    if (this.canEditMode) {
-      address.unshift(SelectorsName.new);
+      if (this.canEditMode && this.country.value !== SelectorsName.new && this.city.value !== SelectorsName.new) {
+        address.unshift(SelectorsName.new);
+      }
     }
     return Array.from(new Set(address));
   }
