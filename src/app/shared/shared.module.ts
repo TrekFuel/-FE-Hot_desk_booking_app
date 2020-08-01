@@ -6,10 +6,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClearableInputComponent } from './components/clearable-input/clearable-input.component';
 import { ZoomComponent } from './components/zoom/zoom.component';
 import { HasFocusDirective } from './directives/has-focus.directive';
+import { OfficeChoosingContainer } from './office-choosing/office-choosing.container';
 
 @NgModule({
   declarations: [
     OfficeChoosingComponent,
+    OfficeChoosingContainer,
     ClearableInputComponent,
     ZoomComponent,
     HasFocusDirective
@@ -21,7 +23,7 @@ import { HasFocusDirective } from './directives/has-focus.directive';
     FormsModule,
   ],
   exports: [
-    OfficeChoosingComponent,
+    OfficeChoosingContainer,
     ClearableInputComponent,
     ZoomComponent,
     HasFocusDirective

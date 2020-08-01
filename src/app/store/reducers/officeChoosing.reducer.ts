@@ -1,10 +1,11 @@
 import { SelectorsModel } from '../../shared/models/selectors.model';
-import {
-  officeChoosingActionType,
-  officeChoosingTypeActions,
-} from '../actions/officeChoosing.action';
+import { officeChoosingActionType, officeChoosingTypeActions } from '../actions/officeChoosing.action';
 
-const initialState: SelectorsModel = null;
+const initialState: SelectorsModel = {
+  country: [],
+  city: [],
+  address: []
+};
 
 export function officeChoosingReducer(
   state: SelectorsModel = initialState,

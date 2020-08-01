@@ -1,26 +1,26 @@
 <div class="container mb-3">
-  <app-office-choosing></app-office-choosing>
+  <office-choosing-container></office-choosing-container>
   <div class="row mx-1">
     <img
-      src="https://static.tildacdn.com/tild3938-3732-4866-b233-623966336431/move1.jpg"
       alt="office-map"
-      title="office-map"
-      class="mx-auto img-fluid">
+      class="mx-auto img-fluid"
+      src="https://static.tildacdn.com/tild3938-3732-4866-b233-623966336431/move1.jpg"
+      title="office-map">
   </div>
   <div class="row mx-1">
     <mat-form-field appearance="outline"
                     class="mx-auto mb-5">
       <mat-label>Choose a date</mat-label>
-      <input matInput
+      <input [formControl]="date"
              [matDatepicker]="picker"
-             [formControl]="date">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+             matInput>
+      <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
   </div>
   <div class="row mx-1">
-    <button type="button"
-            class="btn btn-outline-success mx-auto mb-5">Book a workplace
+    <button class="btn btn-outline-success mx-auto mb-5"
+            type="button">Book a workplace
     </button>
   </div>
 </div>
