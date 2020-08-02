@@ -33,7 +33,7 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   newAddress: SelectorsAddress[] = [];
   // ------------------
 
-  canEditMode = true;
+  canEditMode = false;
 
   constructor(private router: Router, private route: ActivatedRoute) {
   }
@@ -97,25 +97,31 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
     this.countrySubscription = this.country.valueChanges.pipe(
       distinctUntilChanged(),
       tap(() => this.selectOfficeForm.patchValue({ city: null, address: null }))
-    ).subscribe((country: string) => this.canEditMode ?
-      this.onChoosing(SelectorsName.country, country === SelectorsName.new, this.countryOptions) : null);
+    )
+      .subscribe((country: string) => this.canEditMode ?
+        this.onChoosing(SelectorsName.country, country === SelectorsName.new, this.countryOptions)
+        : this.moveFocusFrom(SelectorsName.country));
 
     this.citySubscription = this.city.valueChanges.pipe(
       distinctUntilChanged(),
       tap(() => this.selectOfficeForm.patchValue({ address: null }))
-    ).subscribe((city: string) => this.canEditMode ?
-      this.onChoosing(SelectorsName.city, city === SelectorsName.new, this.cityOptions) : null);
+    )
+      .subscribe((city: string) => this.canEditMode ?
+        this.onChoosing(SelectorsName.city, city === SelectorsName.new, this.cityOptions)
+        : this.moveFocusFrom(SelectorsName.city));
 
     this.addressSubscription = this.address.valueChanges.pipe(
       distinctUntilChanged()
-    ).subscribe((address: string) => this.canEditMode ?
-      this.onChoosing(SelectorsName.address, address === SelectorsName.new, this.addressOptions) : null);
+    )
+      .subscribe((address: string) => this.canEditMode ?
+        this.onChoosing(SelectorsName.address, address === SelectorsName.new, this.addressOptions)
+        : this.moveFocusFrom(SelectorsName.address));
   }
 
   getAddressIdByAddress(): string {
     return (this.selectOfficeForm.valid && this.address.value !== SelectorsName.new) ?
       [...this.selectorsModel.address, ...this.newAddress]
-        .filter((item: SelectorsAddress) => item?.city === this.city.value && item.address === this.address.value)[0].addressId
+        .filter((item: SelectorsAddress) => item?.city === this.city.value && item?.address === this.address.value)[0].addressId
       : environment.ERROR_ON_GETTING_ADDRESS_ID;
   }
 
@@ -130,10 +136,14 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
       this.checkingInputNames = [];
       this.inputNew.disable();
       this.newSelected = null;
-      if (source === SelectorsName.country) this.currentFocus = SelectorsName.city;
-      if (source === SelectorsName.city) this.currentFocus = SelectorsName.address;
-      if (source === SelectorsName.address) this.currentFocus = SelectorsName.choose;
+      this.moveFocusFrom(source);
     }
+  }
+
+  moveFocusFrom(source: string): void {
+    if (source === SelectorsName.country) this.currentFocus = SelectorsName.city;
+    if (source === SelectorsName.city) this.currentFocus = SelectorsName.address;
+    if (source === SelectorsName.address) this.currentFocus = SelectorsName.choose;
   }
 
   onInputMessage(source: string, event): void {
