@@ -37,7 +37,7 @@ export class AuthEffects {
                 token: response.token,
               };
               localStorage.setItem(environment.localStorageUser, JSON.stringify(user));
-              this.router.navigate(['/profile']);
+              this.router.navigate(['/booking']);
               return new LoginSuccessAction({loggedInUser: user});
             }),
             catchError((errorResponse: HttpErrorResponse) => {

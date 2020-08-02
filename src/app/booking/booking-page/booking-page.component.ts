@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {MAT_DATE_FORMATS} from '@angular/material/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MAT_DATE_FORMATS } from '@angular/material/core';
 import * as _moment from 'moment';
+import { Booking } from './models/booking.model';
 
 const moment = _moment;
 export const MY_FORMATS = {
@@ -21,16 +22,17 @@ export const MY_FORMATS = {
   templateUrl: './booking-page.component.html',
   styleUrls: ['./booking-page.component.scss'],
   providers: [
-    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BookingPageComponent implements OnInit {
+
+export class BookingPageComponent {
   date = new FormControl(moment());
 
-  constructor() {
-  }
+  @Input() bookingData: Booking[];
 
-  ngOnInit(): void {
+  constructor() {
   }
 
 }
