@@ -13,7 +13,7 @@
   <mat-form-field appearance="outline" class="col-sm-6 col-md-3 my-1 select-form">
     <mat-label>{{SelectorsName.city | titlecase}}</mat-label>
     <mat-hint *ngIf="!!country.value">Please choose a {{SelectorsName.city}}</mat-hint>
-    <mat-select formControlName="city">
+    <mat-select [hasFocus]="currentFocus === SelectorsName.city" formControlName="city">
       <mat-option *ngFor="let option of cityOptions" [value]="option">{{option}}</mat-option>
     </mat-select>
     <mat-error *ngIf="city.hasError('required')">You need to choose {{SelectorsName.city}}</mat-error>
@@ -22,14 +22,18 @@
   <mat-form-field appearance="outline" class="col-sm-6 col-md-3 my-1 select-form">
     <mat-label>{{SelectorsName.address | titlecase}}</mat-label>
     <mat-hint *ngIf="!!city.value">Please choose an {{SelectorsName.address}}</mat-hint>
-    <mat-select formControlName="address">
+    <mat-select [hasFocus]="currentFocus === SelectorsName.address" formControlName="address">
       <mat-option *ngFor="let option of addressOptions" [value]="option">{{option}}</mat-option>
     </mat-select>
     <mat-error *ngIf="address.hasError('required')">You need to choose {{SelectorsName.address}}</mat-error>
   </mat-form-field>
 
   <div class="btn-div col-sm-6 col-md-3">
-    <button class="btn btn-block btn-outline-secondary" type="submit">Choose</button>
+    <button [hasFocus]="currentFocus === SelectorsName.choose"
+            class="btn btn-block btn-outline-secondary"
+            type="submit">
+      Choose
+    </button>
   </div>
 
   <div *ngIf="canEditMode" class="col-sm-6 col-md-3">

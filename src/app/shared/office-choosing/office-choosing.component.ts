@@ -6,9 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SelectorsAddress, SelectorsCity, SelectorsModel } from '../models/selectors.model';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-
-const TEMP_ADDRESS_ID_FOR_NEW_OFFICE: string = 'new office';
-const ERROR_ON_GETTING_ADDRESS_ID: string = 'error';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-office-choosing',
@@ -118,7 +116,7 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
     return (this.selectOfficeForm.valid && this.address.value !== SelectorsName.new) ?
       [...this.selectorsModel.address, ...this.newAddress]
         .filter((item: SelectorsAddress) => item?.city === this.city.value && item.address === this.address.value)[0].addressId
-      : ERROR_ON_GETTING_ADDRESS_ID;
+      : environment.ERROR_ON_GETTING_ADDRESS_ID;
   }
 
   onChoosing(source: string, isNew: boolean, options: string[]): void {
@@ -132,6 +130,9 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
       this.checkingInputNames = [];
       this.inputNew.disable();
       this.newSelected = null;
+      if (source === SelectorsName.country) this.currentFocus = SelectorsName.city;
+      if (source === SelectorsName.city) this.currentFocus = SelectorsName.address;
+      if (source === SelectorsName.address) this.currentFocus = SelectorsName.choose;
     }
   }
 
@@ -141,24 +142,24 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
     switch (source) {
       case this.SelectorsName.country:
         this.newCountry.push(value);
-        this.selectOfficeForm.patchValue({ country: null, inputNew: '' });
-        this.currentFocus = SelectorsName.country;
+        this.selectOfficeForm.patchValue({ country: value, inputNew: '' });
+        this.currentFocus = SelectorsName.city;
         break;
       case this.SelectorsName.city:
         const newCity: SelectorsCity = { city: value, country: this.country.value };
         this.newCity.push(newCity);
-        this.selectOfficeForm.patchValue({ city: null, inputNew: '' });
-        this.currentFocus = SelectorsName.city;
+        this.selectOfficeForm.patchValue({ city: value, inputNew: '' });
+        this.currentFocus = SelectorsName.address;
         break;
       case this.SelectorsName.address:
         const newAddress: SelectorsAddress = {
           city: this.city.value,
           address: value,
-          addressId: TEMP_ADDRESS_ID_FOR_NEW_OFFICE
+          addressId: environment.TEMP_ADDRESS_ID_FOR_NEW_OFFICE
         };
         this.newAddress.push(newAddress);
-        this.selectOfficeForm.patchValue({ address: null, inputNew: '' });
-        this.currentFocus = SelectorsName.address;
+        this.selectOfficeForm.patchValue({ address: value, inputNew: '' });
+        this.currentFocus = SelectorsName.choose;
         break;
       default:
         break;
@@ -177,15 +178,13 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   onSubmit() {
     let addressId = this.getAddressIdByAddress();
     console.log(addressId);
-    if (this.selectOfficeForm.valid && addressId !== ERROR_ON_GETTING_ADDRESS_ID) {
+    if (this.selectOfficeForm.valid && addressId !== environment.ERROR_ON_GETTING_ADDRESS_ID) {
       const queryParams = { ...this.selectOfficeForm.value, addressId };
-      if (addressId === TEMP_ADDRESS_ID_FOR_NEW_OFFICE) {
+      if (addressId === environment.TEMP_ADDRESS_ID_FOR_NEW_OFFICE) {
         // new office here
-        console.log('new office here');
         delete queryParams.inputNew;
       } else {
-        console.log('existing office');
-
+        // existing office here
       }
 
       this.router.navigate(['.'], {
