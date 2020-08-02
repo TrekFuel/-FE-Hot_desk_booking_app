@@ -28,6 +28,9 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   // variables for edit only here
   matcher = new MyErrorStateMatcher();
   newSelected: string | null = null;
+  newCountry: string[] = [];
+  newCity: string[] = [];
+  newAddress: string[] = [];
   isOfficeNew: boolean = false;
   // ------------------
 
@@ -37,7 +40,8 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   }
 
   public get countryOptions(): string[] {
-    return this.canEditMode ? [SelectorsName.new, ...this.selectorsModel.country] : [...this.selectorsModel.country];
+    return this.canEditMode ? [SelectorsName.new, ...this.selectorsModel.country, ...this.newCountry]
+      : [...this.selectorsModel.country];
   }
 
   public get cityOptions(): string[] {
@@ -50,6 +54,7 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
       });
       if (this.canEditMode && this.country.value !== SelectorsName.new) {
         city.unshift(SelectorsName.new);
+        city.push(...this.newCity);
       }
     }
     return Array.from(new Set(city));
@@ -65,6 +70,7 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
       });
       if (this.canEditMode && this.country.value !== SelectorsName.new && this.city.value !== SelectorsName.new) {
         address.unshift(SelectorsName.new);
+        address.push(...this.newAddress);
       }
     }
     return Array.from(new Set(address));
@@ -93,32 +99,34 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       tap(() => this.selectOfficeForm.patchValue({ city: null, address: null }))
     ).subscribe((country: string) => this.canEditMode ?
-      this.onChoosing(SelectorsName.country, country === SelectorsName.new) : null);
+      this.onChoosing(SelectorsName.country, country === SelectorsName.new, this.countryOptions) : null);
 
     this.citySubscription = this.city.valueChanges.pipe(
       distinctUntilChanged(),
       tap(() => this.selectOfficeForm.patchValue({ address: null }))
     ).subscribe((city: string) => this.canEditMode ?
-      this.onChoosing(SelectorsName.city, city === SelectorsName.new) : null);
+      this.onChoosing(SelectorsName.city, city === SelectorsName.new, this.cityOptions) : null);
 
     this.addressSubscription = this.address.valueChanges.pipe(
       distinctUntilChanged()
     ).subscribe((address: string) => this.canEditMode ?
-      this.onChoosing(SelectorsName.address, address === SelectorsName.new) : null);
+      this.onChoosing(SelectorsName.address, address === SelectorsName.new, this.addressOptions) : null);
   }
 
   getAddressIdByAddress(): string {
-    return (!!this.country.value && !!this.city.value && !!this.address.value) ? this.selectorsModel.address
-      .filter((item: SelectorsAddress) => item.city === this.city.value && item.address === this.address.value)[0].addressId : '';
+    return (this.selectOfficeForm.valid && this.address.value !== SelectorsName.new) ? this.selectorsModel.address
+      .filter((item: SelectorsAddress) => item.city === this.city.value && item.address === this.address.value)[0].addressId : null;
   }
 
-  onChoosing(source: string, isNew: boolean): void {
+  onChoosing(source: string, isNew: boolean, options: string[]): void {
+    this.checkingInputNames = [...options];
     this.toggleInputValidators(isNew);
     if (isNew) {
       this.inputNew.enable();
       this.newSelected = source;
       this.currentFocus = SelectorsName.new;
     } else {
+      this.checkingInputNames = [];
       this.inputNew.disable();
       this.newSelected = null;
     }
@@ -129,13 +137,19 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
     let value: string = event.target.value;
     switch (source) {
       case this.SelectorsName.country:
-        this.selectOfficeForm.patchValue({ country: value, inputNew: '' });
+        this.newCountry.push(value);
+        this.selectOfficeForm.patchValue({ country: null, inputNew: '' });
+        this.currentFocus = SelectorsName.country;
         break;
       case this.SelectorsName.city:
-        this.selectOfficeForm.patchValue({ city: value, inputNew: '' });
+        this.newCity.push(value);
+        this.selectOfficeForm.patchValue({ city: null, inputNew: '' });
+        this.currentFocus = SelectorsName.city;
         break;
       case this.SelectorsName.address:
-        this.selectOfficeForm.patchValue({ address: value, inputNew: '' });
+        this.newAddress.push(value);
+        this.selectOfficeForm.patchValue({ address: null, inputNew: '' });
+        this.currentFocus = SelectorsName.address;
         break;
       default:
         break;
@@ -143,7 +157,6 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   }
 
   toggleInputValidators(enable: boolean): void {
-    console.log('Enable validator: ' + enable);
     const inputValidators: ValidatorFn[] = [
       Validators.required,
       ValidateSameName(this.checkingInputNames)
@@ -268,6 +281,8 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
+    let addressId = this.getAddressIdByAddress();
+    console.log(addressId);
     if (this.selectOfficeForm.valid) {
       const queryParams = { ...this.selectOfficeForm.value, addressId: this.getAddressIdByAddress() };
       if (this.canEditMode) {
