@@ -4,9 +4,11 @@ import { MyErrorStateMatcher, ValidateSameName } from '../validators/same-name.v
 import { SelectorsName } from './selectors-name';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SelectorsAddress, SelectorsCity, SelectorsModel } from '../models/selectors.model';
-import { MatSelectChange } from '@angular/material/select';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+
+const TEMP_ADDRESS_ID_FOR_NEW_OFFICE: string = 'new office';
+const ERROR_ON_GETTING_ADDRESS_ID: string = 'error';
 
 @Component({
   selector: 'app-office-choosing',
@@ -29,9 +31,8 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   matcher = new MyErrorStateMatcher();
   newSelected: string | null = null;
   newCountry: string[] = [];
-  newCity: string[] = [];
-  newAddress: string[] = [];
-  isOfficeNew: boolean = false;
+  newCity: SelectorsCity[] = [];
+  newAddress: SelectorsAddress[] = [];
   // ------------------
 
   canEditMode = true;
@@ -47,14 +48,14 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   public get cityOptions(): string[] {
     const city = [];
     if (!!this.country.value) {
-      this.selectorsModel.city.forEach((item: SelectorsCity) => {
+      const commonCity: SelectorsCity[] = [...this.selectorsModel.city, ...this.newCity];
+      commonCity.forEach((item: SelectorsCity) => {
         if (item.country === this.country.value) {
           city.push(item.city);
         }
       });
       if (this.canEditMode && this.country.value !== SelectorsName.new) {
         city.unshift(SelectorsName.new);
-        city.push(...this.newCity);
       }
     }
     return Array.from(new Set(city));
@@ -63,14 +64,14 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   public get addressOptions(): string[] {
     const address = [];
     if (!!this.city.value) {
-      this.selectorsModel.address.forEach((item: SelectorsAddress) => {
+      const commonAddress: SelectorsAddress[] = [...this.selectorsModel.address, ...this.newAddress];
+      commonAddress.forEach((item: SelectorsAddress) => {
         if (item.city === this.city.value) {
           address.push(item.address);
         }
       });
       if (this.canEditMode && this.country.value !== SelectorsName.new && this.city.value !== SelectorsName.new) {
         address.unshift(SelectorsName.new);
-        address.push(...this.newAddress);
       }
     }
     return Array.from(new Set(address));
@@ -114,8 +115,10 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   }
 
   getAddressIdByAddress(): string {
-    return (this.selectOfficeForm.valid && this.address.value !== SelectorsName.new) ? this.selectorsModel.address
-      .filter((item: SelectorsAddress) => item.city === this.city.value && item.address === this.address.value)[0].addressId : null;
+    return (this.selectOfficeForm.valid && this.address.value !== SelectorsName.new) ?
+      [...this.selectorsModel.address, ...this.newAddress]
+        .filter((item: SelectorsAddress) => item?.city === this.city.value && item.address === this.address.value)[0].addressId
+      : ERROR_ON_GETTING_ADDRESS_ID;
   }
 
   onChoosing(source: string, isNew: boolean, options: string[]): void {
@@ -142,12 +145,18 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
         this.currentFocus = SelectorsName.country;
         break;
       case this.SelectorsName.city:
-        this.newCity.push(value);
+        const newCity: SelectorsCity = { city: value, country: this.country.value };
+        this.newCity.push(newCity);
         this.selectOfficeForm.patchValue({ city: null, inputNew: '' });
         this.currentFocus = SelectorsName.city;
         break;
       case this.SelectorsName.address:
-        this.newAddress.push(value);
+        const newAddress: SelectorsAddress = {
+          city: this.city.value,
+          address: value,
+          addressId: TEMP_ADDRESS_ID_FOR_NEW_OFFICE
+        };
+        this.newAddress.push(newAddress);
         this.selectOfficeForm.patchValue({ address: null, inputNew: '' });
         this.currentFocus = SelectorsName.address;
         break;
@@ -165,129 +174,20 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
     this.inputNew.updateValueAndValidity();
   }
 
-  onOpenSelect(source: string): void {
-
-    // for correct work of double click on same select to (selectionChange) work
-    // switch (source) {
-    //   case this.SelectorsName.country:
-    //     this.selectOfficeForm.patchValue({ country: null });
-    //     break;
-    //   case this.SelectorsName.city:
-    //     this.selectOfficeForm.patchValue({ city: null });
-    //     break;
-    //   case this.SelectorsName.address:
-    //     this.selectOfficeForm.patchValue({ address: null });
-    //     break;
-    //   case this.SelectorsName.floor:
-    //     this.selectOfficeForm.patchValue({ floor: null });
-    //     break;
-    //   default:
-    //     break;
-    // }
-    //
-    // this.currentFocus = null;
-    // if (this.canEditMode) {
-    //   this.resetInput();
-    // }
-    //
-    // if (source !== SelectorsName.floor) {
-    //   this.selectOfficeForm.patchValue({ floor: null });
-    //   this.floor.disable();
-    //   if (source !== SelectorsName.address) {
-    //     this.selectOfficeForm.patchValue({ address: null });
-    //     this.address.disable();
-    //     if (source !== SelectorsName.city) {
-    //       this.selectOfficeForm.patchValue({ city: null });
-    //       this.city.disable();
-    //     }
-    //   }
-    // }
-  }
-
-  //
-  onSelected(selection: MatSelectChange): void {
-    //   let value: string = selection.value.toString().toLowerCase() || '';
-    //   let source: string = selection.source.ngControl.name.toString().toLowerCase() || '';
-    //
-    //
-    //   if (value === SelectorsName.new && this.canEditMode) {
-    //     this.newSelected = source;
-    //     this.inputNew.enable();
-    //     this.currentFocus = SelectorsName.new;
-    //     this.toggleInputValidators(true);
-    //   } else {
-    //     this.enableNextSelection();
-    //   }
-    // }
-    //
-    // enableNextSelection(): void {
-    //   if (this.country?.value && this.country.value.toLowerCase() !== SelectorsName.new) {
-    //     this.city.enable();
-    //     this.currentFocus = SelectorsName.city;
-    //     if (this.city?.value && this.city.value.toLowerCase() !== SelectorsName.new) {
-    //       this.address.enable();
-    //       this.currentFocus = SelectorsName.address;
-    //       if (this.address?.value && this.address.value.toLowerCase() !== SelectorsName.new) {
-    //         this.floor.enable();
-    //         this.currentFocus = SelectorsName.floor;
-    //       }
-    //     }
-    //   }
-  }
-
-  //
-  onInputMessage2(source: string): void {
-    //   const value = this.inputNew?.value;
-    //   if (this.selectOfficeForm.valid) {
-    //     switch (source) {
-    //       case this.SelectorsName.country:
-    //         this.countryArr.push(value);
-    //         this.selectOfficeForm.patchValue({ country: null });
-    //         break;
-    //       case this.SelectorsName.city:
-    //         this.cityArr.push(value);
-    //         this.selectOfficeForm.patchValue({ city: null });
-    //         break;
-    //       case this.SelectorsName.address:
-    //         this.addressArr.push(value);
-    //         this.selectOfficeForm.patchValue({ address: null });
-    //         break;
-    //       case this.SelectorsName.floor:
-    //         this.floorArr.push(value);
-    //         this.selectOfficeForm.patchValue({ floor: null });
-    //         break;
-    //       default:
-    //         break;
-    //     }
-    //     this.enableNextSelection();
-    //     this.resetInput();
-    //   }
-    // }
-    //
-    // resetInput(): void {
-    //   this.inputNew.disable();
-    //   this.inputNew.reset(null);
-    //   this.toggleInputValidators(false);
-    //   this.newSelected = null;
-    // }
-    //
-    // addNewToSelect(arr: string[]): void {
-    //   arr.unshift(SelectorsName.new[0].toUpperCase() + SelectorsName.new.substring(1));
-    // }
-    //
-    // onClickShowHide() {
-    //   this.isShowMap = !this.isShowMap;
-    //   this.showMap.emit(this.isShowMap);
-  }
-
   onSubmit() {
     let addressId = this.getAddressIdByAddress();
     console.log(addressId);
-    if (this.selectOfficeForm.valid) {
-      const queryParams = { ...this.selectOfficeForm.value, addressId: this.getAddressIdByAddress() };
-      if (this.canEditMode) {
+    if (this.selectOfficeForm.valid && addressId !== ERROR_ON_GETTING_ADDRESS_ID) {
+      const queryParams = { ...this.selectOfficeForm.value, addressId };
+      if (addressId === TEMP_ADDRESS_ID_FOR_NEW_OFFICE) {
+        // new office here
+        console.log('new office here');
         delete queryParams.inputNew;
+      } else {
+        console.log('existing office');
+
       }
+
       this.router.navigate(['.'], {
         relativeTo: this.route,
         queryParams,
