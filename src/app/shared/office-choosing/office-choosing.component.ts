@@ -23,17 +23,18 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   citySubscription: Subscription;
   addressSubscription: Subscription;
   currentFocus: string = SelectorsName.country;
-  checkingInputNames: string[] = [];
 
   // variables for edit only here
   matcher = new MyErrorStateMatcher();
+  checkingInputNames: string[] = [];
   newSelected: string | null = null;
   newCountry: string[] = [];
   newCity: SelectorsCity[] = [];
   newAddress: SelectorsAddress[] = [];
+  newOfficeObjectReady: boolean = false;
   // ------------------
 
-  canEditMode = false;
+  canEditMode = true;
 
   constructor(private router: Router, private route: ActivatedRoute) {
   }
@@ -143,7 +144,12 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   moveFocusFrom(source: string): void {
     if (source === SelectorsName.country) this.currentFocus = SelectorsName.city;
     if (source === SelectorsName.city) this.currentFocus = SelectorsName.address;
-    if (source === SelectorsName.address) this.currentFocus = SelectorsName.choose;
+    if (source === SelectorsName.address) {
+      this.currentFocus = SelectorsName.choose;
+      if (this.canEditMode) {
+        this.newOfficeObjectReady = (this.getAddressIdByAddress() === environment.TEMP_ADDRESS_ID_FOR_NEW_OFFICE);
+      }
+    }
   }
 
   onInputMessage(source: string, event): void {

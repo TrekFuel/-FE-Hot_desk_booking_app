@@ -30,9 +30,9 @@
 
   <div class="btn-div col-sm-6 col-md-3">
     <button [hasFocus]="currentFocus === SelectorsName.choose"
-            class="btn btn-block btn-outline-secondary"
+            class="btn btn-block {{newOfficeObjectReady ? 'btn-secondary' : 'btn-outline-secondary'}}"
             type="submit">
-      Choose
+      {{newOfficeObjectReady ? 'Send on server' : 'Choose'}}
     </button>
   </div>
 
@@ -65,9 +65,9 @@
 
   <div *ngIf="canEditMode" class="col-sm-6 col-md-3 btn-div offset-md-3">
     <button
-      class="btn btn-block btn-outline-warning"
+      class="btn btn-block {{newOfficeObjectReady ? 'btn-outline-success' : 'btn-outline-warning'}}"
       type="button">
-      Edit room
+      {{newOfficeObjectReady ? 'New room' : 'Edit room'}}
     </button>
   </div>
 
