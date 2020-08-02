@@ -3,5 +3,6 @@ export enum SelectorsName {
   city = 'city',
   address = 'address',
   floor = 'floor',
-  new = 'new'
+  new = 'New',
+  choose = 'choose'
 }

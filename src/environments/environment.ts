@@ -14,4 +14,6 @@ export const environment = {
     MAX: 200,
     STEP: 10
   },
+  TEMP_ADDRESS_ID_FOR_NEW_OFFICE: 'new office',
+  ERROR_ON_GETTING_ADDRESS_ID: 'error on get id'
 };
