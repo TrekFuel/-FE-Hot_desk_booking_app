@@ -28,7 +28,7 @@
     <mat-error *ngIf="address.hasError('required')">You need to choose {{SelectorsName.address}}</mat-error>
   </mat-form-field>
 
-  <div class="btn-div col-sm-6 col-md-3">
+  <div class="col-sm-6 col-md-3 mt-3">
     <button [hasFocus]="currentFocus === SelectorsName.choose"
             class="btn btn-block {{newOfficeObjectReady ? 'btn-secondary' : 'btn-outline-secondary'}}"
             type="submit">
@@ -36,7 +36,7 @@
     </button>
   </div>
 
-  <div *ngIf="canEditMode" class="col-sm-6 col-md-3">
+  <div *ngIf="canEditMode" class="col-sm-6 col-md-3 mt-4 mt-sm-1">
     <mat-form-field appearance="outline">
       <mat-label>{{!!newSelected ? 'Please enter a new ' + newSelected : ''}}</mat-label>
       <input (keydown.enter)="onInputMessage(newSelected, $event)"
@@ -63,7 +63,7 @@
     </mat-form-field>
   </div>
 
-  <div *ngIf="canEditMode" class="col-sm-6 col-md-3 btn-div offset-md-3">
+  <div *ngIf="canEditMode" class="col-sm-6 col-md-3 offset-md-3 mt-3">
     <button
       class="btn btn-block {{newOfficeObjectReady ? 'btn-outline-success' : 'btn-outline-warning'}}"
       type="button">
@@ -71,7 +71,7 @@
     </button>
   </div>
 
-  <div *ngIf="canEditMode" class="col-sm-6 col-md-3 btn-div">
+  <div *ngIf="canEditMode" class="col-sm-6 col-md-3 offset-sm-6 offset-md-0 mt-3">
     <button class="btn btn-block btn-outline-danger"
             type="button">
       Delete room
