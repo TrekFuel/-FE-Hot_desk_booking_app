@@ -8,7 +8,6 @@ import { LoginUser } from '../models/login-user.model';
 import { AppState } from '../../../store';
 import { Store } from '@ngrx/store';
 import { LoginSuccessAction } from '../../../store/actions/auth.actions';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +15,7 @@ import { Router } from '@angular/router';
 export class AuthService {
 
   constructor(private http: HttpClient,
-              private store$: Store<AppState>,
-              private router: Router) {
+              private store$: Store<AppState>) {
   }
 
   login(loginData: LoginUser): Observable<AuthResponse> {
@@ -37,7 +35,6 @@ export class AuthService {
     const userFromLocalStorage = localStorage.getItem(environment.localStorageUser);
     if (userFromLocalStorage) {
       loadedUser = JSON.parse(userFromLocalStorage);
-      this.router.navigate(['/booking']);
       this.store$.dispatch(new LoginSuccessAction({loggedInUser: loadedUser}));
     } else {
       return false;
