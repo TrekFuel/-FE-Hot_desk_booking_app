@@ -6,13 +6,14 @@ import { AppUsersContainer } from './users/users.container';
 import { UserProfileContainerComponent } from './home/user-profile/user-profile.container';
 import { BookingPageContainerComponent } from './booking/booking-page/booking-page.container';
 import { NoAuthGuard } from './shared/guards/no-auth.guard';
+import { AuthGuard } from './shared/guards/auth.guard';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
   {
     path: 'login',
     component: LoginComponent,
-    canActivate: [],
+    canActivate: [AuthGuard],
   },
   {
     path: 'users',
