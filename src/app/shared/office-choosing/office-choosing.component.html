@@ -1,4 +1,5 @@
-<form (ngSubmit)="onSubmit()" [formGroup]="selectOfficeForm" class="row mt-4 justify-content-center">
+<form (ngSubmit)="onSubmit()" [formGroup]="selectOfficeForm"
+      class="row justify-content-start mt-4 justify-content-start">
 
   <mat-form-field appearance="outline" class="col-sm-6 col-md-3 my-1 select-form">
     <mat-label>{{SelectorsName.country | titlecase}}</mat-label>
@@ -30,13 +31,13 @@
 
   <div class="col-sm-6 col-md-3 mt-3">
     <button [hasFocus]="currentFocus === SelectorsName.choose"
-            class="btn btn-block {{newOfficeObjectReady ? 'btn-secondary' : 'btn-outline-secondary'}}"
+            class="btn btn-block {{newOfficeObjectReady ? 'btn-outline-success' : 'btn-outline-secondary'}}"
             type="submit">
-      {{newOfficeObjectReady ? 'Send on server' : 'Choose'}}
+      {{newOfficeObjectReady ? 'Create new' : 'Choose'}}
     </button>
   </div>
 
-  <div *ngIf="canEditMode" class="col-sm-6 col-md-3 mt-4 mt-sm-1">
+  <div *ngIf="canEditMode" class="col-sm-6 col-md-3 mt-4 mt-sm-1 d-flex">
     <mat-form-field appearance="outline">
       <mat-label>{{!!newSelected ? 'Please enter a new ' + newSelected : ''}}</mat-label>
       <input (keydown.enter)="onInputMessage(newSelected, $event)"
@@ -63,15 +64,15 @@
     </mat-form-field>
   </div>
 
-  <div *ngIf="canEditMode" class="col-sm-6 col-md-3 offset-md-3 mt-3">
+  <div *ngIf="canEditMode && startEdit" class="col-sm-6 col-md-3 offset-md-3 mt-3">
     <button
-      class="btn btn-block {{newOfficeObjectReady ? 'btn-outline-success' : 'btn-outline-warning'}}"
+      class="btn btn-block btn-outline-warning"
       type="button">
-      {{newOfficeObjectReady ? 'New room' : 'Edit room'}}
+      Save changes
     </button>
   </div>
 
-  <div *ngIf="canEditMode" class="col-sm-6 col-md-3 offset-sm-6 offset-md-0 mt-3">
+  <div *ngIf="canEditMode && startEdit" class="col-sm-6 col-md-3 offset-sm-6 offset-md-0 mt-3">
     <button class="btn btn-block btn-outline-danger"
             type="button">
       Delete room
