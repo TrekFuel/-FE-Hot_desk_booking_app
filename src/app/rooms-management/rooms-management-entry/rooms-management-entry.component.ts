@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ChooseOffice } from '../../shared/models/choose-office.model';
 
 @Component({
   selector: 'app-rooms-management-entry',
@@ -6,7 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./rooms-management-entry.component.scss'],
 })
 export class RoomsManagementEntryComponent implements OnInit {
-  showMap: boolean;
+  chooseOffice: ChooseOffice;
+  showMap: boolean = false;
 
   constructor() {}
 

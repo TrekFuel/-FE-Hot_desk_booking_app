@@ -1,12 +1,12 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MyErrorStateMatcher, ValidateSameName } from '../validators/same-name.validator';
 import { SelectorsName } from './selectors-name';
-import { ActivatedRoute, Router } from '@angular/router';
 import { SelectorsAddress, SelectorsCity, SelectorsModel } from '../models/selectors.model';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { ChooseOffice } from '../models/choose-office.model';
 
 @Component({
   selector: 'app-office-choosing',
@@ -17,6 +17,7 @@ import { environment } from '../../../environments/environment';
 export class OfficeChoosingComponent implements OnInit, OnDestroy {
 
   @Input() selectorsModel: SelectorsModel;
+  @Output() onChooseOffice: EventEmitter<ChooseOffice> = new EventEmitter<ChooseOffice>();
   SelectorsName = SelectorsName;
   selectOfficeForm: FormGroup;
   countrySubscription: Subscription;
@@ -34,9 +35,10 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   newOfficeObjectReady: boolean = false;
   // ------------------
 
-  @Input() canEditMode = false;
+  @Input() canEditMode: boolean = false;
+  startEdit: boolean = false;
 
-  constructor(private router: Router, private route: ActivatedRoute) {
+  constructor() {
   }
 
   public get countryOptions(): string[] {
@@ -194,21 +196,18 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   onSubmit() {
     let addressId = this.getAddressIdByAddress();
     if (this.selectOfficeForm.valid && addressId !== environment.ERROR_ON_GETTING_ADDRESS_ID) {
-      const queryParams = { ...this.selectOfficeForm.value, addressId };
+      const data = { ...this.selectOfficeForm.value, addressId };
+
       if (addressId === environment.TEMP_ADDRESS_ID_FOR_NEW_OFFICE) {
         // new office here
-        delete queryParams.inputNew;
+        delete data.inputNew;
       } else {
         // existing office here
       }
 
-      this.router.navigate(['.'], {
-        relativeTo: this.route,
-        queryParams,
-        queryParamsHandling: 'merge' // remove to replace all query params by provided
-        // replaceUrl: true // If we want to replace it in the history instead of adding new value there
-      });
-      console.log(queryParams);
+      // ToDo do 2 different emitters, now it is a temporary variant or refactor this
+      this.onChooseOffice.emit({ isNewObject: this.newOfficeObjectReady, data });
+      this.startEdit = true;
     }
   }
 
