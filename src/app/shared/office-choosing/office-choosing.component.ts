@@ -34,7 +34,7 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   newOfficeObjectReady: boolean = false;
   // ------------------
 
-  canEditMode = true;
+  @Input() canEditMode = false;
 
   constructor(private router: Router, private route: ActivatedRoute) {
   }
@@ -193,7 +193,6 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     let addressId = this.getAddressIdByAddress();
-    console.log(addressId);
     if (this.selectOfficeForm.valid && addressId !== environment.ERROR_ON_GETTING_ADDRESS_ID) {
       const queryParams = { ...this.selectOfficeForm.value, addressId };
       if (addressId === environment.TEMP_ADDRESS_ID_FOR_NEW_OFFICE) {
