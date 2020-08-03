@@ -23,14 +23,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   public btnValue: BtnSidebarInterface[] = [
     {value: 'List Users', route: 'users'},
+    { value: 'Booking', route: 'booking' },
     {value: 'Rooms Management', route: 'rooms-management'}
   ];
-
-  private _bodyElement: ElementRef;
-
   user$: Observable<AuthResponse>;
   subscription$: Subscription;
   userData: AuthResponse;
+  private _bodyElement: ElementRef;
 
   constructor(
     private sidebarServices: SidebarServices,
