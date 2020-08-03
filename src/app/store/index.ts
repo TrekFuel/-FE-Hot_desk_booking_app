@@ -5,16 +5,21 @@ import { authReducer } from './reducers/auth.reducer';
 import { LoginInterface } from './selectors/auth.selectors';
 import { LoaderInterface } from '../layout/loader/models/loader.interface';
 import { loaderReducer } from './reducers/loader.reducer';
-import { MessageStateInterface } from '../layout/message-state/modules/message.interface';
+import { MessageStateInterface } from '../layout/message-state/models/message.interface';
 import { messageStateReducer } from './reducers/messageState.reducer';
-import { UserInterface } from '../shared/models/user.interface';
-
+import { UsersListInterface } from '../users/modules/usersList.interface';
+import { ModalAlertInterface } from '../layout/modal-alert/models/modal-alert.interface';
+import { moduleAlertReducer } from './reducers/modalAlert.reducer';
+import { SelectorsModel } from '../shared/models/selectors.model';
+import { officeChoosingReducer } from './reducers/officeChoosing.reducer';
 
 export interface AppState {
-  usersList: UserInterface[];
+  usersList: UsersListInterface;
   auth: LoginInterface;
   loader: LoaderInterface;
   messageState: MessageStateInterface;
+  modalAlert: ModalAlertInterface;
+  officeChoosing: SelectorsModel;
 }
 
 export const reducers: ActionReducerMap<AppState> = {
@@ -22,6 +27,8 @@ export const reducers: ActionReducerMap<AppState> = {
   auth: authReducer,
   loader: loaderReducer,
   messageState: messageStateReducer,
+  modalAlert: moduleAlertReducer,
+  officeChoosing: officeChoosingReducer,
 };
 
 export const metaReducers: MetaReducer<AppState>[] = !environment.production

@@ -2,12 +2,16 @@ import {
   usersListActionType,
   usersListTypeActions,
 } from '../actions/usersList.actions';
-import { UserInterface } from '../../shared/models/user.interface';
+import { UsersListInterface } from '../../users/modules/usersList.interface';
 
-const initialState: UserInterface[] = [];
+const initialState: UsersListInterface = {
+  users: [],
+  numberPages: null,
+  totalPages: null,
+};
 
 export function usersListReducer(
-  state: UserInterface[] = initialState,
+  state: UsersListInterface = initialState,
   action: usersListTypeActions
 ) {
   switch (action.type) {
@@ -18,7 +22,9 @@ export function usersListReducer(
     case usersListActionType.USERS_LIST_SUCCESS:
       return {
         ...state,
-        users: action.payload.users,
+        users: action.payload.dataUsers.content,
+        totalPages: action.payload.dataUsers.totalPages,
+        numberPages: action.payload.dataUsers.number,
       };
     case usersListActionType.USERS_LIST_FAILURE:
       return {

@@ -12,7 +12,6 @@ interface messageStateInterface {
   type;
 }
 
-/*  add actions */
 const showMessageAction = [usersListActionType.USERS_LIST_FAILURE];
 
 @Injectable()
@@ -21,7 +20,7 @@ export class MessageStateEffects {
   loaderStart$ = this.actions$.pipe(
     ofType(...showMessageAction),
     map((action: messageStateInterface) => {
-      let { message } = action.payload;
+      const { message } = action.payload;
       return new messageStateStartAction({ messageState: message });
     })
   );

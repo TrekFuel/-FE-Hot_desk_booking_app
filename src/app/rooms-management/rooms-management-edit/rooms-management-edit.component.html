@@ -1,89 +1,87 @@
-<div class="container">
-  <div class="row rooms-edit">
+<div class="row rooms-edit mt-3">
 
-    <div class="col-sm-12 my-2 text-center">
-      <h2 class="mt-2 mt-lg-5 mb-2 h1" style="font-size: 2rem">Edit room</h2>
-      <h4 class="mt-3">
-        Country: Belarus,
-        City: Grodno,
-        Office: Somewhere str. 1
-      </h4>
-    </div>
+  <!--    <div class="col-sm-12 my-2 text-center">-->
+  <!--      <h2 class="mt-2 mt-lg-5 mb-2 h1" style="font-size: 2rem">Edit room</h2>-->
+  <!--      <h4 class="mt-3">-->
+  <!--        Country: Belarus,-->
+  <!--        City: Grodno,-->
+  <!--        Office: Somewhere str. 1-->
+  <!--      </h4>-->
+  <!--    </div>-->
 
-    <div class="col-sm-12 my-1">
-      <button (click)="onSaveClick()" class="btn btn-outline-secondary mr-3">Save to server</button>
-      <button class="btn btn-outline-danger ml-2">clear</button>
-    </div>
+  <div class="col-sm-12 my-1">
+    <button (click)="onSaveClick()" class="btn btn-outline-secondary mr-3">Save to server</button>
+    <button class="btn btn-outline-danger ml-2">clear</button>
+  </div>
 
-    <div class="col-sm-4 my-1">
-      <div *ngFor="let editorBlock of editorBlocks" class="card mb-2">
-        <div class="card-header">
-          <mat-icon (click)="onLockClick(editorBlock.name)" class="pr-1">
-            {{blockedElements.includes(editorBlock.name) ? 'lock' : 'lock_open'}}
-          </mat-icon>
-          <span>{{editorBlock.name}}</span>
-        </div>
-        <div class="card-body">
-          <img (click)="onClickAddElementOnCanvas($event, editorBlock.name, url.title)"
-               *ngFor="let url of editorBlock.urls"
-               [alt]="url.title" [src]="url.src"
-               class="images-item"
-               matTooltip="{{url.title}}"
-               matTooltipPosition="above">
-        </div>
+  <div class="col-sm-4 my-1">
+    <div *ngFor="let editorBlock of editorBlocks" class="card mb-2">
+      <div class="card-header">
+        <mat-icon (click)="onLockClick(editorBlock.name)" class="pr-1">
+          {{blockedElements.includes(editorBlock.name) ? 'lock' : 'lock_open'}}
+        </mat-icon>
+        <span>{{editorBlock.name}}</span>
+      </div>
+      <div class="card-body">
+        <img (click)="onClickAddElementOnCanvas($event, editorBlock.name, url.title)"
+             *ngFor="let url of editorBlock.urls"
+             [alt]="url.title" [src]="url.src"
+             class="images-item"
+             matTooltip="{{url.title}}"
+             matTooltipPosition="above">
       </div>
     </div>
-
-    <div class="col-sm-8 my-1 canvas">
-      <app-zoom (zoomChange)="doCanvasZoom($event)" [zoom]="canvasSize.zoom"></app-zoom>
-      <canvas #htmlCanvas class="my-3 mx-1 canvas-place"></canvas>
-    </div>
-    <mat-icon #clone (click)="onClone()"
-              [ngClass]="{'hide': !activeElementOnCanvas.clone}"
-              class="icons-for-canvas b-clone">
-      file_copy
-    </mat-icon>
-    <mat-icon #close (click)="onDelete()"
-              [ngClass]="{'hide': !activeElementOnCanvas.close}"
-              class="icons-for-canvas b-close">
-      close
-    </mat-icon>
-
-    <mat-card #cardForPlace [ngClass]="{'hide': !currentPlace.isPlaceHovered || currentPlace.isPlaceClickedToClose}">
-      <mat-card-header>
-        <button aria-label="Clear" class="btn-clear" mat-button mat-icon-button>
-          <mat-icon (click)="currentPlace.isPlaceClickedToClose = true">close</mat-icon>
-        </button>
-        <img alt="Logo exadel" mat-card-avatar src="../assets/images/logo/logo_micro2.jpg">
-        <mat-card-title>{{currentPlace.placeData?.role === placeRole.cowork ? 'Cowork'
-          : currentPlace.placeData?.role === placeRole.confroom ? 'Confroom' : 'Administration'}}</mat-card-title>
-        <mat-card-subtitle>ID: {{currentPlace.placeData?.id}}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content class="mx-auto">
-        <p>State: <span class="state-of-place {{currentPlace.placeData?.isFree ? 'free' : 'occupied'}}">
-          {{currentPlace.placeData?.isFree ? 'free' : 'occupied'}}</span></p>
-        <div [ngClass]="{'hide': currentPlace.placeData?.role !== placeRole.confroom}" class="for-confroom">
-          <p class="my-3">
-            Max quantity of place here is:
-            <span class="font-weight-bold" style="font-size: 1.2rem">{{currentPlace.placeData?.maxQuantity}}</span>
-          </p>
-          <form (ngSubmit)="onSubmitMaxQuantity()" [formGroup]="formMaxQuantity">
-            <mat-form-field appearance="outline" hintLabel="Any number from {{confroom.min}} to {{confroom.max}}">
-              <mat-label>Enter max quantity of places</mat-label>
-              <input formControlName="maxQuantity" matInput step="1" type="number">
-              <mat-error *ngIf="maxQuantityState.hasError('min')">
-                Number must be {{confroom.min}} or bigger
-              </mat-error>
-              <mat-error *ngIf="maxQuantityState.hasError('max')">
-                Number must be {{confroom.max}} or less
-              </mat-error>
-            </mat-form-field>
-            <button [disabled]="maxQuantityState.invalid" mat-raised-button type="submit">APPLY</button>
-          </form>
-        </div>
-      </mat-card-content>
-
-    </mat-card>
-
   </div>
+
+  <div class="col-sm-8 my-1 canvas">
+    <app-zoom (zoomChange)="doCanvasZoom($event)" [zoom]="canvasSize.zoom"></app-zoom>
+    <canvas #htmlCanvas class="my-3 mx-1 canvas-place"></canvas>
+  </div>
+  <mat-icon #clone (click)="onClone()"
+            [ngClass]="{'hide': !activeElementOnCanvas.clone}"
+            class="icons-for-canvas b-clone">
+    file_copy
+  </mat-icon>
+  <mat-icon #close (click)="onDelete()"
+            [ngClass]="{'hide': !activeElementOnCanvas.close}"
+            class="icons-for-canvas b-close">
+    close
+  </mat-icon>
+
+  <mat-card #cardForPlace [ngClass]="{'hide': !currentPlace.isPlaceHovered || currentPlace.isPlaceClickedToClose}">
+    <mat-card-header>
+      <button aria-label="Clear" class="btn-clear" mat-button mat-icon-button>
+        <mat-icon (click)="currentPlace.isPlaceClickedToClose = true">close</mat-icon>
+      </button>
+      <img alt="Logo exadel" mat-card-avatar src="../assets/images/logo/logo_micro2.jpg">
+      <mat-card-title>{{currentPlace.placeData?.role === placeRole.cowork ? 'Cowork'
+        : currentPlace.placeData?.role === placeRole.confroom ? 'Confroom' : 'Administration'}}</mat-card-title>
+      <mat-card-subtitle>ID: {{currentPlace.placeData?.id}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="mx-auto">
+      <p>State: <span class="state-of-place {{currentPlace.placeData?.isFree ? 'free' : 'occupied'}}">
+          {{currentPlace.placeData?.isFree ? 'free' : 'occupied'}}</span></p>
+      <div [ngClass]="{'hide': currentPlace.placeData?.role !== placeRole.confroom}" class="for-confroom">
+        <p class="my-3">
+          Max quantity of place here is:
+          <span class="font-weight-bold" style="font-size: 1.2rem">{{currentPlace.placeData?.maxQuantity}}</span>
+        </p>
+        <form (ngSubmit)="onSubmitMaxQuantity()" [formGroup]="formMaxQuantity">
+          <mat-form-field appearance="outline" hintLabel="Any number from {{confroom.min}} to {{confroom.max}}">
+            <mat-label>Enter max quantity of places</mat-label>
+            <input formControlName="maxQuantity" matInput step="1" type="number">
+            <mat-error *ngIf="maxQuantityState.hasError('min')">
+              Number must be {{confroom.min}} or bigger
+            </mat-error>
+            <mat-error *ngIf="maxQuantityState.hasError('max')">
+              Number must be {{confroom.max}} or less
+            </mat-error>
+          </mat-form-field>
+          <button [disabled]="maxQuantityState.invalid" mat-raised-button type="submit">APPLY</button>
+        </form>
+      </div>
+    </mat-card-content>
+
+  </mat-card>
+
 </div>

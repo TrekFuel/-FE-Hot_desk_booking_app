@@ -1,6 +1,6 @@
 export interface OfficeAddress {
   country: string,
   city: string,
-  office: string,
+  address: string,
   floor?: string
 }

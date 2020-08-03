@@ -3,6 +3,7 @@ export const environment = {
   localStorageUser: 'user',
   databaseURL: '/api',
   usersComponentRoute: '/users',
+  officesURL: '/offices',
   places: {
     MAX_DEFAULT_QUANTITY_IN_CONFROOM: 25,
     MIN_QUANTITY_IN_CONFROOM: 2,
@@ -13,4 +14,6 @@ export const environment = {
     MAX: 200,
     STEP: 10
   },
+  TEMP_ADDRESS_ID_FOR_NEW_OFFICE: 'new office',
+  ERROR_ON_GETTING_ADDRESS_ID: 'error on get id'
 };

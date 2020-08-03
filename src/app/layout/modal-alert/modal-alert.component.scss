@@ -1,0 +1,16 @@
+@import "main";
+
+.modal-alert {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 99999;
+  background: $bg-semitransparent;
+
+  &--content {
+    max-width: 500px;
+    margin: 1rem auto;
+  }
+}

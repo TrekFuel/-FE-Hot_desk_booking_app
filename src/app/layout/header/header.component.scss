@@ -3,13 +3,15 @@
 
 .header {
   background: $header-bg;
-  box-shadow: 0 0 0.375rem rgba(0,0,0,0.1);
+  box-shadow: 0 0 0.375rem rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
   z-index: 999;
 
   &--burger {
     transition: .2s;
+    margin: 4px 0;
+
     &:hover {
       transition: .2s;
       background: #eeeeee;
@@ -51,6 +53,7 @@
       border-color: $btn-bg;
       color: $btn-bg;
       transition: .2s;
+
       &:hover {
         transition: .2s;
         background: $btn-hover;

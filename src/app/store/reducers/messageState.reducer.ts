@@ -1,4 +1,4 @@
-import { MessageStateInterface } from '../../layout/message-state/modules/message.interface';
+import { MessageStateInterface } from '../../layout/message-state/models/message.interface';
 import {
   messageSateActionType,
   messageStateTypeActions,

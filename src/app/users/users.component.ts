@@ -11,11 +11,11 @@ import { environment } from '../../environments/environment';
 })
 export class UsersComponent {
   @Input() public users: UserInterface[];
-  @Input() public usersLength: number;
+  @Input() public pageNumberVisible: number;
+  @Input() public pagesTotal: number;
   public checkRadioBtn: number;
   public numberPage: number;
   public valueRadioBtn: number[];
-  public disabledNext: boolean;
 
   constructor(private route: ActivatedRoute, private router: Router) {
     this.initializeRadioBtn();

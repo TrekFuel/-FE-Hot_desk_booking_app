@@ -1,53 +1,80 @@
-<form class="row mt-4 justify-content-center"
-      [formGroup]="form">
+<form (ngSubmit)="onSubmit()" [formGroup]="selectOfficeForm" class="row mt-4 justify-content-center">
 
-  <mat-form-field appearance="outline" class="col-sm-4 my-1 select-form">
-    <mat-label class="">Choose a country</mat-label>
-    <mat-select formControlName="country"
-                (selectionChange)="onSelected($event.value)">
-      <mat-option>--</mat-option>
-      <mat-option *ngFor="let option of countryOptions"
-                  [value]="option | lowercase">
-        {{option}}
-      </mat-option>
+  <mat-form-field appearance="outline" class="col-sm-6 col-md-3 my-1 select-form">
+    <mat-label>{{SelectorsName.country | titlecase}}</mat-label>
+    <mat-hint>Please choose a {{SelectorsName.country}}</mat-hint>
+    <mat-select [hasFocus]="currentFocus === SelectorsName.country"
+                formControlName="country">
+      <mat-option *ngFor="let option of countryOptions" [value]="option">{{option}}</mat-option>
     </mat-select>
+    <mat-error *ngIf="country.hasError('required')">You need to choose {{SelectorsName.country}}</mat-error>
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="col-sm-4 my-1 select-form">
-    <mat-label>Choose a city</mat-label>
-    <mat-select formControlName="city"
-                (selectionChange)="onSelected($event.value)">
-      <mat-option>--</mat-option>
-      <mat-option *ngFor="let option of cityOptions"
-                  [value]="option | lowercase">
-        {{option}}
-      </mat-option>
+  <mat-form-field appearance="outline" class="col-sm-6 col-md-3 my-1 select-form">
+    <mat-label>{{SelectorsName.city | titlecase}}</mat-label>
+    <mat-hint *ngIf="!!country.value">Please choose a {{SelectorsName.city}}</mat-hint>
+    <mat-select [hasFocus]="currentFocus === SelectorsName.city" formControlName="city">
+      <mat-option *ngFor="let option of cityOptions" [value]="option">{{option}}</mat-option>
     </mat-select>
+    <mat-error *ngIf="city.hasError('required')">You need to choose {{SelectorsName.city}}</mat-error>
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="col-sm-4 my-1 select-form">
-    <mat-label>Choose an office</mat-label>
-    <mat-select formControlName="office"
-                (selectionChange)="onSelected($event.value)">
-      <mat-option>--</mat-option>
-      <mat-option *ngFor="let option of officeOptions"
-                  [value]="option | lowercase">
-        {{option}}
-      </mat-option>
+  <mat-form-field appearance="outline" class="col-sm-6 col-md-3 my-1 select-form">
+    <mat-label>{{SelectorsName.address | titlecase}}</mat-label>
+    <mat-hint *ngIf="!!city.value">Please choose an {{SelectorsName.address}}</mat-hint>
+    <mat-select [hasFocus]="currentFocus === SelectorsName.address" formControlName="address">
+      <mat-option *ngFor="let option of addressOptions" [value]="option">{{option}}</mat-option>
     </mat-select>
+    <mat-error *ngIf="address.hasError('required')">You need to choose {{SelectorsName.address}}</mat-error>
   </mat-form-field>
 
-  <div class="col-sm-4">
-    <app-clearable-input (inputMessage)="onInputMessage($event)"
-                         [label]="'Any'"
-                         [disableStatus]="true"
-                         [value]="'some value'">
-    </app-clearable-input>
+  <div class="col-sm-6 col-md-3 mt-3">
+    <button [hasFocus]="currentFocus === SelectorsName.choose"
+            class="btn btn-block {{newOfficeObjectReady ? 'btn-secondary' : 'btn-outline-secondary'}}"
+            type="submit">
+      {{newOfficeObjectReady ? 'Send on server' : 'Choose'}}
+    </button>
   </div>
 
-  <div class="text-center col-sm-8 my-1">
-    <button type="button" class="btn btn-outline-warning mx-3">Edit</button>
-    <button type="button" class="btn btn-outline-danger mx-3">Delete</button>
+  <div *ngIf="canEditMode" class="col-sm-6 col-md-3 mt-4 mt-sm-1">
+    <mat-form-field appearance="outline">
+      <mat-label>{{!!newSelected ? 'Please enter a new ' + newSelected : ''}}</mat-label>
+      <input (keydown.enter)="onInputMessage(newSelected, $event)"
+             [errorStateMatcher]="matcher"
+             [hasFocus]="currentFocus === SelectorsName.new"
+             autocomplete="off" formControlName="inputNew"
+             matInput
+             type="text">
+
+      <button (click)="selectOfficeForm.patchValue({inputNew: ''})"
+              *ngIf="!!inputNew.value && !!newSelected"
+              aria-label="Clear"
+              mat-button
+              mat-icon-button
+              matSuffix>
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-error *ngIf="inputNew.hasError('sameName')">
+        You entered an <strong>existing {{newSelected}}.</strong> Please change it.
+      </mat-error>
+      <mat-error *ngIf="inputNew.hasError('required')">
+        Value should't be <strong>empty</strong>!
+      </mat-error>
+    </mat-form-field>
   </div>
 
+  <div *ngIf="canEditMode" class="col-sm-6 col-md-3 offset-md-3 mt-3">
+    <button
+      class="btn btn-block {{newOfficeObjectReady ? 'btn-outline-success' : 'btn-outline-warning'}}"
+      type="button">
+      {{newOfficeObjectReady ? 'New room' : 'Edit room'}}
+    </button>
+  </div>
+
+  <div *ngIf="canEditMode" class="col-sm-6 col-md-3 offset-sm-6 offset-md-0 mt-3">
+    <button class="btn btn-block btn-outline-danger"
+            type="button">
+      Delete room
+    </button>
+  </div>
 </form>

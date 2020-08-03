@@ -1,7 +1,7 @@
 import { Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { fabric } from 'fabric';
 import { CANVAS_OPTION } from './canvas-option';
-import { EDITOR_NAMES, editorBlocks, PLACES_TITLES } from './editorBlocksInfo';
+import { EDITOR_NAMES, editorBlocks, PLACES_TITLES } from './editor-blocks-info';
 import { PlaceData, PlaceRole } from '../../shared/models/map-data.model';
 import { Canvas } from 'fabric/fabric-impl';
 import { environment } from '../../../environments/environment';
@@ -296,10 +296,10 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   onSaveClick(): void {
     const mapData: string = JSON.stringify(this.canvas);
     const officeFull: OfficeFullModel = {
-      address: {
+      officeAddress: {
         country: 'Belarus',
         city: 'Grodno',
-        office: 'Somewhere str. 1'
+        address: 'Somewhere str. 1'
       },
       map: {
         mapData,
