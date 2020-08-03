@@ -16,10 +16,14 @@ export const userSelector = createSelector(loginSelector,
 
 export const userTokenSelector = createSelector(loginSelector,
   (login: LoginInterface): string => {
-    return login.loggedInUser.token;
+    if (login.loggedInUser) {
+      return login.loggedInUser.token;
+    }
   });
 
 export const userRoleSelector = createSelector(loginSelector,
   (login: LoginInterface): string[] => {
-    return login.loggedInUser.userInfo.roleNames;
+    if (login.loggedInUser) {
+      return login.loggedInUser.userInfo.roleNames;
+    }
   });

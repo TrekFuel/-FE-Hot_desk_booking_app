@@ -1,36 +1,33 @@
 import {
-  Component,
-  ElementRef,
-  HostListener,
-  OnInit,
-  ViewChild,
+  Component, ElementRef, HostListener,
+  OnDestroy, OnInit, ViewChild
 } from '@angular/core';
 import { SidebarServices } from '../sidebar/sidebar.services';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
-import { userTokenSelector } from '../../store/selectors/auth.selectors';
-import { Observable } from 'rxjs';
+import { userSelector, userTokenSelector } from '../../store/selectors/auth.selectors';
+import { Observable, Subscription } from 'rxjs';
 import { AuthService } from '../../auth/login/services/auth.service';
 import { LogoutStartAction } from '../../store/actions/auth.actions';
+import { AuthResponse } from '../../auth/login/models/auth-response.model';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
+  styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
-  public isVisibleSubmenu: boolean = false;
-  isLoggedIn$: Observable<string>;
+
+export class HeaderComponent implements OnInit, OnDestroy {
+
+  public isVisibleSubmenu = false;
+  usernameForIcon: string;
+
+  user$: Observable<AuthResponse>;
+  userToken$: Observable<string>;
+  subscription$: Subscription;
 
   @ViewChild('subMenu') subMenu: ElementRef;
   @ViewChild('btnSubMenu') btnSubMenu: ElementRef;
-
-  constructor(
-    private el: ElementRef,
-    private sidebarServices: SidebarServices,
-    private loginService: AuthService,
-    private store$: Store<AppState>
-  ) {}
 
   @HostListener('document:click', ['$event']) clickOut(event) {
     if (this.btnSubMenu) {
@@ -42,19 +39,46 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-    this.isLoggedIn$ = this.store$.pipe(select(userTokenSelector));
+  constructor(
+    private el: ElementRef,
+    private sidebarServices: SidebarServices,
+    private loginService: AuthService,
+    private store$: Store<AppState>,
+  ) {
   }
 
-  isVisibleSidebar(): void {
+  ngOnInit() {
+    this.user$ = this.store$.select(userSelector);
+    this.userToken$ = this.store$.select(userTokenSelector);
+
+    this.subscription$ = this.user$
+      .subscribe((user: AuthResponse) => {
+        if (user && user.token) {
+          const nameShortcut = user.userInfo.firstName.charAt(0);
+          const surnameShortcut = user.userInfo.lastName.charAt(0);
+          this.usernameForIcon = nameShortcut.concat(surnameShortcut);
+        }
+      });
+  }
+
+  isVisibleSidebar() {
     this.sidebarServices.onClick();
   }
 
-  onClickSubmenu(): void {
-    this.isVisibleSubmenu = !this.isVisibleSubmenu;
+  onClickSubmenu() {
+      this.isVisibleSubmenu = !this.isVisibleSubmenu;
   }
 
-  onLogout(): void {
+  onLogout() {
     this.store$.dispatch(new LogoutStartAction());
+    this.onClickSubmenu();
   }
+
+  onFormSubmit() {
+  }
+
+  ngOnDestroy() {
+    this.subscription$.unsubscribe();
+  }
+
 }

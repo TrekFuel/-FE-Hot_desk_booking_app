@@ -1,26 +1,68 @@
-<div class="container mb-3">
+<div class="container mt-5">
   <office-choosing-container></office-choosing-container>
-  <div class="row mx-1">
-    <img
-      alt="office-map"
-      class="mx-auto img-fluid"
-      src="https://static.tildacdn.com/tild3938-3732-4866-b233-623966336431/move1.jpg"
-      title="office-map">
+  <div class="row text-center">
+    <div class="col-sm-12">
+      <img
+        src="https://static.tildacdn.com/tild3938-3732-4866-b233-623966336431/move1.jpg"
+        alt="office-map"
+        title="office-map"
+        class="mx-auto img-fluid">
+    </div>
+    <div class="col-sm-12">
+      <mat-form-field appearance="outline"
+                      class="mx-auto">
+        <mat-label>Choose a date range</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+          <input matStartDate placeholder="Start date">
+          <input matEndDate placeholder="End date">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+    </div>
+    <div class="col-sm-12 mt-1 mb-3">
+      <button type="button"
+              class="btn btn-outline-success mx-auto">Book a workplace
+      </button>
+    </div>
   </div>
-  <div class="row mx-1">
-    <mat-form-field appearance="outline"
-                    class="mx-auto mb-5">
-      <mat-label>Choose a date</mat-label>
-      <input [formControl]="date"
-             [matDatepicker]="picker"
-             matInput>
-      <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-  </div>
-  <div class="row mx-1">
-    <button class="btn btn-outline-success mx-auto mb-5"
-            type="button">Book a workplace
-    </button>
+  <div class="bookings">
+    <div class="row text-center mt-5">
+      <div class="col-sm-12">
+        <h2 class="mx-auto font-weight-light mb-3">Active bookings</h2>
+        <div class="bookings--table">
+          <table class="table">
+            <thead class="thead-light">
+            <tr>
+              <th scope="col">Country</th>
+              <th scope="col">City</th>
+              <th scope="col">Office</th>
+              <th scope="col">Floor</th>
+              <th scope="col">Place</th>
+              <th scope="col">Date</th>
+              <th scope="col">Booking</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr
+              *ngFor="let booking of bookingData">
+              <td class="table--row">{{ booking.country }}</td>
+              <td class="table--row">{{ booking.city }}</td>
+              <td class="table--row">{{ booking.office }}</td>
+              <td class="table--row">{{ booking.floor }}</td>
+              <td class="table--row">{{ booking.place }}</td>
+              <td class="table--row">{{ booking.date }}</td>
+              <td>
+                <button
+                  class="table--btn btn btn-sm"
+                  type="button">open booking
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

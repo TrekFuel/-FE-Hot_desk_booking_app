@@ -10,18 +10,20 @@
       class="header--burger navbar-toggler"
       data-target="#navbarToggleExternalContent"
       data-toggle="collapse"
-      type="button">
+      type="button"
+      [disabled]="!(userToken$ | async)">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <!--Center element menu (position-absolute)-->
-    <a class="header--logo" href="#"></a>
+    <a class="header--logo"></a>
 
     <!--Right element menu-->
-    <ng-container *ngIf="isLoggedIn$ | async">
+    <ng-container *ngIf="userToken$ | async">
       <div class="header--search d-flex align-items-center">
         <form
           #form="ngForm"
+          (ngSubmit)="onFormSubmit()"
           class="form-inline mr-4">
           <input
             aria-label="Search"
@@ -43,7 +45,7 @@
             #btnSubMenu
             (click)="onClickSubmenu()"
             class="d-flex align-items-center">
-            <div class="user-icon">H</div>
+            <div class="user-icon">{{usernameForIcon}}</div>
             <div class="ml-1 dropdown-toggle"></div>
           </div>
           <div
@@ -58,7 +60,7 @@
             </a>
             <a
               (click)="onLogout()"
-              class="hover-item dropdown-item" href="#">
+              class="hover-item dropdown-item">
               Logout
             </a>
           </div>
