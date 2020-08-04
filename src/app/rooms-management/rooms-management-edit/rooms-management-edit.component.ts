@@ -53,6 +53,8 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   };
   formMaxQuantity: FormGroup;
   currentNumber: number = 0;
+  // variables for container
+  // choosePlace: EventEmitter<PlaceData>;
 
   private canvas: Canvas;
 
@@ -199,6 +201,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
 
   // logik with place data
   createNewDataForPlace(newObj: fabric.Object, role: PlaceRole): PlaceData {
+
     let number: number = this.generateNumber();
     let id = '1';
     const placeData: PlaceData = { id, placeType: role, isFree: true, number };
