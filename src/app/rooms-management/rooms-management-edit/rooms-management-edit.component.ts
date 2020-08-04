@@ -1,4 +1,13 @@
-import { Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  Renderer2,
+  ViewChild
+} from '@angular/core';
 import { fabric } from 'fabric';
 import { CANVAS_OPTION } from './canvas-option';
 import { EDITOR_NAMES, editorBlocks, PLACES_TITLES } from './editor-blocks-info';
@@ -12,7 +21,8 @@ import { OfficeFullModel } from '../../shared/models/office-full.model';
 @Component({
   selector: 'app-rooms-management-edit',
   templateUrl: './rooms-management-edit.component.html',
-  styleUrls: ['./rooms-management-edit.component.scss']
+  styleUrls: ['./rooms-management-edit.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class RoomsManagementEditComponent implements OnInit, OnDestroy {
 
@@ -212,8 +222,6 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     activeObj.clone((clonedObj: fabric.Object) => {
       let type: string = clonedObj.name;
       let placeRole: PlaceRole = clonedObj.data?.placeType;
-      console.log(type);
-      console.log(clonedObj.data);
       this.addElementOnCanvas(clonedObj, type, placeRole, 10);
     });
   }
