@@ -2,7 +2,7 @@ export const environment = {
   production: false,
   localStorageUser: 'user',
   databaseURL: '/api',
-  usersComponentRoute: '/users',
+  usersComponentRoute: 'user',
   officesURL: '/offices',
   places: {
     MAX_DEFAULT_QUANTITY_IN_CONFROOM: 10,

@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import {
   officeChoosingStartAction,
-  officeChoosingStartCreateAddressAction,
+  officeChoosingStartCreateAddressAction
 } from '../../store/actions/officeChoosing.action';
 import { selectorsData } from '../../store/selectors/officeChosing.selectors';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -67,7 +67,7 @@ export class OfficeChoosingContainer {
     this.store$.dispatch(
       new officeChoosingStartCreateAddressAction({ selectorData: data })
     );
-    /*this.roomEdit.emit(event);*/
+    this.roomEdit.emit(event);
   }
 
   // here all you need to retrieve the data
