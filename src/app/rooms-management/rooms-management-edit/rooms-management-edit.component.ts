@@ -42,6 +42,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     placeData: null
   };
   formMaxQuantity: FormGroup;
+  currentNumber: number = 0;
 
   private canvas: Canvas;
 
@@ -188,8 +189,9 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
 
   // logik with place data
   createNewDataForPlace(newObj: fabric.Object, role: PlaceRole): PlaceData {
-    let id: string = this.generateId();
-    const placeData: PlaceData = { id, role, isFree: true };
+    let number: number = this.generateNumber();
+    let id = '1';
+    const placeData: PlaceData = { id, placeType: role, isFree: true, number };
     if (role === PlaceRole.confroom) {
       placeData.maxQuantity = environment.places.MAX_DEFAULT_QUANTITY_IN_CONFROOM;
     }
@@ -197,9 +199,8 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     return placeData;
   }
 
-  // ToDo need more secure id
-  generateId(): string {
-    return `BEGR-${Date.now().toString()}-${(Math.round(Math.random() * 899) + 100).toString()}`;
+  generateNumber(): number {
+    return ++this.currentNumber;
   }
 
   // UI method
@@ -210,7 +211,9 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     }
     activeObj.clone((clonedObj: fabric.Object) => {
       let type: string = clonedObj.name;
-      let placeRole: PlaceRole = clonedObj.data?.role;
+      let placeRole: PlaceRole = clonedObj.data?.placeType;
+      console.log(type);
+      console.log(clonedObj.data);
       this.addElementOnCanvas(clonedObj, type, placeRole, 10);
     });
   }

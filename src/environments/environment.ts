@@ -5,9 +5,9 @@ export const environment = {
   usersComponentRoute: '/users',
   officesURL: '/offices',
   places: {
-    MAX_DEFAULT_QUANTITY_IN_CONFROOM: 25,
+    MAX_DEFAULT_QUANTITY_IN_CONFROOM: 10,
     MIN_QUANTITY_IN_CONFROOM: 2,
-    MAX_QUANTITY_IN_CONFROOM: 200
+    MAX_QUANTITY_IN_CONFROOM: 25
   },
   zoomOptions: {
     MIN: 50,

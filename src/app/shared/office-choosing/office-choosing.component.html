@@ -32,9 +32,9 @@
   <div class="col-sm-6 col-md-3 mt-3">
     <button [disabled]="blockSelection"
             [hasFocus]="currentFocus === SelectorsName.choose"
-            class="btn btn-block {{newOfficeObjectReady ? 'btn-outline-success' : 'btn-outline-secondary'}}"
+            class="btn btn-block {{newOfficeObject ? 'btn-outline-success' : 'btn-outline-secondary'}}"
             type="submit">
-      {{newOfficeObjectReady ? 'Create new' : 'Choose'}}
+      {{newOfficeObject ? 'Create new' : 'Choose'}}
     </button>
   </div>
 
