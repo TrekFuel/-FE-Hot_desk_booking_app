@@ -16,6 +16,6 @@
 
   <office-choosing-container (roomEdit)="chooseOffice = $event"></office-choosing-container>
 
-  <app-rooms-management-edit *ngIf="!!chooseOffice?.data"></app-rooms-management-edit>
+  <app-rooms-management-edit-container *ngIf="!!chooseOffice?.data"></app-rooms-management-edit-container>
 
 </div>

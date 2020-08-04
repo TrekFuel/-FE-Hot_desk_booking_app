@@ -70,14 +70,16 @@
         <mat-icon (click)="currentPlace.isPlaceClickedToClose = true">close</mat-icon>
       </button>
       <img alt="Logo exadel" mat-card-avatar src="../assets/images/logo/logo_micro2.jpg">
-      <mat-card-title>{{currentPlace.placeData?.role === placeRole.cowork ? 'Cowork'
-        : currentPlace.placeData?.role === placeRole.confroom ? 'Confroom' : 'Administration'}}</mat-card-title>
-      <mat-card-subtitle>ID: {{currentPlace.placeData?.id}}</mat-card-subtitle>
+      <mat-card-title>{{currentPlace.placeData?.placeType === placeRole.cowork ? 'Cowork'
+        : currentPlace.placeData?.placeType === placeRole.confroom ? 'Confroom' : 'Administration'}}
+        #: {{currentPlace.placeData?.number | number:'3.0-0'}}
+      </mat-card-title>
+      <mat-card-subtitle> uuid: {{currentPlace.placeData?.id | slice:0:15}}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content class="mx-auto">
       <p>State: <span class="state-of-place {{currentPlace.placeData?.isFree ? 'free' : 'occupied'}}">
           {{currentPlace.placeData?.isFree ? 'free' : 'occupied'}}</span></p>
-      <div [ngClass]="{'hide': currentPlace.placeData?.role !== placeRole.confroom}" class="for-confroom">
+      <div [ngClass]="{'hide': currentPlace.placeData?.placeType !== placeRole.confroom}" class="for-confroom">
         <p class="my-3">
           Max quantity of place here is:
           <span class="font-weight-bold" style="font-size: 1.2rem">{{currentPlace.placeData?.maxQuantity}}</span>
