@@ -35,15 +35,15 @@ export class SidebarServices {
       .pipe(
         take(1),
         map((userRoles: string[]) => {
-          if (userRoles.includes(UserRoles.HR)) {
-            btnList = [...btnList,
-              ...[sidebarButtons.hr]];
-          } else if (userRoles.includes(UserRoles.ADMIN) ||
-            userRoles.includes(UserRoles.OFFICE_MANAGER)) {
-            btnList = [...btnList,
-              ...[sidebarButtons.admin_office_manager]];
-          }
-          return btnList;
+            if (userRoles && userRoles.includes(UserRoles.HR)) {
+              btnList = [...btnList,
+                ...[sidebarButtons.hr]];
+            } else if (userRoles && userRoles.includes(UserRoles.ADMIN) ||
+              userRoles && userRoles.includes(UserRoles.OFFICE_MANAGER)) {
+              btnList = [...btnList,
+                ...[sidebarButtons.admin_office_manager]];
+            }
+            return btnList;
         }),
       );
   }
