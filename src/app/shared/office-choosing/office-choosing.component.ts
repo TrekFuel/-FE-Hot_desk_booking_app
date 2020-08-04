@@ -36,7 +36,8 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   // ------------------
 
   @Input() canEditMode: boolean = false;
-  startEdit: boolean = false;
+  //ToDo need store here
+  blockSelection: boolean = false;
 
   constructor() {
   }
@@ -207,7 +208,20 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
 
       // ToDo do 2 different emitters, now it is a temporary variant or refactor this
       this.onChooseOffice.emit({ isNewObject: this.newOfficeObjectReady, data });
-      this.startEdit = true;
+      if (this.canEditMode) this.blockAllSelectors(true);
+    }
+  }
+
+  blockAllSelectors(enable: boolean): void {
+    this.blockSelection = enable;
+    if (enable) {
+      this.country.disable();
+      this.city.disable();
+      this.address.disable();
+    } else {
+      this.country.enable();
+      this.city.enable();
+      this.address.enable();
     }
   }
 
