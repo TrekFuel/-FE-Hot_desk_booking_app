@@ -1,6 +1,6 @@
 export class OfficesDataSelectsInterface {
-  country: string;
   city: string;
+  countryName: string;
   street: string;
-  id: string;
+  id?: string;
 }

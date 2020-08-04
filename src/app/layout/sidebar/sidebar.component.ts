@@ -6,6 +6,7 @@ import { AuthResponse } from '../../auth/login/models/auth-response.model';
 import { AppState } from '../../store';
 import { Store } from '@ngrx/store';
 import { userSelector } from '../../store/selectors/auth.selectors';
+import { environment } from '../../../environments/environment';
 
 interface BtnSidebarInterface {
   value: string;
@@ -22,7 +23,7 @@ interface BtnSidebarInterface {
 export class SidebarComponent implements OnInit, OnDestroy {
 
   public btnValue: BtnSidebarInterface[] = [
-    {value: 'List Users', route: 'users'},
+    {value: 'List Users', route: environment.usersComponentRoute},
     { value: 'Booking', route: 'booking' },
     {value: 'Rooms Management', route: 'rooms-management'}
   ];
