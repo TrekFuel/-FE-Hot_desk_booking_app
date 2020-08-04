@@ -3,7 +3,7 @@ import { AuthService } from '../../auth/login/services/auth.service';
 import { Injectable } from '@angular/core';
 import {
   authActionType, LoginFailureAction,
-  LoginStartAction, LoginSuccessAction, LogoutEndAction,
+  LoginStartAction, LoginSuccessAction, LogoutEndAction
 } from '../actions/auth.actions';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { AuthResponse } from '../../auth/login/models/auth-response.model';
@@ -14,6 +14,7 @@ import { Actions } from '@ngrx/effects';
 import { Router } from '@angular/router';
 
 @Injectable()
+
 export class AuthEffects {
   @Effect()
   loggedInUser$ = this.actions$
@@ -52,9 +53,14 @@ export class AuthEffects {
     .pipe(
       ofType(authActionType.LOGOUT_START),
       switchMap(() => {
-        localStorage.removeItem(environment.localStorageUser);
-        this.router.navigate(['/login']);
-        return of(new LogoutEndAction({loggedInUser: null}));
+        return this.services$.logout({})
+          .pipe(
+            map(() => {
+              localStorage.removeItem(environment.localStorageUser);
+              this.router.navigate(['/login']);
+              return new LogoutEndAction({loggedInUser: null});
+            }),
+          );
       }),
     );
 
