@@ -7,6 +7,7 @@ import { UserProfileContainerComponent } from './home/user-profile/user-profile.
 import { BookingPageContainerComponent } from './booking/booking-page/booking-page.container';
 import { NoAuthGuard } from './shared/guards/no-auth.guard';
 import { AuthGuard } from './shared/guards/auth.guard';
+import { environment } from '../environments/environment';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
@@ -16,7 +17,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'users',
+    path: environment.usersComponentRoute,
     component: AppUsersContainer,
     canActivate: [NoAuthGuard],
   },
@@ -41,5 +42,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}
