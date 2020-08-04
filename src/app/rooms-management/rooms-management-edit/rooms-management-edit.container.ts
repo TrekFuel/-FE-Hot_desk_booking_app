@@ -19,16 +19,20 @@ export class RoomsManagementEditContainer {
   }
 
   onHandlePlaces(placeDataArr: PlaceData[]) {
-    // Input DATA [ {id: "1596568001226-651", placeType: 0, number: 1, maxQuantity: 1} ]
-    // OUTPUT DATA [ {oldId: "1596568001226-651", placeType: 0, number: 1, maxQuantity: 1, id: 'uuid from server here'} ]
+    // Input DATA [ {tempId: "1596568001226-651", placeType: 0, number: 1, maxQuantity: 1 } ]
+    //
+    // OUTPUT DATA [ {tempId: "1596568001226-651", placeType: 0, number: 1, maxQuantity: 1, id: 'uuid from server here' } ]
+
+    // simulate server work
+    let rnd = Math.ceil(Math.random() * 99 + 1);
     const newPlaceDataArr = [...placeDataArr].map((item: PlaceData) => {
-      let [oldId, number, maxQuantity, placeType] = [item.id, item.number, item.maxQuantity, item.placeType];
-      const newItem: PlaceData = { id: 'uuid from server here', oldId, number, maxQuantity, placeType };
+      const newItem: PlaceData = { ...item, id: `uuid ${rnd}` };
       return newItem;
     });
 
+    // changedMap can be save to server
     let changedMap = RoomsManagementEditComponent.putDataReturnMap(newPlaceDataArr);
-    console.log(changedMap);
+    // console.log(changedMap);
   }
 
   initStore(): void {

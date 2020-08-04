@@ -69,11 +69,14 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   }
 
   static putDataReturnMap(placeDataArr: PlaceData[]): string {
-    RoomsManagementEditComponent.canvas.forEachObject((obj: fabric.Object) => {
-      if (obj?.name === EDITOR_NAMES.place) {
-        let oldId: string = obj.data.id;
-        let placeWithOldId: PlaceData = placeDataArr.find((item: PlaceData) => item.oldId === oldId);
-        obj.data.id = placeWithOldId.id;
+    RoomsManagementEditComponent.canvas.forEachObject((obj: (fabric.Object)) => {
+      if (obj?.name === EDITOR_NAMES.place && !obj?.data.id) {
+        console.log('no id');
+        let tempId: string = obj.data.tempId;
+        let placeWithTempId: PlaceData = placeDataArr.find((item: PlaceData) => item.tempId === tempId);
+        console.log(tempId);
+        console.log(placeWithTempId);
+        obj.data.id = placeWithTempId.id;
       }
     });
     return JSON.stringify(this.canvas);
@@ -211,8 +214,8 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   // logik with place data
   createNewDataForPlace(newObj: fabric.Object, role: PlaceRole): PlaceData {
     let number: number = this.generateNumber();
-    let id = this.generateId();
-    const placeData: PlaceData = { id, placeType: role, number };
+    let tempId = this.generateId();
+    const placeData: PlaceData = { tempId, placeType: role, number };
     if (role === PlaceRole.confroom) {
       placeData.maxQuantity = environment.places.MAX_DEFAULT_QUANTITY_IN_CONFROOM;
     } else {
@@ -250,7 +253,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
       actObjs.forEach((actObj: fabric.Object) => {
         if (!this.blockedElements.includes(actObj.name)) {
           if (actObj.name === EDITOR_NAMES.place) {
-            this.placesData = this.placesData.filter((place: PlaceData) => place.id !== actObj.data.id);
+            this.placesData = this.placesData.filter((place: PlaceData) => place.tempId !== actObj.data.tempId);
           }
           RoomsManagementEditComponent.canvas.remove(actObj);
         }
@@ -318,7 +321,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   onSubmitMaxQuantity(): void {
     let maxQuantity: number = this.formMaxQuantity.value.maxQuantity;
     this.currentPlace.placeData['maxQuantity'] = maxQuantity;
-    this.placesData.some((place: PlaceData) => place.id === this.currentPlace.placeData.id
+    this.placesData.some((place: PlaceData) => place.tempId === this.currentPlace.placeData.tempId
       ? place['maxQuantity'] = maxQuantity : false);
   }
 

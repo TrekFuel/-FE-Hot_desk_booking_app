@@ -7,7 +7,7 @@ export interface PlaceData {
   number: number,
   placeType: PlaceRole,
   id?: string,
-  oldId?: string,
+  tempId?: string,
   roomId?: string,
   isFree?: boolean,
   maxQuantity?: number,
