@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { userRolesSelector } from '../../store/selectors/auth.selectors';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { UserRoles } from '../../shared/enums/user-roles.enum';
 
 @Injectable({
@@ -21,6 +21,7 @@ export class RoomsManagementGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean> {
     return this.store$.select(userRolesSelector)
       .pipe(
+        take(1),
         map((userRoles: string[]) => {
           if (userRoles.includes(UserRoles.ADMIN) ||
             userRoles.includes(UserRoles.OFFICE_MANAGER)) {
