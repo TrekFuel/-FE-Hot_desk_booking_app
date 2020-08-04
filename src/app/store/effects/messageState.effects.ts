@@ -6,13 +6,17 @@ import {
   messageStateFinishAction,
   messageStateStartAction,
 } from '../actions/messageState.action';
+import { officeChoosingActionType } from '../actions/officeChoosing.action';
 
 interface messageStateInterface {
   payload;
   type;
 }
 
-const showMessageAction = [usersListActionType.USERS_LIST_FAILURE];
+const showMessageAction = [
+  usersListActionType.USERS_LIST_FAILURE,
+  officeChoosingActionType.SELECTORS_DATA_FAILURE,
+];
 
 @Injectable()
 export class MessageStateEffects {

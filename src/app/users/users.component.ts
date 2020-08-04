@@ -29,7 +29,7 @@ export class UsersComponent {
   }
 
   queryParams(): void {
-    this.router.navigate([environment.usersComponentRoute], {
+    this.router.navigate([`/${environment.usersComponentRoute}`], {
       queryParams: {
         size: this.checkRadioBtn,
         page: this.numberPage - 1,
