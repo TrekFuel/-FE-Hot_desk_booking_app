@@ -7,7 +7,7 @@ export const environment = {
   places: {
     MAX_DEFAULT_QUANTITY_IN_CONFROOM: 10,
     MIN_QUANTITY_IN_CONFROOM: 2,
-    MAX_QUANTITY_IN_CONFROOM: 25
+    MAX_QUANTITY_IN_CONFROOM: 50
   },
   zoomOptions: {
     MIN: 50,
