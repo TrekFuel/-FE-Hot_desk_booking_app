@@ -28,8 +28,9 @@ export const MY_FORMATS = {
 export class BookingPageComponent {
   chooseOffice: ChooseOffice;
   date = new FormControl(new Date());
-
   // date = new FormControl(moment());
+
+  showMap: boolean = false;
 
   constructor() {
   }

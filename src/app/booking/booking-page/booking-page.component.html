@@ -40,13 +40,14 @@
     </div>
 
     <div class="col-sm-6 col-md-3 mt-3">
-      <button (click)="onClickShowMap()" class="btn btn-block btn-outline-primary">
+      <button (click)="showMap = !showMap" class="btn btn-block btn-outline-primary">
         Show map
       </button>
     </div>
+
   </div>
 
-  <app-booking-map-container></app-booking-map-container>
+  <app-booking-map-container *ngIf="showMap"></app-booking-map-container>
 
   <app-booking-table-container></app-booking-table-container>
 </div>
