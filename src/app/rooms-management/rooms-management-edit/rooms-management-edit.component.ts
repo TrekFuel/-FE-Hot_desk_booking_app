@@ -1,10 +1,11 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
+  EventEmitter,
   HostListener,
   OnDestroy,
   OnInit,
+  Output,
   Renderer2,
   ViewChild
 } from '@angular/core';
@@ -16,15 +17,15 @@ import { Canvas } from 'fabric/fabric-impl';
 import { environment } from '../../../environments/environment';
 import { CanvasSize, Confroom, CurrentPlaceInEditor, EditorBlock } from './models/editor-blocks.models';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { OfficeFullModel } from '../../shared/models/office-full.model';
 
 @Component({
   selector: 'app-rooms-management-edit',
   templateUrl: './rooms-management-edit.component.html',
   styleUrls: ['./rooms-management-edit.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default
 })
 export class RoomsManagementEditComponent implements OnInit, OnDestroy {
+
+  private static canvas: Canvas;
 
   @ViewChild('htmlCanvas', { static: true }) htmlCanvas: ElementRef;
   @ViewChild('clone', { static: true, read: ElementRef }) btnClone: ElementRef;
@@ -35,7 +36,6 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     height: 500,
     zoom: 100
   };
-
   placesData: PlaceData[] = [];
   placeRole = PlaceRole;
   editorBlocks: EditorBlock[] = editorBlocks;
@@ -53,10 +53,10 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   };
   formMaxQuantity: FormGroup;
   currentNumber: number = 0;
-  // variables for container
-  // choosePlace: EventEmitter<PlaceData>;
 
-  private canvas: Canvas;
+  // variables for container
+  @Output() handlePlaces: EventEmitter<PlaceData[]> = new EventEmitter<PlaceData[]>();
+  @Output() deletePlaces: EventEmitter<string[]> = new EventEmitter<string[]>();
 
   constructor(private renderer: Renderer2) {
   }
@@ -69,6 +69,20 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     return this.formMaxQuantity.get('maxQuantity');
   }
 
+  static putDataReturnMap(placeDataArr: PlaceData[]): string {
+    if (placeDataArr.length > 0) {
+      RoomsManagementEditComponent.canvas.forEachObject((obj: (fabric.Object)) => {
+        if (obj?.name === EDITOR_NAMES.place && !obj?.data.id) {
+          console.log('no id');
+          let tempId: string = obj.data.tempId;
+          let placeWithTempId: PlaceData = placeDataArr.find((item: PlaceData) => item.tempId === tempId);
+          obj.data.id = placeWithTempId.id;
+        }
+      });
+    }
+    return JSON.stringify(RoomsManagementEditComponent.canvas);
+  }
+
   @HostListener('window:resize') onResize() {
     this.activeElementOnCanvas.clone = this.activeElementOnCanvas.close = false;
   }
@@ -77,7 +91,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     switch (event.key) {
       case 'Escape':
         this.discardActObj();
-        this.canvas.requestRenderAll();
+        RoomsManagementEditComponent.canvas.requestRenderAll();
         break;
       case 'Delete':
         this.onDelete();
@@ -88,12 +102,11 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.canvas = new fabric.Canvas(this.htmlCanvas.nativeElement, CANVAS_OPTION.FOR_EDIT);
+    RoomsManagementEditComponent.canvas = new fabric.Canvas(this.htmlCanvas.nativeElement, CANVAS_OPTION.FOR_EDIT);
     this.doCanvasZoom();
 
-    this.canvas.on({
+    RoomsManagementEditComponent.canvas.on({
       'object:added': (e) => {
-        // ToDo maybe show data of obj
         this.hidePlaceData();
       },
       'object:selected': (e) => {
@@ -117,7 +130,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
       'selection:cleared': (e) => this.activeElementOnCanvas.clone = this.activeElementOnCanvas.close = false,
       'mouse:over': (e) => {
         const actObj: fabric.Object = e.target;
-        if (actObj?.name === EDITOR_NAMES.place && this.canvas.getActiveObjects().length <= 1) {
+        if (actObj?.name === EDITOR_NAMES.place && RoomsManagementEditComponent.canvas.getActiveObjects().length <= 1) {
           this.currentPlace.isPlaceHovered = true;
           this.currentPlace.placeData = actObj.data;
         }
@@ -143,10 +156,10 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
 
   doCanvasZoom(zoom: number = this.canvasSize.zoom): void {
     this.canvasSize.zoom = zoom;
-    this.canvas.setWidth(this.canvasSize.width * this.curZoom);
-    this.canvas.setHeight(this.canvasSize.height * this.curZoom);
-    this.canvas.setZoom(this.curZoom);
-    const actObj = this.canvas.getActiveObject();
+    RoomsManagementEditComponent.canvas.setWidth(this.canvasSize.width * this.curZoom);
+    RoomsManagementEditComponent.canvas.setHeight(this.canvasSize.height * this.curZoom);
+    RoomsManagementEditComponent.canvas.setZoom(this.curZoom);
+    const actObj = RoomsManagementEditComponent.canvas.getActiveObject();
     if (actObj) {
       this.positioningCloneAndClose(actObj);
     }
@@ -201,12 +214,14 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
 
   // logik with place data
   createNewDataForPlace(newObj: fabric.Object, role: PlaceRole): PlaceData {
-
     let number: number = this.generateNumber();
-    let id = '1';
-    const placeData: PlaceData = { id, placeType: role, isFree: true, number };
+    let tempId = this.generateId();
+    const placeData: PlaceData = { tempId, placeType: role, number };
     if (role === PlaceRole.confroom) {
       placeData.maxQuantity = environment.places.MAX_DEFAULT_QUANTITY_IN_CONFROOM;
+    } else {
+      // default value
+      placeData.maxQuantity = 1;
     }
     this.placesData.push(placeData);
     return placeData;
@@ -216,9 +231,13 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     return ++this.currentNumber;
   }
 
+  generateId(): string {
+    return `${Date.now().toString()}-${(Math.round(Math.random() * 899) + 100).toString()}`;
+  }
+
   // UI method
   onClone(): void {
-    const activeObj: fabric.Object = this.canvas.getActiveObject();
+    const activeObj: fabric.Object = RoomsManagementEditComponent.canvas.getActiveObject();
     if (activeObj.type === 'activeSelection') {
       return;
     }
@@ -230,18 +249,21 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   }
 
   onDelete(): void {
-    const actObjs: fabric.Object[] = this.canvas.getActiveObjects();
+    const actObjs: fabric.Object[] = RoomsManagementEditComponent.canvas.getActiveObjects();
+    const placesIdToDeleteFromServer: string[] = [];
     if (actObjs) {
       actObjs.forEach((actObj: fabric.Object) => {
         if (!this.blockedElements.includes(actObj.name)) {
           if (actObj.name === EDITOR_NAMES.place) {
-            this.placesData = this.placesData.filter((place: PlaceData) => place.id !== actObj.data.id);
+            this.placesData = this.placesData.filter((place: PlaceData) => place.tempId !== actObj.data.tempId);
+            if (!!actObj?.data.id) placesIdToDeleteFromServer.push(actObj.data.id);
           }
-          this.canvas.remove(actObj);
+          RoomsManagementEditComponent.canvas.remove(actObj);
         }
       });
       this.discardActObj();
-      this.canvas.requestRenderAll();
+      RoomsManagementEditComponent.canvas.requestRenderAll();
+      this.deletePlaces.emit(placesIdToDeleteFromServer);
     }
   }
 
@@ -261,11 +283,11 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  addAndRender(obj: fabric.Object) {
-    this.canvas.add(obj);
-    this.canvas.setActiveObject(obj);
+  addAndRender(obj: fabric.Object): void {
+    RoomsManagementEditComponent.canvas.add(obj);
+    RoomsManagementEditComponent.canvas.setActiveObject(obj);
     this.currentPlace.placeData = obj.data;
-    this.canvas.requestRenderAll();
+    RoomsManagementEditComponent.canvas.requestRenderAll();
   }
 
   positioningCloneAndClose(obj: fabric.Object): void {
@@ -300,28 +322,34 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSubmitMaxQuantity() {
+  onSubmitMaxQuantity(): void {
     let maxQuantity: number = this.formMaxQuantity.value.maxQuantity;
     this.currentPlace.placeData['maxQuantity'] = maxQuantity;
-    this.placesData.some((place: PlaceData) => place.id === this.currentPlace.placeData.id
+    this.placesData.some((place: PlaceData) => place.tempId === this.currentPlace.placeData.tempId
       ? place['maxQuantity'] = maxQuantity : false);
   }
 
   onSaveClick(): void {
-    const mapData: string = JSON.stringify(this.canvas);
-    const officeFull: OfficeFullModel = {
-      officeAddress: {
-        country: 'Belarus',
-        city: 'Grodno',
-        address: 'Somewhere str. 1'
-      },
-      map: {
-        mapData,
-        placesData: this.placesData
-      }
-    };
+    // const mapData: string = JSON.stringify(this.canvas);
+    // const officeFull: OfficeFullModel = {
+    //   officeAddress: {
+    //     country: 'Belarus',
+    //     city: 'Grodno',
+    //     address: 'Somewhere str. 1'
+    //   },
+    //   map: {
+    //     mapData,
+    //     placesData: this.placesData
+    //   }
+    // };
 
-    console.log(officeFull);
+    // console.log(officeFull);
+    // -------------- NEW ---------
+
+    console.log(this.placesData);
+    this.handlePlaces.emit(this.placesData);
+
+
     // // const obj = this.canvas.toObject();
     // const dataJSON: string = JSON.stringify(this.canvas);
     // // console.log(JSON.stringify(datalessJSON));
@@ -339,7 +367,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   }
 
   doLockElements(): void {
-    this.canvas.forEachObject((obj: fabric.Object) => {
+    RoomsManagementEditComponent.canvas.forEachObject((obj: fabric.Object) => {
       let isCurrentObjLocked: boolean = this.blockedElements.includes(obj.name);
       obj.lockMovementX = isCurrentObjLocked;
       obj.lockMovementY = isCurrentObjLocked;
@@ -359,11 +387,11 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
       }
     }
     this.doLockElements();
-    this.canvas.requestRenderAll();
+    RoomsManagementEditComponent.canvas.requestRenderAll();
   }
 
   discardActObj(): void {
-    this.canvas.discardActiveObject();
+    RoomsManagementEditComponent.canvas.discardActiveObject();
     this.hidePlaceData();
     this.activeElementOnCanvas.clone = this.activeElementOnCanvas.close = false;
   }
@@ -374,7 +402,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.canvas.off();
+    RoomsManagementEditComponent.canvas.off();
   }
 
   private _initForm() {
