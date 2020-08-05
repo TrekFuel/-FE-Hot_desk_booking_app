@@ -330,7 +330,9 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   }
 
   onSaveClick(): void {
-    // const mapData: string = JSON.stringify(this.canvas);
+    const mapData: string = JSON.stringify(RoomsManagementEditComponent.canvas);
+    console.log(mapData);
+
     // const officeFull: OfficeFullModel = {
     //   officeAddress: {
     //     country: 'Belarus',
