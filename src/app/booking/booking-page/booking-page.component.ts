@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChooseOffice } from '../../shared/models/choose-office.model';
 
 @Component({
   selector: 'app-booking-page',
@@ -8,7 +9,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 })
 
 export class BookingPageComponent {
-
+  chooseOffice: ChooseOffice;
   constructor() {
   }
 

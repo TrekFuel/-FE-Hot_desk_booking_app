@@ -7,3 +7,11 @@
   -khtml-user-select: none;
   user-select: none;
 }
+
+@mixin styleForTitle() {
+  margin: 2.5rem 0 calc(2.5rem * 2) 0;
+  h2.h1 {
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+}
