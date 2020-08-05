@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { BookingPageService } from './booking-page.service';
-import { Booking } from './models/booking.model';
+import { BookingPageService } from '../bookings-table/booking-page.service';
+import { Booking } from '../bookings-table/models/booking.model';
 
 @Component({
   selector: 'app-booking-page-container',

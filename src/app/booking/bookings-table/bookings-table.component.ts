@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { MAT_DATE_FORMATS } from '@angular/material/core';
 import * as _moment from 'moment';
-import { Booking } from '../bookings-table/models/booking.model';
+import { MAT_DATE_FORMATS } from '@angular/material/core';
+import { FormControl } from '@angular/forms';
+import { Booking } from './models/booking.model';
 
 const moment = _moment;
 export const MY_FORMATS = {
@@ -18,21 +18,16 @@ export const MY_FORMATS = {
 };
 
 @Component({
-  selector: 'app-booking-page',
-  templateUrl: './booking-page.component.html',
-  styleUrls: ['./booking-page.component.scss'],
-  providers: [
-    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
-  ],
+  selector: 'app-bookings-table',
+  templateUrl: './bookings-table.component.html',
+  styleUrls: ['./bookings-table.component.scss'],
+  providers: [ { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS } ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+export class BookingsTableComponent {
 
-export class BookingPageComponent {
   date = new FormControl(moment());
 
   @Input() bookingData: Booking[];
-
-  constructor() {
-  }
 
 }

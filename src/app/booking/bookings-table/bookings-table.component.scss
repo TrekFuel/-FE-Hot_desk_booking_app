@@ -1,0 +1,39 @@
+@import "main";
+
+mat-form-field {
+  width: 21rem;
+}
+
+.brn-bg {
+  background-color: $btn-bg;
+}
+
+th {
+  min-width: 140px;
+}
+
+.bookings {
+  margin: 2.5rem 0 calc(2.5rem * 2) 0;
+
+  &--table {
+    overflow-x: auto;
+    max-width: 100%;
+  }
+
+  .table {
+
+    &--row {
+      vertical-align: middle;
+    }
+
+    &--btn {
+      border-color: $btn-bg;
+      color: $btn-bg;
+      &:hover {
+        border-color: #40bfef;
+        background: #40bfef;
+        color: #ffff;
+      }
+    }
+  }
+}
