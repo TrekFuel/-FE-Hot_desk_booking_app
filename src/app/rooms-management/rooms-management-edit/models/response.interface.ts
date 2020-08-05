@@ -3,4 +3,6 @@ export interface ResponseOfficeDtoInterface {
   number: string;
   id: string;
   floor?: null;
+  officeId?: string;
+  room?: string;
 }
