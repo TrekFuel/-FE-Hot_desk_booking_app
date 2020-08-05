@@ -32,11 +32,12 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   newCountry: string[] = [];
   newCity: SelectorsCity[] = [];
   newAddress: SelectorsAddress[] = [];
-  newOfficeObjectReady: boolean = false;
+  @Input() newOfficeObject: boolean = false;
   // ------------------
 
   @Input() canEditMode: boolean = false;
-  startEdit: boolean = false;
+  //ToDo need store here
+  blockSelection: boolean = false;
 
   constructor() {
   }
@@ -149,7 +150,7 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
     if (source === SelectorsName.address) {
       this.currentFocus = SelectorsName.choose;
       if (this.canEditMode) {
-        this.newOfficeObjectReady = (this.getAddressIdByAddress() === environment.TEMP_ADDRESS_ID_FOR_NEW_OFFICE);
+        this.newOfficeObject = (this.getAddressIdByAddress() === environment.TEMP_ADDRESS_ID_FOR_NEW_OFFICE);
       }
     }
   }
@@ -206,8 +207,21 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
       }
 
       // ToDo do 2 different emitters, now it is a temporary variant or refactor this
-      this.onChooseOffice.emit({ isNewObject: this.newOfficeObjectReady, data });
-      this.startEdit = true;
+      this.onChooseOffice.emit({ isNewObject: this.newOfficeObject, data });
+      if (this.canEditMode) this.blockAllSelectors(true);
+    }
+  }
+
+  blockAllSelectors(enable: boolean): void {
+    this.blockSelection = enable;
+    if (enable) {
+      this.country.disable();
+      this.city.disable();
+      this.address.disable();
+    } else {
+      this.country.enable();
+      this.city.enable();
+      this.address.enable();
     }
   }
 

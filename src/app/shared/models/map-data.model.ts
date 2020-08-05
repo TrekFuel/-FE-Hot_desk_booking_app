@@ -4,13 +4,13 @@ export interface MapDataModel {
 }
 
 export interface PlaceData {
-  id: string,
-  role: PlaceRole,
-  isFree: boolean,
-  occupiedBy?: string | string[],
+  number: number,
+  placeType: PlaceRole,
+  id?: string,
+  tempId?: string,
+  roomId?: string,
+  isFree?: boolean,
   maxQuantity?: number,
-  quantity?: number,
-  infoForAdmins?: any,
 }
 
 export enum PlaceRole {

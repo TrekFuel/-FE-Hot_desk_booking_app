@@ -6,6 +6,7 @@ import { AuthResponse } from '../../auth/login/models/auth-response.model';
 import { AppState } from '../../store';
 import { Store } from '@ngrx/store';
 import { userSelector } from '../../store/selectors/auth.selectors';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-sidebar',

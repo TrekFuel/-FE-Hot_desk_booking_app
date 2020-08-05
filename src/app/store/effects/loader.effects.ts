@@ -7,10 +7,13 @@ import {
   loaderStartAction,
 } from '../actions/loader.action';
 import { officeChoosingActionType } from '../actions/officeChoosing.action';
+import { authActionType } from '../actions/auth.actions';
 
 const showLoaderAction = [
   usersListActionType.USERS_LIST_START,
   officeChoosingActionType.SELECTORS_DATA_START,
+  authActionType.LOGIN_START,
+  officeChoosingActionType.SELECTORS_CREATE_ADDRESS_START,
 ];
 
 const hideLoaderAction = [
@@ -18,6 +21,9 @@ const hideLoaderAction = [
   usersListActionType.USERS_LIST_SUCCESS,
   officeChoosingActionType.SELECTORS_DATA_SUCCESS,
   officeChoosingActionType.SELECTORS_DATA_FAILURE,
+  authActionType.LOGIN_SUCCESS,
+  authActionType.LOGIN_FAILURE,
+  officeChoosingActionType.SELECTORS_CREATE_ADDRESS,
 ];
 
 @Injectable()

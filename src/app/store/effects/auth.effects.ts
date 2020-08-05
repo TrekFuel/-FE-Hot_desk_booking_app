@@ -1,4 +1,4 @@
-import { Effect, ofType } from '@ngrx/effects';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 import { AuthService } from '../../auth/login/services/auth.service';
 import { Injectable } from '@angular/core';
 import {
@@ -10,7 +10,6 @@ import { AuthResponse } from '../../auth/login/models/auth-response.model';
 import { environment } from '../../../environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { of } from 'rxjs';
-import { Actions } from '@ngrx/effects';
 import { Router } from '@angular/router';
 
 @Injectable()

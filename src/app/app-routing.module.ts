@@ -9,6 +9,7 @@ import { NoAuthGuard } from './shared/guards/no-auth.guard';
 import { AuthGuard } from './shared/guards/auth.guard';
 import { UsersGuard } from './users/guards/users.guard';
 import { RoomsManagementGuard } from './rooms-management/guards/rooms-management.guard';
+import { environment } from '../environments/environment';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
@@ -18,7 +19,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'users',
+    path: environment.usersComponentRoute,
     component: AppUsersContainer,
     canActivate: [
       NoAuthGuard,

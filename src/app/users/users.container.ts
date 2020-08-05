@@ -40,8 +40,8 @@ export class AppUsersContainer {
         })
       )
       .subscribe((data: UsersRequestPathInterface) => {
-        let [path] = data.path.split('?');
-        if (path === environment.usersComponentRoute) {
+        const [path] = data.path.split('?');
+        if (path === `/${environment.usersComponentRoute}`) {
           this.store$.dispatch(new usersListStartAction({ queryParams: data }));
         }
       });

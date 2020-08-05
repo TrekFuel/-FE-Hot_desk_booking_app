@@ -7,19 +7,20 @@
   }
 
   mat-card {
-    position: absolute;
+    position: fixed;
     z-index: 6;
     top: 63px;
     right: 0;
     @include marginForRightTopCorner;
     @include userSelectNone;
+    min-width: 220px;
     max-width: 400px;
     background-color: $cardOfPlaceBackgroundColor;
 
     .btn-clear {
       position: absolute;
-      top: 5px;
-      right: 5px;
+      top: -8px;
+      right: -8px;
     }
 
     .btn-clear.hide {

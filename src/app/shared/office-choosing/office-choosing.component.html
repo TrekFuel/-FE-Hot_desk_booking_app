@@ -30,14 +30,15 @@
   </mat-form-field>
 
   <div class="col-sm-6 col-md-3 mt-3">
-    <button [hasFocus]="currentFocus === SelectorsName.choose"
-            class="btn btn-block {{newOfficeObjectReady ? 'btn-outline-success' : 'btn-outline-secondary'}}"
+    <button [disabled]="blockSelection"
+            [hasFocus]="currentFocus === SelectorsName.choose"
+            class="btn btn-block {{newOfficeObject ? 'btn-outline-success' : 'btn-outline-secondary'}}"
             type="submit">
-      {{newOfficeObjectReady ? 'Create new' : 'Choose'}}
+      {{newOfficeObject ? 'Create new' : 'Choose'}}
     </button>
   </div>
 
-  <div *ngIf="canEditMode" class="col-sm-6 col-md-3 mt-4 mt-sm-1 d-flex">
+  <div *ngIf="canEditMode && !blockSelection" class="col-sm-6 col-md-3 mt-4 mt-sm-1 d-flex">
     <mat-form-field appearance="outline">
       <mat-label>{{!!newSelected ? 'Please enter a new ' + newSelected : ''}}</mat-label>
       <input (keydown.enter)="onInputMessage(newSelected, $event)"
@@ -64,18 +65,4 @@
     </mat-form-field>
   </div>
 
-  <div *ngIf="canEditMode && startEdit" class="col-sm-6 col-md-3 offset-md-3 mt-3">
-    <button
-      class="btn btn-block btn-outline-warning"
-      type="button">
-      Save changes
-    </button>
-  </div>
-
-  <div *ngIf="canEditMode && startEdit" class="col-sm-6 col-md-3 offset-sm-6 offset-md-0 mt-3">
-    <button class="btn btn-block btn-outline-danger"
-            type="button">
-      Delete room
-    </button>
-  </div>
 </form>

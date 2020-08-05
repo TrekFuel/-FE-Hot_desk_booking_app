@@ -2,12 +2,12 @@ export const environment = {
   production: false,
   localStorageUser: 'user',
   databaseURL: '/api',
-  usersComponentRoute: '/users',
+  usersComponentRoute: 'user',
   officesURL: '/offices',
   places: {
-    MAX_DEFAULT_QUANTITY_IN_CONFROOM: 25,
+    MAX_DEFAULT_QUANTITY_IN_CONFROOM: 10,
     MIN_QUANTITY_IN_CONFROOM: 2,
-    MAX_QUANTITY_IN_CONFROOM: 200
+    MAX_QUANTITY_IN_CONFROOM: 50
   },
   zoomOptions: {
     MIN: 50,

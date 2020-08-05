@@ -1,17 +1,33 @@
 <div class="row rooms-edit mt-3">
 
-  <!--    <div class="col-sm-12 my-2 text-center">-->
-  <!--      <h2 class="mt-2 mt-lg-5 mb-2 h1" style="font-size: 2rem">Edit room</h2>-->
-  <!--      <h4 class="mt-3">-->
-  <!--        Country: Belarus,-->
-  <!--        City: Grodno,-->
-  <!--        Office: Somewhere str. 1-->
-  <!--      </h4>-->
-  <!--    </div>-->
+  <div class="col-sm-6 col-md-3 mt-1 mb-3">
+    <button (click)="onSaveClick()"
+            class="btn btn-block btn-outline-warning"
+            type="button">
+      Save changes
+    </button>
+  </div>
 
-  <div class="col-sm-12 my-1">
-    <button (click)="onSaveClick()" class="btn btn-outline-secondary mr-3">Save to server</button>
-    <button class="btn btn-outline-danger ml-2">clear</button>
+  <div class="col-sm-6 col-md-3 mt-1 mb-3">
+    <button class="btn btn-block btn-outline-success"
+            type="button">
+      Load from server
+    </button>
+  </div>
+
+  <div class="col-sm-6 col-md-3 mt-1 mb-3">
+    <button
+      class="btn btn-block btn-outline-secondary"
+      type="button">
+      Cancel edit
+    </button>
+  </div>
+
+  <div class="col-sm-6 col-md-3 mt-1 mb-3">
+    <button class="btn btn-block btn-outline-danger"
+            type="button">
+      Clear all
+    </button>
   </div>
 
   <div class="col-sm-4 my-1">
@@ -54,14 +70,17 @@
         <mat-icon (click)="currentPlace.isPlaceClickedToClose = true">close</mat-icon>
       </button>
       <img alt="Logo exadel" mat-card-avatar src="../assets/images/logo/logo_micro2.jpg">
-      <mat-card-title>{{currentPlace.placeData?.role === placeRole.cowork ? 'Cowork'
-        : currentPlace.placeData?.role === placeRole.confroom ? 'Confroom' : 'Administration'}}</mat-card-title>
-      <mat-card-subtitle>ID: {{currentPlace.placeData?.id}}</mat-card-subtitle>
+      <mat-card-title>{{currentPlace.placeData?.placeType === placeRole.cowork ? 'Cowork'
+        : currentPlace.placeData?.placeType === placeRole.confroom ? 'Confroom' : 'Administration'}}
+        #{{currentPlace.placeData?.number | number:'3.0-0'}}
+      </mat-card-title>
+      <mat-card-subtitle> uuid: {{currentPlace.placeData?.id | slice:0:17}}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content class="mx-auto">
-      <p>State: <span class="state-of-place {{currentPlace.placeData?.isFree ? 'free' : 'occupied'}}">
-          {{currentPlace.placeData?.isFree ? 'free' : 'occupied'}}</span></p>
-      <div [ngClass]="{'hide': currentPlace.placeData?.role !== placeRole.confroom}" class="for-confroom">
+      <p>State: <span class="state-of-place free">free</span></p>
+      <!--      <p>State: <span class="state-of-place {{currentPlace.placeData?.isFree ? 'free' : 'occupied'}}">-->
+      <!--          {{currentPlace.placeData?.isFree ? 'free' : 'occupied'}}</span></p>-->
+      <div [ngClass]="{'hide': currentPlace.placeData?.placeType !== placeRole.confroom}" class="for-confroom">
         <p class="my-3">
           Max quantity of place here is:
           <span class="font-weight-bold" style="font-size: 1.2rem">{{currentPlace.placeData?.maxQuantity}}</span>
