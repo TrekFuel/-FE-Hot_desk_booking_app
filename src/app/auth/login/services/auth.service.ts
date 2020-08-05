@@ -12,6 +12,7 @@ import { LoginSuccessAction } from '../../../store/actions/auth.actions';
 @Injectable({
   providedIn: 'root'
 })
+
 export class AuthService {
 
   constructor(private http: HttpClient,
@@ -39,6 +40,15 @@ export class AuthService {
     } else {
       return false;
     }
+  }
+
+  logout(body): Observable<object> {
+    return this.http.post(`${environment.databaseURL}/logout`, body)
+      .pipe(
+        map((response) => {
+          return response;
+        })
+      );
   }
 
 }

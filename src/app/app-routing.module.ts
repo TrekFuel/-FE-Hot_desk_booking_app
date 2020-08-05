@@ -7,6 +7,8 @@ import { UserProfileContainerComponent } from './home/user-profile/user-profile.
 import { BookingPageContainerComponent } from './booking/booking-page/booking-page.container';
 import { NoAuthGuard } from './shared/guards/no-auth.guard';
 import { AuthGuard } from './shared/guards/auth.guard';
+import { UsersGuard } from './users/guards/users.guard';
+import { RoomsManagementGuard } from './rooms-management/guards/rooms-management.guard';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
@@ -18,12 +20,18 @@ const routes: Routes = [
   {
     path: 'users',
     component: AppUsersContainer,
-    canActivate: [NoAuthGuard],
+    canActivate: [
+      NoAuthGuard,
+      UsersGuard,
+    ],
   },
   {
     path: 'rooms-management',
     component: RoomsManagementEntryComponent,
-    canActivate: [NoAuthGuard],
+    canActivate: [
+      NoAuthGuard,
+      RoomsManagementGuard,
+    ],
   },
   {
     path: 'booking',

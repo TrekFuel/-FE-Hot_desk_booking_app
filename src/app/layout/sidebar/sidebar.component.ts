@@ -1,16 +1,11 @@
 import { Component, ElementRef, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { SidebarServices } from './sidebar.services';
+import { BtnSidebarInterface, SidebarServices } from './sidebar.services';
 import { sidebarAnimation } from './sidebar.animation';
 import { Observable, Subscription } from 'rxjs';
 import { AuthResponse } from '../../auth/login/models/auth-response.model';
 import { AppState } from '../../store';
 import { Store } from '@ngrx/store';
 import { userSelector } from '../../store/selectors/auth.selectors';
-
-interface BtnSidebarInterface {
-  value: string;
-  route: string;
-}
 
 @Component({
   selector: 'app-sidebar',
@@ -21,14 +16,11 @@ interface BtnSidebarInterface {
 
 export class SidebarComponent implements OnInit, OnDestroy {
 
-  public btnValue: BtnSidebarInterface[] = [
-    {value: 'List Users', route: 'users'},
-    { value: 'Booking', route: 'booking' },
-    {value: 'Rooms Management', route: 'rooms-management'}
-  ];
+  btnValue: BtnSidebarInterface[];
   user$: Observable<AuthResponse>;
-  subscription$: Subscription;
+  userSubscription$: Subscription;
   userData: AuthResponse;
+  // tslint:disable-next-line:variable-name
   private _bodyElement: ElementRef;
 
   constructor(
@@ -44,8 +36,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   closeSidebar(event): void {
-      if (event.target.id === 'component' || event.target.id === 'btnSidebar') {
-        this.sidebarServices.onClick();
+    if (event.target.id === 'component' || event.target.id === 'btnSidebar') {
+      this.sidebarServices.onClick();
     }
   }
 
@@ -53,12 +45,16 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this._bodyElement = this.elRef.nativeElement.offsetParent;
 
     this.user$ = this.store$.select(userSelector);
-    this.subscription$ = this.user$
+    this.userSubscription$ = this.user$
       .subscribe((user: AuthResponse) => {
         if (user && user.token) {
           this.userData = user;
+          this.sidebarServices.filterButtons()
+            .subscribe((btnList: BtnSidebarInterface[]) => {
+              this.btnValue = btnList;
+            });
         }
-    });
+      });
   }
 
   scrollVisible(flag: boolean): void {
@@ -70,7 +66,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription$.unsubscribe();
+    this.userSubscription$.unsubscribe();
   }
 
 }
