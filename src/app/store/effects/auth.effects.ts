@@ -34,6 +34,12 @@ export class AuthEffects {
                   lastName: response.userInfo.lastName,
                   isActive: response.userInfo.isActive,
                   roleNames: [...response.userInfo.roleNames],
+                  position: response.userInfo.position,
+                  department: response.userInfo.department,
+                  location: response.userInfo.location,
+                  phone: response.userInfo.phone,
+                  skype: response.userInfo.skype,
+                  hr: response.userInfo.hr,
                 },
                 token: response.token,
               };

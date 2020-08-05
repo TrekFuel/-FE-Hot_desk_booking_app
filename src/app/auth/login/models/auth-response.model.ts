@@ -6,7 +6,13 @@ export interface AuthResponse {
     firstName: string,
     lastName: string,
     isActive: boolean,
-    roleNames: string[]
+    roleNames: string[],
+    position: string,
+    department: string,
+    location: string,
+    phone: string,
+    skype: string,
+    hr: string,
   };
   token: string;
 }
