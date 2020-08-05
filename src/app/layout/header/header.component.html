@@ -3,17 +3,18 @@
   <nav class="navbar navbar-light">
 
     <!--Left element menu-->
-    <button
-      (click)="isVisibleSidebar()"
-      aria-controls="navbarToggleExternalContent"
-      aria-expanded="false" aria-label="Toggle navigation"
-      class="header--burger navbar-toggler"
-      data-target="#navbarToggleExternalContent"
-      data-toggle="collapse"
-      type="button"
-      [disabled]="!(userToken$ | async)">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <ng-container *ngIf="userToken$ | async">
+      <button
+        (click)="isVisibleSidebar()"
+        aria-controls="navbarToggleExternalContent"
+        aria-expanded="false" aria-label="Toggle navigation"
+        class="header--burger navbar-toggler"
+        data-target="#navbarToggleExternalContent"
+        data-toggle="collapse"
+        type="button">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </ng-container>
 
     <!--Center element menu (position-absolute)-->
     <a class="header--logo"></a>

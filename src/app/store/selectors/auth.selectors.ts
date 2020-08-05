@@ -21,9 +21,9 @@ export const userTokenSelector = createSelector(loginSelector,
     }
   });
 
-export const userRoleSelector = createSelector(loginSelector,
+export const userRolesSelector = createSelector(loginSelector,
   (login: LoginInterface): string[] => {
-    if (login.loggedInUser) {
+    if (login.loggedInUser.token) {
       return login.loggedInUser.userInfo.roleNames;
     }
   });

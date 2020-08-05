@@ -11,7 +11,7 @@ import {
 import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { usersListStartAction } from '../store/actions/usersList.actions';
-import { UsersRequestPathInterface } from './modules/requestPath.interface';
+import { UsersRequestPathInterface } from './models/requestPath.interface';
 import { environment } from '../../environments/environment';
 
 @Component({

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { UsersRequestPathInterface } from './modules/requestPath.interface';
+import { UsersRequestPathInterface } from './models/requestPath.interface';
 import { GetAllUsersInterface } from '../shared/models/getAllUsers.interface';
 import { Observable } from 'rxjs';
 

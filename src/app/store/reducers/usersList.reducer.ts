@@ -2,7 +2,7 @@ import {
   usersListActionType,
   usersListTypeActions,
 } from '../actions/usersList.actions';
-import { UsersListInterface } from '../../users/modules/usersList.interface';
+import { UsersListInterface } from '../../users/models/usersList.interface';
 
 const initialState: UsersListInterface = {
   users: [],

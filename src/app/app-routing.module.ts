@@ -7,6 +7,8 @@ import { UserProfileContainerComponent } from './home/user-profile/user-profile.
 import { BookingPageContainerComponent } from './booking/booking-page/booking-page.container';
 import { NoAuthGuard } from './shared/guards/no-auth.guard';
 import { AuthGuard } from './shared/guards/auth.guard';
+import { UsersGuard } from './users/guards/users.guard';
+import { RoomsManagementGuard } from './rooms-management/guards/rooms-management.guard';
 import { environment } from '../environments/environment';
 
 const routes: Routes = [
@@ -19,12 +21,18 @@ const routes: Routes = [
   {
     path: environment.usersComponentRoute,
     component: AppUsersContainer,
-    canActivate: [NoAuthGuard],
+    canActivate: [
+      NoAuthGuard,
+      UsersGuard,
+    ],
   },
   {
     path: 'rooms-management',
     component: RoomsManagementEntryComponent,
-    canActivate: [NoAuthGuard],
+    canActivate: [
+      NoAuthGuard,
+      RoomsManagementGuard,
+    ],
   },
   {
     path: 'booking',
@@ -42,4 +50,5 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+}

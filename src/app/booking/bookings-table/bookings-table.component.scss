@@ -1,5 +1,9 @@
 @import "main";
 
+mat-form-field {
+  width: 21rem;
+}
+
 .brn-bg {
   background-color: $btn-bg;
 }
@@ -8,8 +12,8 @@ th {
   min-width: 140px;
 }
 
-.users {
-  @include styleForTitle;
+.bookings {
+  margin: 2.5rem 0 calc(2.5rem * 2) 0;
 
   &--table {
     overflow-x: auto;
