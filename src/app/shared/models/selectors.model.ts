@@ -1,16 +1,21 @@
+export interface OfficeChoosingInterface {
+  createAddressId: string;
+  selectorsData: SelectorsModel;
+}
+
 export interface SelectorsModel {
-  country: string[] | null,
-  city: SelectorsCity[] | null,
-  address: SelectorsAddress[] | null
+  country: string[] | null;
+  city: SelectorsCity[] | null;
+  address: SelectorsAddress[] | null;
 }
 
 export interface SelectorsCity {
-  country: string,
-  city: string
+  country: string;
+  city: string;
 }
 
 export interface SelectorsAddress {
-  city: string,
-  address: string,
-  addressId: string
+  city: string;
+  address: string;
+  addressId: string;
 }
