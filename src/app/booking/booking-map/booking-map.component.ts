@@ -46,6 +46,17 @@ export class BookingMapComponent implements OnInit {
       console.log('this.canvas.item(0).name: ' + (this.canvas as any).item(0)?.name);
       console.log('this.canvas.item(0).data: ' + (this.canvas as any).item(0)?.data?.id);
     });
+    this.doLockElements();
+  }
+
+  doLockElements(): void {
+    this.canvas.forEachObject((obj: fabric.Object) => {
+      obj.lockMovementX = true;
+      obj.lockMovementY = true;
+      obj.hasControls = false;
+      obj.hasBorders = false;
+      obj.selectable = false;
+    });
   }
 
   private _initCanvas(): void {
