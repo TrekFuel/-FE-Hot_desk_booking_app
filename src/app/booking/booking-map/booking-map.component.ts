@@ -43,8 +43,6 @@ export class BookingMapComponent implements OnInit {
     const dataJSON: string = MOCK_OFFICE;
     this.canvas.loadFromJSON(dataJSON, () => {
       this.canvas.renderAll();
-      console.log('this.canvas.item(0).name: ' + (this.canvas as any).item(0)?.name);
-      console.log('this.canvas.item(0).data: ' + (this.canvas as any).item(0)?.data?.id);
     });
     this.doLockElements();
   }
