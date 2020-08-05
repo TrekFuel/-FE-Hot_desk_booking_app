@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
+import { createFloorId } from '../../store/selectors/officeChosing.selectors';
+import { filter } from 'rxjs/operators';
+import { roomsManagementEditStartAction } from '../../store/actions/roomsManagementEdit.action';
 import { PlaceData } from '../../shared/models/map-data.model';
 import { RoomsManagementEditComponent } from './rooms-management-edit.component';
 
@@ -14,7 +17,6 @@ import { RoomsManagementEditComponent } from './rooms-management-edit.component'
   `
 })
 export class RoomsManagementEditContainer {
-
   constructor(private store$: Store<AppState>) {
     this.initStore();
   }
@@ -41,7 +43,14 @@ export class RoomsManagementEditContainer {
   }
 
   initStore(): void {
-    // this.store$.dispatch();
+    this.store$
+      .select(createFloorId)
+      .pipe(filter((data) => data !== null))
+      .subscribe((id: string) =>
+        this.store$.dispatch(
+          new roomsManagementEditStartAction({ addressId: id })
+        )
+      );
   }
 
 }
