@@ -11,10 +11,10 @@ import { RoomsManagementEditComponent } from './rooms-management-edit.component'
   selector: 'app-rooms-management-edit-container',
   template: `
     <app-rooms-management-edit
-        (handlePlaces)="onHandlePlaces($event)"
-        (deletePlaces)="onDeletePlaces($event)"
+      (handlePlaces)="onHandlePlaces($event)"
+      (deletePlaces)="onDeletePlaces($event)"
     ></app-rooms-management-edit>
-  `
+  `,
 })
 export class RoomsManagementEditContainer {
   constructor(private store$: Store<AppState>) {
@@ -22,6 +22,7 @@ export class RoomsManagementEditContainer {
   }
 
   onHandlePlaces(placeDataArr: PlaceData[]): void {
+    console.log(placeDataArr);
     // Input DATA [ {tempId: "1596568001226-651", placeType: 0, number: 1, maxQuantity: 1 } ]
     //
     // OUTPUT DATA [ {tempId: "1596568001226-651", placeType: 0, number: 1, maxQuantity: 1, id: 'uuid from server here' } ]
@@ -34,7 +35,9 @@ export class RoomsManagementEditContainer {
     });
 
     // changedMap can be save to server
-    let changedMap = RoomsManagementEditComponent.putDataReturnMap(newPlaceDataArr);
+    let changedMap = RoomsManagementEditComponent.putDataReturnMap(
+      newPlaceDataArr
+    );
     // console.log(changedMap);
   }
 
@@ -52,5 +55,4 @@ export class RoomsManagementEditContainer {
         )
       );
   }
-
 }

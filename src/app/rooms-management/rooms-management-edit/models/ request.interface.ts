@@ -4,7 +4,7 @@ export interface RequestOfficeInterface {
 }
 
 export interface RequestFloorInterface {
-  addressId: string;
+  officeId: string;
   number: '1';
   map: string;
 }

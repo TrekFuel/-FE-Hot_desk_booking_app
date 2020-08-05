@@ -12,13 +12,22 @@ export function roomsManagementEditReducer(
 ) {
   switch (action.type) {
     case roomsManagementEditActionType.R_M_E_CREATE_OFFICE:
+      console.log(action.payload.response);
       return {
         ...state,
         ...action.payload.response,
       };
     case roomsManagementEditActionType.R_M_E_CREATE_FLOOR:
+      console.log(action.payload.response);
       return {
         ...state,
+        ...action.payload.response,
+      };
+    case roomsManagementEditActionType.R_M_E_CREATE_FLOOR:
+      console.log(action.payload.response);
+      return {
+        ...state,
+        ...action.payload.response,
       };
   }
   return state;
