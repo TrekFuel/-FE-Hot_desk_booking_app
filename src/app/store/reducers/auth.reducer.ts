@@ -11,6 +11,12 @@ const initialState: LoginInterface = {
       lastName: null,
       isActive: null,
       roleNames: null,
+      position: null,
+      department: null,
+      location: null,
+      phone: null,
+      skype: null,
+      hr: null,
     },
     token: null,
   }

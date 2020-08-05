@@ -10,7 +10,9 @@
 
       <!-- User data -->
       <div class="user font-weight-light">
-        <div class="user--position text-secondary">Position</div>
+        <div
+          class="user--position text-secondary">{{userData.userInfo.position
+          | titlecase}}</div>
         <div class="user--name text-dark">
           <div class="first">{{userData.userInfo.firstName}}</div>
           <div class="last">{{userData.userInfo.lastName}}</div>
