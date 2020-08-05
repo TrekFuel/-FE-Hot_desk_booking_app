@@ -56,6 +56,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
 
   // variables for container
   @Output() handlePlaces: EventEmitter<PlaceData[]> = new EventEmitter<PlaceData[]>();
+  @Output() deletePlaces: EventEmitter<string[]> = new EventEmitter<string[]>();
 
   constructor(private renderer: Renderer2) {
   }
@@ -69,17 +70,17 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   }
 
   static putDataReturnMap(placeDataArr: PlaceData[]): string {
-    RoomsManagementEditComponent.canvas.forEachObject((obj: (fabric.Object)) => {
-      if (obj?.name === EDITOR_NAMES.place && !obj?.data.id) {
-        console.log('no id');
-        let tempId: string = obj.data.tempId;
-        let placeWithTempId: PlaceData = placeDataArr.find((item: PlaceData) => item.tempId === tempId);
-        console.log(tempId);
-        console.log(placeWithTempId);
-        obj.data.id = placeWithTempId.id;
-      }
-    });
-    return JSON.stringify(this.canvas);
+    if (placeDataArr.length > 0) {
+      RoomsManagementEditComponent.canvas.forEachObject((obj: (fabric.Object)) => {
+        if (obj?.name === EDITOR_NAMES.place && !obj?.data.id) {
+          console.log('no id');
+          let tempId: string = obj.data.tempId;
+          let placeWithTempId: PlaceData = placeDataArr.find((item: PlaceData) => item.tempId === tempId);
+          obj.data.id = placeWithTempId.id;
+        }
+      });
+    }
+    return JSON.stringify(RoomsManagementEditComponent.canvas);
   }
 
   @HostListener('window:resize') onResize() {
@@ -249,17 +250,20 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
 
   onDelete(): void {
     const actObjs: fabric.Object[] = RoomsManagementEditComponent.canvas.getActiveObjects();
+    const placesIdToDeleteFromServer: string[] = [];
     if (actObjs) {
       actObjs.forEach((actObj: fabric.Object) => {
         if (!this.blockedElements.includes(actObj.name)) {
           if (actObj.name === EDITOR_NAMES.place) {
             this.placesData = this.placesData.filter((place: PlaceData) => place.tempId !== actObj.data.tempId);
+            if (!!actObj?.data.id) placesIdToDeleteFromServer.push(actObj.data.id);
           }
           RoomsManagementEditComponent.canvas.remove(actObj);
         }
       });
       this.discardActObj();
       RoomsManagementEditComponent.canvas.requestRenderAll();
+      this.deletePlaces.emit(placesIdToDeleteFromServer);
     }
   }
 
