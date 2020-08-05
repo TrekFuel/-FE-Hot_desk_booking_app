@@ -9,7 +9,7 @@ th {
 }
 
 .users {
-  margin: 2.5rem 0 calc(2.5rem * 2) 0;
+  @include styleForTitle;
 
   &--table {
     overflow-x: auto;
