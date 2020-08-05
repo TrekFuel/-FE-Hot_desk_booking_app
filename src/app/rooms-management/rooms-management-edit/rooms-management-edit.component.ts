@@ -330,7 +330,9 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   }
 
   onSaveClick(): void {
-    // const mapData: string = JSON.stringify(this.canvas);
+    // const mapData: string = JSON.stringify(RoomsManagementEditComponent.canvas);
+    // console.log(mapData);
+
     // const officeFull: OfficeFullModel = {
     //   officeAddress: {
     //     country: 'Belarus',
@@ -346,7 +348,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     // console.log(officeFull);
     // -------------- NEW ---------
 
-    console.log(this.placesData);
+    // console.log(this.placesData);
     this.handlePlaces.emit(this.placesData);
 
 

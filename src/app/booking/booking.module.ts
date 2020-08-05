@@ -8,13 +8,17 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BookingPageContainerComponent } from './booking-page/booking-page.container';
 import { BookingsTableComponent } from './bookings-table/bookings-table.component';
 import { BookingsTableContainer } from './bookings-table/bookings-table.container';
+import { BookingMapComponent } from './booking-map/booking-map.component';
+import { BookingMapContainer } from './booking-map/booking-map.container';
 
 @NgModule({
   declarations: [
     BookingPageComponent,
     BookingPageContainerComponent,
     BookingsTableComponent,
-    BookingsTableContainer
+    BookingsTableContainer,
+    BookingMapComponent,
+    BookingMapContainer
   ],
   imports: [
     CommonModule,
