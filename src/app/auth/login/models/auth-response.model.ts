@@ -13,6 +13,7 @@ export interface AuthResponse {
     phone: string,
     skype: string,
     hr: string,
+    img: string;
   };
   token: string;
 }
