@@ -72,11 +72,11 @@
     app-zoom {
       z-index: 9;
       position: absolute;
-      top: 05px;
-      right: 20px;
-      transform: scale(0.7);
+      top: 0;
+      right: 5px;
       @media (min-width: map-get($grid-breakpoints, "md")) {
-        transform: scale(1);
+        top: 5px;
+        right: 20px;
       }
     }
   }

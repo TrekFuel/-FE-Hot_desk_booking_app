@@ -1,20 +1,31 @@
-.zoom-widget {
-  border: 1px solid #ddd;
-  background: white;
-  border-radius: 8px;
-  flex-direction: row;
-  box-sizing: border-box;
-  display: flex;
-  place-content: center;
-  align-items: center;
-  width: 130px;
-  span {
-    font-size: 16px;
-    text-align: right;
-    font-weight: 800;
-    min-width: 50px;
+@import "main";
+
+:host {
+  transform: scale(0.7);
+  @media (min-width: map-get($grid-breakpoints, "md")) {
+    transform: scale(1);
   }
-  button {
-    line-height: 30px;
+
+  .zoom-widget {
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 8px;
+    flex-direction: row;
+    box-sizing: border-box;
+    display: flex;
+    place-content: center;
+    align-items: center;
+    width: 130px;
+
+    span {
+      font-size: 16px;
+      text-align: right;
+      font-weight: 800;
+      min-width: 50px;
+    }
+
+    button {
+      line-height: 30px;
+    }
   }
 }
