@@ -208,7 +208,7 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
       this.newCity = [];
       this.newAddress = [];
       this.isAddressChosen = true;
-      this.blockAllSelectors(true);
+      this.ocs.setBlockSelection(true);
 
       if (addressId === environment.TEMP_ADDRESS_ID_FOR_NEW_OFFICE) {
         // new office here

@@ -1,7 +1,7 @@
 <div class="container">
 
-  <office-choosing-container (roomEdit)="chooseOffice = $event"></office-choosing-container>
+  <office-choosing-container></office-choosing-container>
 
-  <app-rooms-management-edit-container *ngIf="!!chooseOffice?.data"></app-rooms-management-edit-container>
+  <app-rooms-management-edit-container *ngIf="blockSelection$ | async"></app-rooms-management-edit-container>
 
 </div>

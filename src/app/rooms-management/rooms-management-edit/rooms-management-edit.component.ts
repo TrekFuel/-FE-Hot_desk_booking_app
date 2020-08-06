@@ -17,6 +17,7 @@ import { Canvas } from 'fabric/fabric-impl';
 import { environment } from '../../../environments/environment';
 import { CanvasSize, Confroom, CurrentPlaceInEditor, EditorBlock } from './models/editor-blocks.models';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { OfficeChoosingServices } from '../../shared/office-choosing/office-choosing.services';
 
 @Component({
   selector: 'app-rooms-management-edit',
@@ -58,7 +59,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   @Output() handlePlaces: EventEmitter<PlaceData[]> = new EventEmitter<PlaceData[]>();
   @Output() deletePlaces: EventEmitter<string[]> = new EventEmitter<string[]>();
 
-  constructor(private renderer: Renderer2) {
+  constructor(private renderer: Renderer2, private ocs: OfficeChoosingServices) {
   }
 
   get curZoom() {
@@ -152,6 +153,10 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     });
 
     this._initForm();
+  }
+
+  onCancelEdit() {
+    this.ocs.setBlockSelection(false);
   }
 
   doCanvasZoom(zoom: number = this.canvasSize.zoom): void {
@@ -330,42 +335,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   }
 
   onSaveClick(): void {
-    // const mapData: string = JSON.stringify(RoomsManagementEditComponent.canvas);
-    // console.log(mapData);
-
-    // const officeFull: OfficeFullModel = {
-    //   officeAddress: {
-    //     country: 'Belarus',
-    //     city: 'Grodno',
-    //     address: 'Somewhere str. 1'
-    //   },
-    //   map: {
-    //     mapData,
-    //     placesData: this.placesData
-    //   }
-    // };
-
-    // console.log(officeFull);
-    // -------------- NEW ---------
-
-    // console.log(this.placesData);
     this.handlePlaces.emit(this.placesData);
-
-
-    // // const obj = this.canvas.toObject();
-    // const dataJSON: string = JSON.stringify(this.canvas);
-    // // console.log(JSON.stringify(datalessJSON));
-    // // console.log(JSON.stringify(this.canvas));
-    // console.log(dataJSON);
-    // this.canvas.clear();
-    //
-    // setTimeout(() => {
-    //   this.canvas.loadFromJSON(dataJSON, () => {
-    //     this.canvas.renderAll();
-    //     console.log('this.canvas.item(0).name: ' + (this.canvas as any).item(0)?.name);
-    //     console.log('this.canvas.item(0).data: ' + (this.canvas as any).item(0)?.data?.id);
-    //   });
-    // }, 3000);
   }
 
   doLockElements(): void {
