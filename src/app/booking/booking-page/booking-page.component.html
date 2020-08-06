@@ -13,7 +13,7 @@
       </mat-form-field>
     </div>
 
-    <div class="col-sm-6 col-md-6 my-1">
+    <div class="col-sm-6 col-md-4 my-1">
       <mat-form-field appearance="outline">
         <mat-label>Choose a date range</mat-label>
         <mat-date-range-input [rangePicker]="picker">
@@ -23,6 +23,12 @@
         <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
         <mat-date-range-picker #picker></mat-date-range-picker>
       </mat-form-field>
+    </div>
+
+    <div class="col-sm-6 col-md-2 mt-3">
+      <button class="btn btn-block btn-outline-secondary">
+        Another address
+      </button>
     </div>
 
     <div class="col-sm-6 col-md-3 mt-3">

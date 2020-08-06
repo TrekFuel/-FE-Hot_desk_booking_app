@@ -38,11 +38,8 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   // ------------------
 
   @Input() canEditMode: boolean = false;
-  //ToDo need store here
   blockSelection: boolean = false;
-
-  constructor() {
-  }
+  isAddressChosen: boolean = false;
 
   public get countryOptions(): string[] {
     return this.canEditMode ? [SelectorsName.new, ...this.selectorsModel.country, ...this.newCountry]
@@ -196,10 +193,19 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
     this.inputNew.updateValueAndValidity();
   }
 
+  onClickChoose() {
+    console.log('choose');
+  }
+
   onSubmit() {
     let addressId = this.getAddressIdByAddress();
     if (this.selectOfficeForm.valid && addressId !== environment.ERROR_ON_GETTING_ADDRESS_ID) {
       const data = { ...this.selectOfficeForm.value, addressId };
+      this.newCountry = [];
+      this.newCity = [];
+      this.newAddress = [];
+      this.isAddressChosen = true;
+      this.blockAllSelectors(true);
 
       if (addressId === environment.TEMP_ADDRESS_ID_FOR_NEW_OFFICE) {
         // new office here
@@ -210,7 +216,7 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
 
       // ToDo do 2 different emitters, now it is a temporary variant or refactor this
       this.onChooseOffice.emit({ isNewObject: this.newOfficeObject, data });
-      if (this.canEditMode) this.blockAllSelectors(true);
+
     }
   }
 

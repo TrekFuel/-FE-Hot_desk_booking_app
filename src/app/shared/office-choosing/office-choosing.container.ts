@@ -57,7 +57,6 @@ export class OfficeChoosingContainer {
             this.titleName = 'Choosing';
             break;
         }
-        console.log(this.titleName);
       });
     this.selectorsModel$ = this.store$.select(selectorsData);
     // Start action

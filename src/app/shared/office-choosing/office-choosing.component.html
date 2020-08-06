@@ -3,10 +3,10 @@
     <h2 class="h1">{{titleName}}</h2>
     <h4 class="mt-3">
       <div
-        *ngIf="selectOfficeForm.valid && getAddressIdByAddress() !== environment.ERROR_ON_GETTING_ADDRESS_ID; else noMap">
-        Country: <span class="choosing-span">{{country.value}}</span>
-        City: <span class="choosing-span">{{city.value}}</span>
-        Address: <span class="choosing-span">{{address.value}}</span>
+        *ngIf="isAddressChosen; else noMap">
+        Country: <span class="choosing-span">{{country?.value}}</span>
+        City: <span class="choosing-span">{{city?.value}}</span>
+        Address: <span class="choosing-span">{{address?.value}}</span>
         <!--          floor: <span class="choosing-span">1</span>-->
       </div>
       <ng-template #noMap>Please choose an office</ng-template>
@@ -46,11 +46,12 @@
   </mat-form-field>
 
   <div class="col-sm-6 col-md-3 mt-3">
-    <button [disabled]="blockSelection"
+    <button (click)="onClickChoose()"
+            [disabled]="blockSelection"
             [hasFocus]="currentFocus === SelectorsName.choose"
             class="btn btn-block {{newOfficeObject ? 'btn-outline-success' : 'btn-outline-secondary'}}"
             type="submit">
-      {{newOfficeObject ? 'Create new' : 'Choose'}}
+      {{newOfficeObject ? 'Create new' : isAddressChosen ? 'Chosen' : 'Choose'}}
     </button>
   </div>
 
