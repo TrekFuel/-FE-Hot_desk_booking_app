@@ -7,15 +7,10 @@ export const CANVAS_OPTION = {
     backgroundColor: 'white',
   },
   READ_ONLY: {
-    hoverCursor: 'pointer',
-    selection: true,
-    selectionBorderColor: 'transparent',
+    hoverCursor: 'default',
+    selection: false,
+    selectionBorderColor: 'white',
     allowTouchScrolling: true,
     backgroundColor: 'white',
-    hasControls: false,
-    hasBorders: false,
-    lockMovementX: true,
-    lockMovementY: true,
-    evented: true
   },
 };

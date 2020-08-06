@@ -65,46 +65,19 @@
   .canvas {
     border: 1px solid $commonBorderColor;
     border-radius: 3px;
+    padding: 0 0 40px 0;
     width: 100%;
     overflow: scroll;
 
     app-zoom {
-      z-index: 2;
+      z-index: 9;
       position: absolute;
-      top: 5px;
+      top: 05px;
       right: 20px;
+      transform: scale(0.7);
+      @media (min-width: map-get($grid-breakpoints, "md")) {
+        transform: scale(1);
+      }
     }
-
-    &-place {
-      border: 2px solid $canvasBorderColor;
-      border-radius: 3px;
-    }
-  }
-
-  .icons-for-canvas {
-    position: absolute;
-    cursor: pointer;
-    transition: 0.5s ease transform;
-  }
-
-  .icons-for-canvas.b-clone:hover {
-    transition-timing-function: ease;
-    color: $hoverCloneColor;
-    transform: scale(1.1);
-  }
-
-  .icons-for-canvas.b-close:hover {
-    transition-timing-function: ease;
-    color: $hoverCloseColor;
-    transform: scale(1.15);
-  }
-
-  .icons-for-canvas.b-clone:active {
-    transition-timing-function: cubic-bezier(.29, 1.01, 1, -0.68);
-    transform: scale(1.2);
-  }
-
-  .icons-for-canvas.hide {
-    display: none;
   }
 }

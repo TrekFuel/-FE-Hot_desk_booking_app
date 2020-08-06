@@ -30,7 +30,7 @@ export class BookingPageComponent {
   date = new FormControl(new Date());
   // date = new FormControl(moment());
   blockSelection$: Observable<boolean> = this.ocs.blockSelection;
-  showMap: boolean = false;
+  showMap: boolean = true;
 
   constructor(private ocs: OfficeChoosingServices) {
   }

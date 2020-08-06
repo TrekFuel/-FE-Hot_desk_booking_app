@@ -34,14 +34,16 @@
     </div>
 
     <div class="col-sm-6 col-md-3 mt-3">
-      <button (click)="showMap = !showMap" class="btn btn-block btn-outline-primary">
+      <button (click)="showMap = !showMap"
+              [disabled]="!(blockSelection$ | async)"
+              class="btn btn-block btn-outline-primary">
         {{showMap ? 'Hide map' : 'Show map'}}
       </button>
     </div>
 
   </div>
 
-  <app-booking-map-container *ngIf="blockSelection$ | async"></app-booking-map-container>
+  <app-booking-map-container *ngIf="(blockSelection$ | async) && showMap"></app-booking-map-container>
 
   <app-booking-table-container></app-booking-table-container>
 </div>

@@ -202,11 +202,14 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     let addressId = this.getAddressIdByAddress();
+    console.log(this.selectorsModel.country);
     if (this.selectOfficeForm.valid && addressId !== environment.ERROR_ON_GETTING_ADDRESS_ID) {
       const data = { ...this.selectOfficeForm.value, addressId };
       this.newCountry = [];
       this.newCity = [];
       this.newAddress = [];
+      this.checkingInputNames = [];
+      this.newSelected = null;
       this.isAddressChosen = true;
       this.ocs.setBlockSelection(true);
 
@@ -223,9 +226,9 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
     }
   }
 
-  blockAllSelectors(enable: boolean): void {
+  blockAllSelectors(disable: boolean): void {
     // this.blockSelection = enable;
-    if (enable) {
+    if (disable) {
       this.country.disable();
       this.city.disable();
       this.address.disable();
@@ -233,6 +236,7 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
       this.country.enable();
       this.city.enable();
       this.address.enable();
+      this.currentFocus = SelectorsName.country;
     }
   }
 

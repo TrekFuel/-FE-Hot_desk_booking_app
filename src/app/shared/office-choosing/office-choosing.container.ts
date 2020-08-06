@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SelectorsModel } from '../models/selectors.model';
 import { Store } from '@ngrx/store';
@@ -29,7 +29,6 @@ export class OfficeChoosingContainer {
   public selectorsModel$: Observable<SelectorsModel>;
   canEditMode: boolean = false;
   titleName: string;
-  @Output() roomEdit: EventEmitter<ChooseOffice> = new EventEmitter<ChooseOffice>();
 
   constructor(
     private store$: Store<AppState>,
@@ -59,6 +58,9 @@ export class OfficeChoosingContainer {
         }
       });
     this.selectorsModel$ = this.store$.select(selectorsData);
+    this.selectorsModel$.subscribe((data) => {
+      console.log(data.address[0]?.addressId);
+    });
     // Start action
     this.initStore();
   }
@@ -71,15 +73,18 @@ export class OfficeChoosingContainer {
       queryParamsHandling: 'merge' // remove to replace all query params by provided
       // replaceUrl: true // If we want to replace it in the history instead of adding new value there
     });
+
+    //new -----
     const data: OfficesDataSelectsInterface = {
       countryName: queryParams.country,
       city: queryParams.city,
       street: queryParams.address
     };
+
     this.store$.dispatch(
       new officeChoosingStartCreateAddressAction({ selectorData: data })
     );
-    this.roomEdit.emit(event);
+
   }
 
   // here all you need to retrieve the data
