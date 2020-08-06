@@ -1,19 +1,5 @@
 <div class="container">
-  <!--  ToDo shared component -->
-  <div class="row">
-    <div class="col-sm-12 text-center booking-title">
-      <h2 class="h1">Booking</h2>
-      <h4 class="mt-3">
-        <div *ngIf="!!chooseOffice?.data; else noMap">
-          Country: <span class="choosing-span">{{chooseOffice?.data.country}}</span>
-          City: <span class="choosing-span">{{chooseOffice?.data.city}}</span>
-          Address: <span class="choosing-span">{{chooseOffice?.data.address}}</span>
-          <!--          floor: <span class="choosing-span">1</span>-->
-        </div>
-        <ng-template #noMap>Please choose an office</ng-template>
-      </h4>
-    </div>
-  </div>
+
   <office-choosing-container (roomEdit)="chooseOffice = $event"></office-choosing-container>
 
   <div class="row justify-content-start">

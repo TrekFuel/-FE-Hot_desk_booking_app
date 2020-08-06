@@ -17,19 +17,19 @@ import { OfficesDataSelectsInterface } from '../models/offices-data-selects.inte
   selector: 'office-choosing-container',
   template: `
     <app-office-choosing
-      [canEditMode]="canEditMode"
-      (onChooseOffice)="onChooseOffice($event)"
-      [selectorsModel]="selectorsModel$ | async"
+        [canEditMode]="canEditMode"
+        (onChooseOffice)="onChooseOffice($event)"
+        [selectorsModel]="selectorsModel$ | async"
+        [titleName]="titleName"
     >
     </app-office-choosing>
-  `,
+  `
 })
 export class OfficeChoosingContainer {
   public selectorsModel$: Observable<SelectorsModel>;
   canEditMode: boolean = false;
-  @Output() roomEdit: EventEmitter<ChooseOffice> = new EventEmitter<
-    ChooseOffice
-  >();
+  titleName: string;
+  @Output() roomEdit: EventEmitter<ChooseOffice> = new EventEmitter<ChooseOffice>();
 
   constructor(
     private store$: Store<AppState>,
@@ -45,7 +45,20 @@ export class OfficeChoosingContainer {
         map((route: string) => route.split('/')[1]),
         tap((route) => (this.canEditMode = route === 'rooms-management'))
       )
-      .subscribe();
+      .subscribe((route: string) => {
+        switch (route) {
+          case 'rooms-management':
+            this.titleName = 'Create or edit office';
+            break;
+          case 'booking':
+            this.titleName = 'Booking';
+            break;
+          default:
+            this.titleName = 'Choosing';
+            break;
+        }
+        console.log(this.titleName);
+      });
     this.selectorsModel$ = this.store$.select(selectorsData);
     // Start action
     this.initStore();
@@ -56,13 +69,13 @@ export class OfficeChoosingContainer {
     this.router.navigate(['.'], {
       relativeTo: this.route,
       queryParams,
-      queryParamsHandling: 'merge', // remove to replace all query params by provided
+      queryParamsHandling: 'merge' // remove to replace all query params by provided
       // replaceUrl: true // If we want to replace it in the history instead of adding new value there
     });
     const data: OfficesDataSelectsInterface = {
       countryName: queryParams.country,
       city: queryParams.city,
-      street: queryParams.address,
+      street: queryParams.address
     };
     this.store$.dispatch(
       new officeChoosingStartCreateAddressAction({ selectorData: data })

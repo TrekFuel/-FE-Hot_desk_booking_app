@@ -17,8 +17,10 @@ import { ChooseOffice } from '../models/choose-office.model';
 export class OfficeChoosingComponent implements OnInit, OnDestroy {
 
   @Input() selectorsModel: SelectorsModel;
+  @Input() titleName: string = 'Choosing';
   @Output() onChooseOffice: EventEmitter<ChooseOffice> = new EventEmitter<ChooseOffice>();
   SelectorsName = SelectorsName;
+  environment = environment;
   selectOfficeForm: FormGroup;
   countrySubscription: Subscription;
   citySubscription: Subscription;
