@@ -38,8 +38,6 @@ export class BookingMapComponent implements OnInit, OnDestroy {
 
           this.canvas.requestRenderAll();
           console.log('place under mouse');
-          //   this.currentPlace.isPlaceHovered = true;
-          //   this.currentPlace.placeData = actObj.data;
         }
       },
       'mouse:out': (e) => {
@@ -49,20 +47,12 @@ export class BookingMapComponent implements OnInit, OnDestroy {
           actObj.setShadow('0 0 0 rgba(255,255,255,0)');
 
           this.canvas.requestRenderAll();
-          console.log('place under mouse');
-          //   this.currentPlace.isPlaceHovered = true;
-          //   this.currentPlace.placeData = actObj.data;
         }
-        // const actObj: fabric.Object = e.target;
       },
       'mouse:down': (e) => {
         const actObj: fabric.Object = e.target;
         if (actObj?.name === EDITOR_NAMES.place) {
           console.log('click on place');
-          //   this.currentPlace.isPlaceClickedToClose = false;
-          //   this.currentPlace.placeData = actObj.data;
-          // } else {
-          //   this.hidePlaceData();
         }
       },
       'mouse:down:before': (e) => {
@@ -80,11 +70,12 @@ export class BookingMapComponent implements OnInit, OnDestroy {
         const rect = new fabric.Rect({
           left: bound.left - 7,
           top: bound.top - 5,
-          width: bound.width + 12,
+          width: bound.width + 10,
           height: bound.height + 10,
           fill: 'transparent',
           stroke: 'lightgreen',
-          strokeWidth: 3,
+          strokeWidth: 4,
+          opacity: 0.5,
           rx: 10,
           ry: 10,
           perPixelTargetFind: true,
