@@ -46,8 +46,7 @@
   </mat-form-field>
 
   <div class="col-sm-6 col-md-3 mt-3">
-    <button (click)="onClickChoose()"
-            [disabled]="blockSelection"
+    <button [disabled]="blockSelection"
             [hasFocus]="currentFocus === SelectorsName.choose"
             class="btn btn-block {{newOfficeObject ? 'btn-outline-success' : 'btn-outline-secondary'}}"
             type="submit">

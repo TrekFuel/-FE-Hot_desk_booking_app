@@ -7,6 +7,7 @@ import { distinctUntilChanged, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ChooseOffice } from '../models/choose-office.model';
+import { OfficeChoosingServices } from './office-choosing.services';
 
 @Component({
   selector: 'app-office-choosing',
@@ -39,7 +40,11 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
 
   @Input() canEditMode: boolean = false;
   blockSelection: boolean = false;
+  oscSubscription: Subscription;
   isAddressChosen: boolean = false;
+
+  constructor(private ocs: OfficeChoosingServices) {
+  }
 
   public get countryOptions(): string[] {
     return this.canEditMode ? [SelectorsName.new, ...this.selectorsModel.country, ...this.newCountry]
@@ -119,6 +124,8 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
       .subscribe((address: string) => this.canEditMode ?
         this.onChoosing(SelectorsName.address, address === SelectorsName.new, this.addressOptions)
         : this.moveFocusFrom(SelectorsName.address));
+
+    this.oscSubscription = this.ocs.blockSelection.pipe(tap((value: boolean) => this.blockAllSelectors(value))).subscribe();
   }
 
   getAddressIdByAddress(): string {
@@ -193,10 +200,6 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
     this.inputNew.updateValueAndValidity();
   }
 
-  onClickChoose() {
-    console.log('choose');
-  }
-
   onSubmit() {
     let addressId = this.getAddressIdByAddress();
     if (this.selectOfficeForm.valid && addressId !== environment.ERROR_ON_GETTING_ADDRESS_ID) {
@@ -237,6 +240,7 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
     this.countrySubscription.unsubscribe();
     this.citySubscription.unsubscribe();
     this.addressSubscription.unsubscribe();
+    this.oscSubscription.unsubscribe();
   }
 
   private _initChoosingForm(): void {
