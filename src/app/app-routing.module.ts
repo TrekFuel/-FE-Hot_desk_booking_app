@@ -10,9 +10,14 @@ import { AuthGuard } from './shared/guards/auth.guard';
 import { UsersGuard } from './users/guards/users.guard';
 import { RoomsManagementGuard } from './rooms-management/guards/rooms-management.guard';
 import { environment } from '../environments/environment';
+import { NotFoundPageComponent } from './shared/not-found-page/not-found-page.component';
 
 const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'login' },
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'login'
+  },
   {
     path: 'login',
     component: LoginComponent,
@@ -44,6 +49,16 @@ const routes: Routes = [
     component: UserProfileContainerComponent,
     canActivate: [NoAuthGuard],
   },
+  {
+    path: '404',
+    component: NotFoundPageComponent,
+    canActivate: [NoAuthGuard],
+  },
+  {
+    path: '**',
+    redirectTo: '404',
+    pathMatch: 'full',
+  }
 ];
 
 @NgModule({
