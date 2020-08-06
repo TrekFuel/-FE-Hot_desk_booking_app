@@ -10,7 +10,7 @@
     z-index: 6;
     top: 63px;
     right: 0;
-    @include marginForRightTopCorner;
+    //@include marginForRightTopCorner;
     @include userSelectNone;
     min-width: 220px;
     max-width: 400px;
@@ -67,7 +67,6 @@
     border-radius: 3px;
     padding: 0 0 40px 0;
     width: 100%;
-    overflow: scroll;
 
     app-zoom {
       z-index: 9;

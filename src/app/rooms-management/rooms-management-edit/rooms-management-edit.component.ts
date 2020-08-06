@@ -10,7 +10,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { fabric } from 'fabric';
-import { CANVAS_OPTION } from './canvas-option';
+import { CANVAS_DEFAULT, CANVAS_OPTION } from './canvas-option';
 import { EDITOR_NAMES, editorBlocks, PLACES_TITLES } from './editor-blocks-info';
 import { PlaceData, PlaceRole } from '../../shared/models/map-data.model';
 import { Canvas } from 'fabric/fabric-impl';
@@ -32,11 +32,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   @ViewChild('clone', { static: true, read: ElementRef }) btnClone: ElementRef;
   @ViewChild('close', { static: true, read: ElementRef }) btnClose: ElementRef;
   @ViewChild('cardForPlace', { static: true }) cardForPlace: ElementRef;
-  public canvasSize: CanvasSize = {
-    width: 500,
-    height: 500,
-    zoom: 100
-  };
+  public canvasSize: CanvasSize = CANVAS_DEFAULT;
   placesData: PlaceData[] = [];
   placeRole = PlaceRole;
   editorBlocks: EditorBlock[] = editorBlocks;

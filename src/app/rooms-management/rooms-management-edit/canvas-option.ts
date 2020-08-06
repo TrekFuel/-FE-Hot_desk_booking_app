@@ -1,3 +1,5 @@
+import { CanvasSize } from './models/editor-blocks.models';
+
 export const CANVAS_OPTION = {
   FOR_EDIT: {
     hoverCursor: 'move',
@@ -13,4 +15,10 @@ export const CANVAS_OPTION = {
     allowTouchScrolling: true,
     backgroundColor: 'white',
   },
+};
+
+export const CANVAS_DEFAULT: CanvasSize = {
+  width: 500,
+  height: 500,
+  zoom: 100
 };

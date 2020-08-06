@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CanvasSize } from '../../rooms-management/rooms-management-edit/models/editor-blocks.models';
 import { Canvas } from 'fabric/fabric-impl';
 import { fabric } from 'fabric';
-import { CANVAS_OPTION } from '../../rooms-management/rooms-management-edit/canvas-option';
+import { CANVAS_DEFAULT, CANVAS_OPTION } from '../../rooms-management/rooms-management-edit/canvas-option';
 import { MOCK_OFFICE } from '../../shared/mock-office';
 
 @Component({
@@ -13,11 +13,7 @@ import { MOCK_OFFICE } from '../../shared/mock-office';
 export class BookingMapComponent implements OnInit {
 
   @ViewChild('htmlCanvasBooking', { static: true }) htmlCanvas: ElementRef;
-  public canvasSize: CanvasSize = {
-    width: 500,
-    height: 500,
-    zoom: 100
-  };
+  public canvasSize: CanvasSize = CANVAS_DEFAULT;
   private canvas: Canvas;
 
   constructor() {
