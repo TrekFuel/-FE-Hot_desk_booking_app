@@ -27,19 +27,32 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this._initCanvas();
     this.loadMap();
+    this.checkBookingsOnPlaces();
 
     this.canvas.on({
       'mouse:over': (e) => {
         const actObj: fabric.Object = e.target;
         if (actObj?.name === EDITOR_NAMES.place && this.canvas.getActiveObjects().length <= 1) {
           this.canvas.hoverCursor = 'pointer';
+          actObj.setShadow('3px 3px 12px rgba(0,255,0,0.7)');
+
+          this.canvas.requestRenderAll();
           console.log('place under mouse');
           //   this.currentPlace.isPlaceHovered = true;
           //   this.currentPlace.placeData = actObj.data;
         }
       },
       'mouse:out': (e) => {
-        this.canvas.hoverCursor = 'default';
+        const actObj: fabric.Object = e.target;
+        if (actObj?.name === EDITOR_NAMES.place && this.canvas.getActiveObjects().length <= 1) {
+          this.canvas.hoverCursor = 'default';
+          actObj.setShadow('0 0 0 rgba(255,255,255,0)');
+
+          this.canvas.requestRenderAll();
+          console.log('place under mouse');
+          //   this.currentPlace.isPlaceHovered = true;
+          //   this.currentPlace.placeData = actObj.data;
+        }
         // const actObj: fabric.Object = e.target;
       },
       'mouse:down': (e) => {
@@ -56,6 +69,40 @@ export class BookingMapComponent implements OnInit, OnDestroy {
         // this.blockedElements.includes(e.target?.name) ? this.discardActObj()
         // : this.positioningCloneAndClose(e.target)
       }
+    });
+  }
+
+  checkBookingsOnPlaces() {
+    this.canvas.forEachObject((obj: fabric.Object) => {
+      if (obj?.name === EDITOR_NAMES.place) {
+        const bound = obj.getBoundingRect();
+
+        const rect = new fabric.Rect({
+          left: bound.left - 7,
+          top: bound.top - 5,
+          width: bound.width + 12,
+          height: bound.height + 10,
+          fill: 'transparent',
+          stroke: 'lightgreen',
+          strokeWidth: 3,
+          rx: 10,
+          ry: 10,
+          perPixelTargetFind: true,
+          lockMovementX: true,
+          lockMovementY: true,
+          hasControls: false,
+          hasBorders: false,
+          selectable: false
+        });
+
+        rect.name = `temp|${obj.data.tempId}`;
+
+        console.log(rect);
+
+        this.canvas.add(rect);
+
+      }
+      this.canvas.requestRenderAll();
     });
   }
 
