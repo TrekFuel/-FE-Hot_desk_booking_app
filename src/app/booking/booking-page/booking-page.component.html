@@ -1,6 +1,6 @@
 <div class="container">
 
-  <office-choosing-container (roomEdit)="chooseOffice = $event"></office-choosing-container>
+  <office-choosing-container></office-choosing-container>
 
   <div class="row justify-content-start">
 
@@ -26,7 +26,9 @@
     </div>
 
     <div class="col-sm-6 col-md-2 mt-3">
-      <button class="btn btn-block btn-outline-secondary">
+      <button (click)="onClickAnotherAddress()"
+              [disabled]="!(blockSelection$ | async)"
+              class="btn btn-block btn-outline-secondary">
         Another address
       </button>
     </div>
@@ -39,7 +41,7 @@
 
   </div>
 
-  <app-booking-map-container *ngIf="showMap"></app-booking-map-container>
+  <app-booking-map-container *ngIf="blockSelection$ | async"></app-booking-map-container>
 
   <app-booking-table-container></app-booking-table-container>
 </div>

@@ -4,7 +4,7 @@ import { MyErrorStateMatcher, ValidateSameName } from '../validators/same-name.v
 import { SelectorsName } from './selectors-name';
 import { SelectorsAddress, SelectorsCity, SelectorsModel } from '../models/selectors.model';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ChooseOffice } from '../models/choose-office.model';
 import { OfficeChoosingServices } from './office-choosing.services';
@@ -39,7 +39,7 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   // ------------------
 
   @Input() canEditMode: boolean = false;
-  blockSelection: boolean = false;
+  blockSelection$: Observable<boolean> = this.ocs.blockSelection;
   oscSubscription: Subscription;
   isAddressChosen: boolean = false;
 
@@ -224,7 +224,7 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   }
 
   blockAllSelectors(enable: boolean): void {
-    this.blockSelection = enable;
+    // this.blockSelection = enable;
     if (enable) {
       this.country.disable();
       this.city.disable();
