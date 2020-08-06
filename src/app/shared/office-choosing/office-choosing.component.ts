@@ -32,6 +32,7 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   matcher = new MyErrorStateMatcher();
   checkingInputNames: string[] = [];
   newSelected: string | null = null;
+
   newCountry: string[] = [];
   newCity: SelectorsCity[] = [];
   newAddress: SelectorsAddress[] = [];
@@ -41,7 +42,6 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   @Input() canEditMode: boolean = false;
   blockSelection$: Observable<boolean> = this.ocs.blockSelection;
   oscSubscription: Subscription;
-  isAddressChosen: boolean = false;
 
   constructor(private ocs: OfficeChoosingServices) {
   }
@@ -202,28 +202,24 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     let addressId = this.getAddressIdByAddress();
-    console.log(this.selectorsModel.country);
     if (this.selectOfficeForm.valid && addressId !== environment.ERROR_ON_GETTING_ADDRESS_ID) {
       const data = { ...this.selectOfficeForm.value, addressId };
-      this.newCountry = [];
-      this.newCity = [];
-      this.newAddress = [];
-      this.checkingInputNames = [];
-      this.newSelected = null;
-      this.isAddressChosen = true;
+      if (addressId === environment.TEMP_ADDRESS_ID_FOR_NEW_OFFICE) delete data.inputNew;
+
+      this.cancelAllNewVariables();
       this.ocs.setBlockSelection(true);
 
-      if (addressId === environment.TEMP_ADDRESS_ID_FOR_NEW_OFFICE) {
-        // new office here
-        delete data.inputNew;
-      } else {
-        // existing office here
-      }
-
-      // ToDo do 2 different emitters, now it is a temporary variant or refactor this
       this.onChooseOffice.emit({ isNewObject: this.newOfficeObject, data });
-
+      this.newOfficeObject = false;
     }
+  }
+
+  cancelAllNewVariables() {
+    this.newCountry = [];
+    this.newCity = [];
+    this.newAddress = [];
+    this.checkingInputNames = [];
+    this.newSelected = null;
   }
 
   blockAllSelectors(disable: boolean): void {
