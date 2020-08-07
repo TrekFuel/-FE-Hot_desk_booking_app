@@ -1,22 +1,8 @@
 <div class="container">
-  <!--  ToDo shared component -->
-  <div class="row">
-    <div class="col-sm-12 text-center booking-title">
-      <h2 class="h1">Booking</h2>
-      <h4 class="mt-3">
-        <div *ngIf="!!chooseOffice?.data; else noMap">
-          Country: <span class="choosing-span">{{chooseOffice?.data.country}}</span>
-          City: <span class="choosing-span">{{chooseOffice?.data.city}}</span>
-          Address: <span class="choosing-span">{{chooseOffice?.data.address}}</span>
-          <!--          floor: <span class="choosing-span">1</span>-->
-        </div>
-        <ng-template #noMap>Please choose an office</ng-template>
-      </h4>
-    </div>
-  </div>
-  <office-choosing-container (roomEdit)="chooseOffice = $event"></office-choosing-container>
 
-  <div class="row justify-content-start">
+  <office-choosing-container></office-choosing-container>
+
+  <div class="row justify-content-start mt-3">
 
     <div class="col-sm-6 col-md-3 my-1">
       <mat-form-field appearance="outline">
@@ -27,7 +13,7 @@
       </mat-form-field>
     </div>
 
-    <div class="col-sm-6 col-md-6 my-1">
+    <div class="col-sm-6 col-md-4 my-1">
       <mat-form-field appearance="outline">
         <mat-label>Choose a date range</mat-label>
         <mat-date-range-input [rangePicker]="picker">
@@ -39,15 +25,25 @@
       </mat-form-field>
     </div>
 
+    <div class="col-sm-6 col-md-2 mt-3">
+      <button (click)="onClickAnotherAddress()"
+              [disabled]="!(blockSelection$ | async)"
+              class="btn btn-block btn-outline-secondary">
+        Another address
+      </button>
+    </div>
+
     <div class="col-sm-6 col-md-3 mt-3">
-      <button (click)="showMap = !showMap" class="btn btn-block btn-outline-primary">
+      <button (click)="showMap = !showMap"
+              [disabled]="!(blockSelection$ | async)"
+              class="btn btn-block btn-outline-primary">
         {{showMap ? 'Hide map' : 'Show map'}}
       </button>
     </div>
 
   </div>
 
-  <app-booking-map-container *ngIf="showMap"></app-booking-map-container>
+  <app-booking-map-container *ngIf="(blockSelection$ | async) && showMap"></app-booking-map-container>
 
   <app-booking-table-container></app-booking-table-container>
 </div>

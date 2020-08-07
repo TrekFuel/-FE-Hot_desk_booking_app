@@ -4,9 +4,10 @@ import { MyErrorStateMatcher, ValidateSameName } from '../validators/same-name.v
 import { SelectorsName } from './selectors-name';
 import { SelectorsAddress, SelectorsCity, SelectorsModel } from '../models/selectors.model';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ChooseOffice } from '../models/choose-office.model';
+import { OfficeChoosingServices } from './office-choosing.services';
 
 @Component({
   selector: 'app-office-choosing',
@@ -17,8 +18,10 @@ import { ChooseOffice } from '../models/choose-office.model';
 export class OfficeChoosingComponent implements OnInit, OnDestroy {
 
   @Input() selectorsModel: SelectorsModel;
+  @Input() titleName: string = 'Choosing';
   @Output() onChooseOffice: EventEmitter<ChooseOffice> = new EventEmitter<ChooseOffice>();
   SelectorsName = SelectorsName;
+  environment = environment;
   selectOfficeForm: FormGroup;
   countrySubscription: Subscription;
   citySubscription: Subscription;
@@ -29,6 +32,7 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   matcher = new MyErrorStateMatcher();
   checkingInputNames: string[] = [];
   newSelected: string | null = null;
+
   newCountry: string[] = [];
   newCity: SelectorsCity[] = [];
   newAddress: SelectorsAddress[] = [];
@@ -36,10 +40,10 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   // ------------------
 
   @Input() canEditMode: boolean = false;
-  //ToDo need store here
-  blockSelection: boolean = false;
+  blockSelection$: Observable<boolean> = this.ocs.blockSelection;
+  oscSubscription: Subscription;
 
-  constructor() {
+  constructor(private ocs: OfficeChoosingServices) {
   }
 
   public get countryOptions(): string[] {
@@ -120,6 +124,8 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
       .subscribe((address: string) => this.canEditMode ?
         this.onChoosing(SelectorsName.address, address === SelectorsName.new, this.addressOptions)
         : this.moveFocusFrom(SelectorsName.address));
+
+    this.oscSubscription = this.ocs.blockSelection.pipe(tap((value: boolean) => this.blockAllSelectors(value))).subscribe();
   }
 
   getAddressIdByAddress(): string {
@@ -198,23 +204,27 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
     let addressId = this.getAddressIdByAddress();
     if (this.selectOfficeForm.valid && addressId !== environment.ERROR_ON_GETTING_ADDRESS_ID) {
       const data = { ...this.selectOfficeForm.value, addressId };
+      if (addressId === environment.TEMP_ADDRESS_ID_FOR_NEW_OFFICE) delete data.inputNew;
 
-      if (addressId === environment.TEMP_ADDRESS_ID_FOR_NEW_OFFICE) {
-        // new office here
-        delete data.inputNew;
-      } else {
-        // existing office here
-      }
+      this.cancelAllNewVariables();
+      this.ocs.setBlockSelection(true);
 
-      // ToDo do 2 different emitters, now it is a temporary variant or refactor this
       this.onChooseOffice.emit({ isNewObject: this.newOfficeObject, data });
-      if (this.canEditMode) this.blockAllSelectors(true);
+      this.newOfficeObject = false;
     }
   }
 
-  blockAllSelectors(enable: boolean): void {
-    this.blockSelection = enable;
-    if (enable) {
+  cancelAllNewVariables() {
+    this.newCountry = [];
+    this.newCity = [];
+    this.newAddress = [];
+    this.checkingInputNames = [];
+    this.newSelected = null;
+  }
+
+  blockAllSelectors(disable: boolean): void {
+    // this.blockSelection = enable;
+    if (disable) {
       this.country.disable();
       this.city.disable();
       this.address.disable();
@@ -222,6 +232,7 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
       this.country.enable();
       this.city.enable();
       this.address.enable();
+      this.currentFocus = SelectorsName.country;
     }
   }
 
@@ -229,6 +240,7 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
     this.countrySubscription.unsubscribe();
     this.citySubscription.unsubscribe();
     this.addressSubscription.unsubscribe();
+    this.oscSubscription.unsubscribe();
   }
 
   private _initChoosingForm(): void {

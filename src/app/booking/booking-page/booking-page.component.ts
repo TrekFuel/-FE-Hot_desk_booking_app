@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ChooseOffice } from '../../shared/models/choose-office.model';
 import { FormControl } from '@angular/forms';
 import * as _moment from 'moment';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
+import { Observable } from 'rxjs';
+import { OfficeChoosingServices } from '../../shared/office-choosing/office-choosing.services';
 
 const moment = _moment;
 export const MY_FORMATS = {
@@ -26,17 +27,15 @@ export const MY_FORMATS = {
 })
 
 export class BookingPageComponent {
-  chooseOffice: ChooseOffice;
   date = new FormControl(new Date());
   // date = new FormControl(moment());
+  blockSelection$: Observable<boolean> = this.ocs.blockSelection;
+  showMap: boolean = true;
 
-  showMap: boolean = false;
-
-  constructor() {
+  constructor(private ocs: OfficeChoosingServices) {
   }
 
-  onClickShowMap() {
-    console.log('showmap');
+  onClickAnotherAddress() {
+    this.ocs.setBlockSelection(false);
   }
-
 }

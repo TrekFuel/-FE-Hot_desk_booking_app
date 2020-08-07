@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { Observable } from 'rxjs';
-import { SelectorsModel } from '../models/selectors.model';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
+import { SelectorsAddress, SelectorsModel } from '../models/selectors.model';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import {
@@ -10,31 +10,34 @@ import {
 import { selectorsData } from '../../store/selectors/officeChosing.selectors';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, map, tap } from 'rxjs/operators';
-import { ChooseOffice } from '../models/choose-office.model';
+import { ChooseOffice, OfficeData } from '../models/choose-office.model';
 import { OfficesDataSelectsInterface } from '../models/offices-data-selects.interface';
+import { OfficeChoosingServices } from './office-choosing.services';
 
 @Component({
   selector: 'office-choosing-container',
   template: `
     <app-office-choosing
-      [canEditMode]="canEditMode"
-      (onChooseOffice)="onChooseOffice($event)"
-      [selectorsModel]="selectorsModel$ | async"
+        [canEditMode]="canEditMode"
+        (onChooseOffice)="onChooseOffice($event)"
+        [selectorsModel]="selectorsModel$ | async"
+        [titleName]="titleName"
     >
     </app-office-choosing>
-  `,
+  `
 })
-export class OfficeChoosingContainer {
-  public selectorsModel$: Observable<SelectorsModel>;
+export class OfficeChoosingContainer implements OnInit, OnDestroy {
+  public selectorsModel$: Observable<SelectorsModel> = this.store$.select(selectorsData);
+  selectorsModelSubscription: Subscription;
   canEditMode: boolean = false;
-  @Output() roomEdit: EventEmitter<ChooseOffice> = new EventEmitter<
-    ChooseOffice
-  >();
+  titleName: string;
+  newOfficeData: OfficeData | null;
 
   constructor(
     private store$: Store<AppState>,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private ocs: OfficeChoosingServices
   ) {
     this.router.events
       .pipe(
@@ -45,33 +48,77 @@ export class OfficeChoosingContainer {
         map((route: string) => route.split('/')[1]),
         tap((route) => (this.canEditMode = route === 'rooms-management'))
       )
-      .subscribe();
-    this.selectorsModel$ = this.store$.select(selectorsData);
+      .subscribe((route: string) => {
+        switch (route) {
+          case 'rooms-management':
+            this.titleName = 'Create or edit office';
+            break;
+          case 'booking':
+            this.titleName = 'Booking';
+            break;
+          default:
+            this.titleName = 'Choosing';
+            break;
+        }
+      });
+
     // Start action
     this.initStore();
   }
 
-  onChooseOffice(event: ChooseOffice) {
-    const queryParams = event.data;
-    this.router.navigate(['.'], {
-      relativeTo: this.route,
-      queryParams,
-      queryParamsHandling: 'merge', // remove to replace all query params by provided
-      // replaceUrl: true // If we want to replace it in the history instead of adding new value there
+  ngOnInit() {
+    this.ocs.setBlockSelection(false);
+    this.selectorsModelSubscription = this.selectorsModel$.subscribe((data: SelectorsModel) => {
+      if (!!data && !!this.newOfficeData) {
+        const office: OfficeData = this.newOfficeData;
+        // To PAVEL ---- if it is a new address we get addressId here!
+        let addressId = this.getAddressIdByAddress(data.address, office.city, office.address);
+        console.log(`new address id  is: ${addressId}`);
+        office[addressId] = addressId;
+        this.existingOfficeHandle(office);
+        this.newOfficeData = null;
+      }
     });
-    const data: OfficesDataSelectsInterface = {
-      countryName: queryParams.country,
-      city: queryParams.city,
-      street: queryParams.address,
-    };
+  }
+
+  onChooseOffice(event: ChooseOffice): void {
+    event.isNewObject ? this.newOfficeHandle(event.data) : this.existingOfficeHandle(event.data);
+  }
+
+  newOfficeHandle(officeData: OfficeData) {
+    this.newOfficeData = { ...officeData };
+    console.log(officeData);
+    let [countryName, city, street]: string[] = [
+      this.newOfficeData.country,
+      this.newOfficeData.city,
+      this.newOfficeData.address];
+    const data: OfficesDataSelectsInterface = { countryName, city, street };
     this.store$.dispatch(
       new officeChoosingStartCreateAddressAction({ selectorData: data })
     );
-    this.roomEdit.emit(event);
+  }
+
+  existingOfficeHandle(officeData: OfficeData) {
+    const queryParams: OfficeData = { ...officeData };
+    this.router.navigate(['.'], {
+      relativeTo: this.route,
+      queryParams,
+      queryParamsHandling: 'merge' // remove to replace all query params by provided
+      // replaceUrl: true // If we want to replace it in the history instead of adding new value there
+    });
+  }
+
+  // return AddressId by City and Address from Array of Addresses
+  getAddressIdByAddress(offices: SelectorsAddress[], city: string, address: string): string {
+    return offices.filter((item: SelectorsAddress) => item?.city === city && item?.address === address)[0].addressId;
   }
 
   // here all you need to retrieve the data
   initStore(): void {
     this.store$.dispatch(new officeChoosingStartAction());
+  }
+
+  ngOnDestroy(): void {
+    this.selectorsModelSubscription.unsubscribe();
   }
 }

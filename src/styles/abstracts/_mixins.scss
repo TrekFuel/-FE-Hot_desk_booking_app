@@ -15,3 +15,9 @@
     font-size: 1.5rem;
   }
 }
+
+@mixin choosingSpan() {
+  font-weight: 500;
+  color: $mainThemeColor;
+  padding-right: 7px;
+}
