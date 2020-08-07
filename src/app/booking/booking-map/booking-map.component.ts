@@ -1,5 +1,8 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CanvasSize } from '../../rooms-management/rooms-management-edit/models/editor-blocks.models';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  CanvasSize,
+  CurrentBookingPlace
+} from '../../rooms-management/rooms-management-edit/models/editor-blocks.models';
 import { Canvas } from 'fabric/fabric-impl';
 import { fabric } from 'fabric';
 import { CANVAS_DEFAULT, CANVAS_OPTION } from '../../rooms-management/rooms-management-edit/canvas-option';
@@ -16,11 +19,16 @@ import { Subscription } from 'rxjs';
 export class BookingMapComponent implements OnInit, OnDestroy {
 
   @ViewChild('htmlCanvasBooking', { static: true }) htmlCanvas: ElementRef;
+  @ViewChild('cardForBooking', { static: true }) cardForBooking: ElementRef;
   public canvasSize: CanvasSize = CANVAS_DEFAULT;
-  ocsSubscription: Subscription;
+  currentBookingPlace: CurrentBookingPlace = {
+    isPlaceClicked: false,
+    placeData: null
+  };
+  private ocsSubscription: Subscription;
   private canvas: Canvas;
 
-  constructor(private ocs: OfficeChoosingServices) {
+  constructor(private ocs: OfficeChoosingServices, private changeDetection: ChangeDetectorRef) {
   }
 
   get curZoom() {
@@ -57,12 +65,13 @@ export class BookingMapComponent implements OnInit, OnDestroy {
       'mouse:down': (e) => {
         const actObj: fabric.Object = e.target;
         if (actObj?.name === EDITOR_NAMES.place) {
-          console.log(`click on place: ${actObj.data.tempId}`);
+          this.currentBookingPlace.isPlaceClicked = true;
+          this.currentBookingPlace.placeData = actObj.data;
+          this.changeDetection.detectChanges();
         }
       },
       'mouse:down:before': (e) => {
-        // this.blockedElements.includes(e.target?.name) ? this.discardActObj()
-        // : this.positioningCloneAndClose(e.target)
+
       }
     });
   }
