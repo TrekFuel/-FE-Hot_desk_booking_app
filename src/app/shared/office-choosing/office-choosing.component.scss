@@ -1,4 +1,16 @@
+@import "main";
+
 :host {
+  .title-place {
+    @include styleForTitle;
+
+    .choosing-span {
+      font-weight: 500;
+      font-size: 1.2rem;
+      color: $mainThemeColor;
+      padding-right: 7px;
+    }
+  }
 
   mat-form-field {
     width: 100%;

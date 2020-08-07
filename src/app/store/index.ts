@@ -12,8 +12,8 @@ import { ModalAlertInterface } from '../layout/modal-alert/models/modal-alert.in
 import { moduleAlertReducer } from './reducers/modalAlert.reducer';
 import { OfficeChoosingInterface } from '../shared/models/selectors.model';
 import { officeChoosingReducer } from './reducers/officeChoosing.reducer';
-import { ResponseOfficeDtoInterface } from '../rooms-management/rooms-management-edit/models/response.interface';
 import { roomsManagementEditReducer } from './reducers/roomsManagementEdit.reducer';
+import { RoomsManagementEditStoreInterface } from '../rooms-management/rooms-management-edit/models/rooms-management-edit-store.interface';
 
 export interface AppState {
   usersList: UsersListInterface;
@@ -22,7 +22,7 @@ export interface AppState {
   messageState: MessageStateInterface;
   modalAlert: ModalAlertInterface;
   officeChoosing: OfficeChoosingInterface;
-  roomsManagementEdit: ResponseOfficeDtoInterface;
+  roomsManagementEditStore: RoomsManagementEditStoreInterface;
 }
 
 export const reducers: ActionReducerMap<AppState> = {
@@ -32,7 +32,7 @@ export const reducers: ActionReducerMap<AppState> = {
   messageState: messageStateReducer,
   modalAlert: moduleAlertReducer,
   officeChoosing: officeChoosingReducer,
-  roomsManagementEdit: roomsManagementEditReducer,
+  roomsManagementEditStore: roomsManagementEditReducer,
 };
 
 export const metaReducers: MetaReducer<AppState>[] = !environment.production
