@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import {
   officeChoosingStartAction,
-  officeChoosingStartCreateAddressAction
+  officeChoosingStartCreateAddressAction,
 } from '../../store/actions/officeChoosing.action';
 import { selectorsData } from '../../store/selectors/officeChosing.selectors';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
