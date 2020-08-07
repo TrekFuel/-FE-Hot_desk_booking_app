@@ -1,6 +1,7 @@
 @import "main";
 
 :host {
+  z-index: 6;
   transform: scale(0.7);
   @media (min-width: map-get($grid-breakpoints, "md")) {
     transform: scale(1);
