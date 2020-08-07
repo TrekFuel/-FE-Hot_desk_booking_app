@@ -1,16 +1,16 @@
 @import "main";
 
 :host {
-  mat-icon {
-    @include userSelectNone;
-  }
+  //mat-icon {
+  //  @include userSelectNone;
+  //}
 
   mat-card {
     position: fixed;
     z-index: 6;
     top: 63px;
     right: 0;
-    //@include marginForRightTopCorner;
+    @include marginForRightTopCorner;
     @include userSelectNone;
     min-width: 220px;
     max-width: 400px;
@@ -18,8 +18,8 @@
 
     .btn-clear {
       position: absolute;
-      top: -8px;
-      right: -8px;
+      top: 0;
+      right: 0;
     }
 
     .btn-clear.hide {
@@ -31,6 +31,18 @@
         display: none;
       }
 
+      .for-admin {
+        textarea {
+          background-color: white;
+        }
+      }
+
+      .choosing-span {
+        @include choosingSpan;
+        margin-left: 3px;
+        font-size: 1.1rem;
+      }
+
       mat-form-field {
         width: 60%;
         margin-right: 1rem;
@@ -38,8 +50,8 @@
 
       .state-of-place {
         position: relative;
-        left: 3rem;
-        font-size: 1.7rem;
+        left: 0.5rem;
+        font-size: 1.2rem;
         font-weight: bold;
         text-transform: uppercase;
       }
