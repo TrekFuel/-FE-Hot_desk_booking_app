@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HomeRoutingModule } from './home-routing.module';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UserProfileContainerComponent } from './user-profile/user-profile.container';
+import {MaterialModule} from '../material/material-module';
 
 
 
@@ -11,10 +12,11 @@ import { UserProfileContainerComponent } from './user-profile/user-profile.conta
     UserProfileComponent,
     UserProfileContainerComponent
   ],
-  imports: [
-    CommonModule,
-    HomeRoutingModule,
-  ],
+    imports: [
+        CommonModule,
+        HomeRoutingModule,
+        MaterialModule,
+    ],
   exports: [
     UserProfileComponent,
     UserProfileContainerComponent,
