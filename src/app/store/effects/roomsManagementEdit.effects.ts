@@ -1,105 +1,125 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { RoomsManagementEditServices } from '../../rooms-management/rooms-management-edit/rooms-management-edit.services';
 import * as roomsManagementEditTypeActions from '../actions/roomsManagementEdit.action';
 import {
   roomsManagementEditActionType,
-  roomsManagementEditCreateFloorAction,
-  roomsManagementEditCreateOfficeAction,
+  roomsManagementEditFloorAction,
+  roomsManagementEditOfficeAction,
+  roomsManagementEditPlaceAction,
+  roomsManagementEditRoomAction,
 } from '../actions/roomsManagementEdit.action';
-import { RoomsManagementEditServices } from '../../rooms-management/rooms-management-edit/rooms-management-edit.services';
+import { map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import { AppState } from '../index';
+import { roomsManagementEditData } from '../selectors/roomsManagementEdit.selector';
 import {
-  RequestFloorInterface,
-  RequestOfficeInterface,
-} from '../../rooms-management/rooms-management-edit/models/ request.interface';
-import { ResponseOfficeDtoInterface } from '../../rooms-management/rooms-management-edit/models/response.interface';
-import { HttpErrorResponse } from '@angular/common/http';
-import { MessageStateInterface } from '../../layout/message-state/models/message.interface';
-import { of } from 'rxjs';
-import { usersListFailureAction } from '../actions/usersList.actions';
-import { DEFAULT_MAP_DATA } from '../../shared/models/default-map';
+  GetFloorDataInterface,
+  GetPlaceDataInterface,
+  GetRoomDataInterface,
+  PostPlaceDataInterface,
+} from '../../rooms-management/rooms-management-edit/models/rooms-management-edit-store.interface';
 
 @Injectable()
-export class roomsManagementEditEffects {
+export class RoomsManagementEditEffects {
   @Effect()
-  createOffice$ = this.actions$.pipe(
+  roomManagementOffice$ = this.actions$.pipe(
     ofType(roomsManagementEditActionType.R_M_E_START),
     switchMap(
       (data: roomsManagementEditTypeActions.roomsManagementEditStartAction) => {
-        const dadaRequest: RequestOfficeInterface = {
-          addressId: data.payload.addressId,
-          number: '1',
-        };
-        return this.roomsManagementEditServices.postOffice(dadaRequest).pipe(
-          map((data: ResponseOfficeDtoInterface) => {
-            return new roomsManagementEditCreateOfficeAction({
-              response: data,
-            });
-          }),
-          catchError((errorResponse: HttpErrorResponse) => {
-            const messageState: MessageStateInterface = {
-              message: {
-                text: errorResponse.statusText,
-                stateAlert: 'alert-danger',
-              },
-            };
-
-            return of(
-              new usersListFailureAction({
-                errors: errorResponse,
-                message: messageState,
-              })
-            );
+        return this.roomsManagementEditServices
+          .postOffice({
+            addressId: data.payload.addressId,
+            number: data.payload.dataRoomsContainer.number,
           })
-        );
+          .pipe(
+            map((dataOffice) => {
+              return new roomsManagementEditOfficeAction({
+                dataCreateOffice: dataOffice,
+              });
+            })
+          );
       }
     )
   );
 
   @Effect()
-  createFloor$ = this.actions$.pipe(
-    ofType(roomsManagementEditActionType.R_M_E_CREATE_OFFICE),
-    switchMap(
-      (
-        data: roomsManagementEditTypeActions.roomsManagementEditCreateOfficeAction
-      ) => {
-        const dataFloor: RequestFloorInterface = {
-          officeId: data.payload.response.id,
-          number: '1',
-          map: DEFAULT_MAP_DATA,
-        };
-        return this.roomsManagementEditServices.postFloor(dataFloor).pipe(
-          map((data: ResponseOfficeDtoInterface) => {
-            return new roomsManagementEditCreateFloorAction({ response: data });
-          }),
-          catchError((errorResponse: HttpErrorResponse) => {
-            const messageState: MessageStateInterface = {
-              message: {
-                text: errorResponse.statusText,
-                stateAlert: 'alert-danger',
-              },
-            };
-
-            return of(
-              new usersListFailureAction({
-                errors: errorResponse,
-                message: messageState,
-              })
-            );
+  roomManagementFloor$ = this.actions$.pipe(
+    ofType(roomsManagementEditActionType.R_M_E_OFFICE),
+    withLatestFrom(this.store$.select(roomsManagementEditData)),
+    map(([action, roomsManagementEditData]) => [
+      action,
+      roomsManagementEditData,
+    ]),
+    switchMap(([, storeState]) => {
+      return this.roomsManagementEditServices
+        .postFloor({
+          map: storeState.dataRoomsContainer.map,
+          officeId: storeState.officeId,
+          number: storeState.dataRoomsContainer.number,
+        })
+        .pipe(
+          map((data: GetFloorDataInterface) => {
+            return new roomsManagementEditFloorAction({
+              getDataFloor: data,
+            });
           })
         );
-      }
-    )
+    })
   );
 
-  /*@Effect()
-  createPlace$ = this.actions$.pipe(
-    ofType(roomsManagementEditActionType.R_M_E_CREATE_PLACE_START),
-    switchMap((data:  roomsManagementEditTypeActions.) => {})
-  );*/
+  @Effect()
+  roomManagementRoom$ = this.actions$.pipe(
+    ofType(roomsManagementEditActionType.R_M_E_FLOOR),
+    withLatestFrom(this.store$.select(roomsManagementEditData)),
+    map(([action, roomsManagementEditData]) => [
+      action,
+      roomsManagementEditData,
+    ]),
+    switchMap(([, storeState]) => {
+      return this.roomsManagementEditServices
+        .postRoom({
+          floorId: storeState.floorId,
+          number: storeState.dataRoomsContainer.number,
+        })
+        .pipe(
+          map((data: GetRoomDataInterface) => {
+            return new roomsManagementEditRoomAction({
+              getDataRoom: data,
+            });
+          })
+        );
+    })
+  );
+
+  @Effect()
+  roomManagementPlace$ = this.actions$.pipe(
+    ofType(roomsManagementEditActionType.R_M_E_ROOM),
+    withLatestFrom(this.store$.select(roomsManagementEditData)),
+    map(([action, roomsManagementEditData]) => {
+      let addRoomId = [];
+      roomsManagementEditData.dataRoomsContainer.places.forEach((el) => {
+        addRoomId = [
+          ...addRoomId,
+          { ...el, roomId: roomsManagementEditData.roomId },
+        ];
+      });
+      return addRoomId;
+    }),
+    switchMap((arr: PostPlaceDataInterface[]) => {
+      return this.roomsManagementEditServices.postPlaces(arr).pipe(
+        map((data: GetPlaceDataInterface[]) => {
+          return new roomsManagementEditPlaceAction({
+            getDataPlace: data,
+          });
+        })
+      );
+    })
+  );
 
   constructor(
     private actions$: Actions,
-    private roomsManagementEditServices: RoomsManagementEditServices
+    private roomsManagementEditServices: RoomsManagementEditServices,
+    private store$: Store<AppState>
   ) {}
 }

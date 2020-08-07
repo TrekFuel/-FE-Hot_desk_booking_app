@@ -1,45 +1,73 @@
 import { Action } from '@ngrx/store';
-import { ResponseOfficeDtoInterface } from '../../rooms-management/rooms-management-edit/models/response.interface';
-import { PlaceData } from '../../shared/models/map-data.model';
+import {
+  dataRoomsManagementEditInterface,
+  GetFloorDataInterface,
+  GetOfficeDataInterface,
+  GetRoomDataInterface,
+} from '../../rooms-management/rooms-management-edit/models/rooms-management-edit-store.interface';
 
 export enum roomsManagementEditActionType {
-  R_M_E_START = '[RoomsManagementEdit] Start office',
-  R_M_E_CREATE_OFFICE = '[RoomsManagementEdit] Create office',
-  R_M_E_CREATE_FLOOR = '[RoomsManagementEdit] Create Floor',
-  R_M_E_CREATE_ROOM = '[RoomsManagementEdit] Create Room',
-  R_M_E_CREATE_PLACE_START = '[RoomsManagementEdit] Start Create Place',
+  R_M_E_START = '[RoomsManagementEdi] Start Office',
+  R_M_E_OFFICE = '[RoomsManagementEdi] Post Office',
+  R_M_E_FLOOR = '[RoomsManagementEdi] Post Floor',
+  R_M_E_ROOM = '[RoomsManagementEdi] Post Room',
+  R_M_E_PLACE = '[RoomsManagementEdi] Post Place',
 }
 
 export class roomsManagementEditStartAction implements Action {
   readonly type = roomsManagementEditActionType.R_M_E_START;
 
-  constructor(public payload: { addressId: string }) {}
+  constructor(
+    public payload: {
+      dataRoomsContainer: dataRoomsManagementEditInterface;
+      addressId: string;
+    }
+  ) {}
 }
 
-export class roomsManagementEditCreateOfficeAction implements Action {
-  readonly type = roomsManagementEditActionType.R_M_E_CREATE_OFFICE;
+export class roomsManagementEditOfficeAction implements Action {
+  readonly type = roomsManagementEditActionType.R_M_E_OFFICE;
 
-  constructor(public payload: { response: ResponseOfficeDtoInterface }) {}
+  constructor(
+    public payload: {
+      dataCreateOffice: GetOfficeDataInterface;
+    }
+  ) {}
 }
 
-export class roomsManagementEditCreateFloorAction implements Action {
-  readonly type = roomsManagementEditActionType.R_M_E_CREATE_FLOOR;
+export class roomsManagementEditFloorAction implements Action {
+  readonly type = roomsManagementEditActionType.R_M_E_FLOOR;
 
-  constructor(public payload: { response: ResponseOfficeDtoInterface }) {}
+  constructor(
+    public payload: {
+      getDataFloor: GetFloorDataInterface;
+    }
+  ) {}
 }
 
-export class roomsManagementEditCreateRoomAction implements Action {
-  readonly type = roomsManagementEditActionType.R_M_E_CREATE_ROOM;
+export class roomsManagementEditRoomAction implements Action {
+  readonly type = roomsManagementEditActionType.R_M_E_ROOM;
+
+  constructor(
+    public payload: {
+      getDataRoom: GetRoomDataInterface;
+    }
+  ) {}
 }
 
-export class roomsManagementEditCreateStartPlaceAction implements Action {
-  readonly type = roomsManagementEditActionType.R_M_E_CREATE_PLACE_START;
+export class roomsManagementEditPlaceAction implements Action {
+  readonly type = roomsManagementEditActionType.R_M_E_PLACE;
 
-  constructor(public payload: { place: PlaceData }) {}
+  constructor(
+    public payload: {
+      getDataPlace: any;
+    }
+  ) {}
 }
 
 export type roomsManagementEditTypeActions =
   | roomsManagementEditStartAction
-  | roomsManagementEditCreateOfficeAction
-  | roomsManagementEditCreateFloorAction
-  | roomsManagementEditCreateRoomAction;
+  | roomsManagementEditOfficeAction
+  | roomsManagementEditFloorAction
+  | roomsManagementEditRoomAction
+  | roomsManagementEditPlaceAction;

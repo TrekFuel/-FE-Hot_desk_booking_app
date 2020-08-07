@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import {
-  RequestFloorInterface,
-  RequestOfficeInterface,
-} from './models/ request.interface';
+  GetFloorDataInterface,
+  GetOfficeDataInterface,
+  GetPlaceDataInterface,
+  GetRoomDataInterface,
+  PostFloorDataInterface,
+  PostOfficeDataInterface,
+  PostPlaceDataInterface,
+  PostRoomDataInterface,
+} from './models/rooms-management-edit-store.interface';
+import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import { ResponseOfficeDtoInterface } from './models/response.interface';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -16,27 +21,30 @@ export class RoomsManagementEditServices {
   constructor(private http: HttpClient) {}
 
   postOffice(
-    data: RequestOfficeInterface
-  ): Observable<ResponseOfficeDtoInterface> {
-    console.log(data);
+    data: PostOfficeDataInterface
+  ): Observable<GetOfficeDataInterface> {
     return this.http
       .post(`${environment.databaseURL}/office`, data)
-      .pipe(map((data: ResponseOfficeDtoInterface) => data));
+      .pipe(map((dataOffice: GetOfficeDataInterface) => dataOffice));
   }
 
-  postFloor(
-    data: RequestFloorInterface
-  ): Observable<ResponseOfficeDtoInterface> {
-    console.log(data);
+  postFloor(data: PostFloorDataInterface): Observable<GetFloorDataInterface> {
     return this.http
       .post(`${environment.databaseURL}/floor`, data)
-      .pipe(map((data: ResponseOfficeDtoInterface) => data));
+      .pipe(map((dataFloor: GetFloorDataInterface) => dataFloor));
   }
 
-  /*postPlace(data): Observable<> {
-    console.log(data);
+  postRoom(data: PostRoomDataInterface): Observable<GetRoomDataInterface> {
     return this.http
-      .post(`${environment.databaseURL}/place`, data)
-      .pipe(map((data ) => data));
-  }*/
+      .post(`${environment.databaseURL}/room`, data)
+      .pipe(map((dataRoom: GetRoomDataInterface) => dataRoom));
+  }
+
+  postPlaces(
+    data: PostPlaceDataInterface[]
+  ): Observable<GetPlaceDataInterface[]> {
+    return this.http
+      .post(`${environment.databaseURL}/place/places`, data)
+      .pipe(map((data: GetPlaceDataInterface[]) => data));
+  }
 }

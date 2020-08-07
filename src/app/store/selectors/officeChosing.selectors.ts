@@ -17,7 +17,7 @@ export const selectorsData = createSelector(
   }
 );
 
-export const createFloorId = createSelector(
+export const getAddressId = createSelector(
   officeChoosingSelector,
   (data: OfficeChoosingInterface): string => {
     return data.createAddressId;
