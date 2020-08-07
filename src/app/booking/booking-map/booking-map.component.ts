@@ -5,6 +5,8 @@ import { fabric } from 'fabric';
 import { CANVAS_DEFAULT, CANVAS_OPTION } from '../../rooms-management/rooms-management-edit/canvas-option';
 import { MOCK_OFFICE } from '../../shared/mock-office';
 import { EDITOR_NAMES } from '../../rooms-management/rooms-management-edit/editor-blocks-info';
+import { OfficeChoosingServices } from '../../shared/office-choosing/office-choosing.services';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-booking-map',
@@ -15,9 +17,10 @@ export class BookingMapComponent implements OnInit, OnDestroy {
 
   @ViewChild('htmlCanvasBooking', { static: true }) htmlCanvas: ElementRef;
   public canvasSize: CanvasSize = CANVAS_DEFAULT;
+  ocsSubscription: Subscription;
   private canvas: Canvas;
 
-  constructor() {
+  constructor(private ocs: OfficeChoosingServices) {
   }
 
   get curZoom() {
@@ -25,6 +28,10 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.ocsSubscription = this.ocs.blockSelection.subscribe((block: boolean) => {
+      if (block) this.canvasSize.zoom = 100;
+    });
+
     this._initCanvas();
     this.loadMap();
     this.checkBookingsOnPlaces();
@@ -35,9 +42,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
         if (actObj?.name === EDITOR_NAMES.place && this.canvas.getActiveObjects().length <= 1) {
           this.canvas.hoverCursor = 'pointer';
           actObj.setShadow('3px 3px 12px rgba(0,255,0,0.7)');
-
           this.canvas.requestRenderAll();
-          console.log('place under mouse');
         }
       },
       'mouse:out': (e) => {
@@ -52,7 +57,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
       'mouse:down': (e) => {
         const actObj: fabric.Object = e.target;
         if (actObj?.name === EDITOR_NAMES.place) {
-          console.log('click on place');
+          console.log(`click on place: ${actObj.data.tempId}`);
         }
       },
       'mouse:down:before': (e) => {
@@ -76,8 +81,8 @@ export class BookingMapComponent implements OnInit, OnDestroy {
           stroke: 'lightgreen',
           strokeWidth: 4,
           opacity: 0.5,
-          rx: 10,
-          ry: 10,
+          rx: 5,
+          ry: 5,
           perPixelTargetFind: true,
           lockMovementX: true,
           lockMovementY: true,
@@ -87,9 +92,6 @@ export class BookingMapComponent implements OnInit, OnDestroy {
         });
 
         rect.name = `temp|${obj.data.tempId}`;
-
-        console.log(rect);
-
         this.canvas.add(rect);
 
       }
@@ -123,6 +125,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.ocsSubscription.unsubscribe();
     this.canvas.off();
   }
 
