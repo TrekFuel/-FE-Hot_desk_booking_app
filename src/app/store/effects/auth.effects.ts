@@ -12,10 +12,12 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { of } from 'rxjs';
 import { Router } from '@angular/router';
 import { MessageStateInterface } from '../../layout/message-state/models/message.interface';
+import { LoginInterface } from '../selectors/auth.selectors';
 
 @Injectable()
 
 export class AuthEffects {
+
   @Effect()
   loggedInUser$ = this.actions$
     .pipe(
@@ -25,28 +27,38 @@ export class AuthEffects {
           .pipe(
             map((response: AuthResponse) => {
 // user creation across all application
-              const user: AuthResponse = {
-                userInfo: {
-                  id: response.userInfo.id,
-                  email: response.userInfo.email,
-                  username: response.userInfo.username,
-                  firstName: response.userInfo.firstName,
-                  lastName: response.userInfo.lastName,
-                  isActive: response.userInfo.isActive,
-                  roleNames: [...response.userInfo.roleNames],
-                  position: response.userInfo.position,
-                  department: response.userInfo.department,
-                  location: response.userInfo.location,
-                  phone: response.userInfo.phone,
-                  skype: response.userInfo.skype,
-                  hr: response.userInfo.hr,
-                  img: response.userInfo.img,
+              const user: LoginInterface = {
+                loggedInUser: {
+                  expiresIn: response.expiresIn,
+                  userInfo: {
+                    id: response.userInfo.id,
+                    email: response.userInfo.email,
+                    username: response.userInfo.username,
+                    firstName: response.userInfo.firstName,
+                    lastName: response.userInfo.lastName,
+                    isActive: response.userInfo.isActive,
+                    roleNames: [...response.userInfo.roleNames],
+                    position: response.userInfo.position,
+                    department: response.userInfo.department,
+                    location: response.userInfo.location,
+                    phone: response.userInfo.phone,
+                    skype: response.userInfo.skype,
+                    hr: response.userInfo.hr,
+                    img: response.userInfo.img,
+                  },
+                  token: response.token,
                 },
-                token: response.token,
+                expirationDate: new Date(new Date().getTime() + response.expiresIn),
               };
               localStorage.setItem(environment.localStorageUser, JSON.stringify(user));
+              this.services$.autoLogout();
               this.router.navigate(['/booking']);
-              return new LoginSuccessAction({loggedInUser: user});
+              return new LoginSuccessAction(
+                {
+                  loggedInUser: user.loggedInUser,
+                  expirationDate: user.expirationDate
+                }
+              );
             }),
             catchError((errorResponse: HttpErrorResponse) => {
               const messageState: MessageStateInterface = {
@@ -75,7 +87,10 @@ export class AuthEffects {
             map(() => {
               localStorage.removeItem(environment.localStorageUser);
               this.router.navigate(['/login']);
-              return new LogoutEndAction({loggedInUser: null});
+              return new LogoutEndAction({
+                loggedInUser: null,
+                expirationDate: null
+              });
             }),
           );
       }),
