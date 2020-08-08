@@ -10,6 +10,7 @@ export interface RoomsManagementEditStoreInterface {
   florDtoInterface: GetFloorDataInterface | null;
   roomDtoInterface: GetRoomDataInterface | null;
   placeDtoInterface: PlaceData[] | null;
+  getMap: string | null;
 }
 
 export interface dataRoomsManagementDefaultEditInterface {
@@ -31,8 +32,9 @@ export interface GetOfficeDataInterface {
 
 export interface PostFloorDataInterface {
   officeId: string;
-  number: number;
   map: string;
+  number?: number;
+  id?: string;
 }
 
 export interface GetFloorDataInterface {
@@ -41,6 +43,13 @@ export interface GetFloorDataInterface {
   number: number;
   map: string;
   room: null;
+  floor?: {
+    officeId: string;
+    id: string;
+    number: number;
+    map: string;
+    room: null;
+  };
 }
 
 export interface PostRoomDataInterface {

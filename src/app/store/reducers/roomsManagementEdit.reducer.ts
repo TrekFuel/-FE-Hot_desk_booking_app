@@ -14,6 +14,7 @@ const initialState: RoomsManagementEditStoreInterface = {
   florDtoInterface: null,
   roomDtoInterface: null,
   placeDtoInterface: null,
+  getMap: null,
 };
 
 export function roomsManagementEditReducer(
@@ -45,10 +46,11 @@ export function roomsManagementEditReducer(
         roomId: action.payload.getDataRoom.id,
         roomDtoInterface: action.payload.getDataRoom,
       };
-    case roomsManagementEditActionType.R_M_E_CREATE_MAP:
+    case roomsManagementEditActionType.R_M_E_GET_MAP:
+      console.log(action.payload.getMap);
       return {
         ...state,
-        placeDtoInterface: action.payload.getDataMap,
+        getMap: action.payload.getMap.map,
       };
     default:
       return {
