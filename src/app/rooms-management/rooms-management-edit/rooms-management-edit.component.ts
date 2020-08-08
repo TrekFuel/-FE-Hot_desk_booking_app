@@ -18,6 +18,7 @@ import { environment } from '../../../environments/environment';
 import { CanvasSize, Confroom, CurrentPlaceInEditor, EditorBlock } from './models/editor-blocks.models';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { OfficeChoosingServices } from '../../shared/office-choosing/office-choosing.services';
+import { MOCK_OFFICE } from '../../shared/mock-office';
 
 @Component({
   selector: 'app-rooms-management-edit',
@@ -106,6 +107,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     RoomsManagementEditComponent.canvas = new fabric.Canvas(this.htmlCanvas.nativeElement, CANVAS_OPTION.FOR_EDIT);
     this.doCanvasZoom();
+    this.loadMap();
 
     RoomsManagementEditComponent.canvas.on({
       'object:added': (e) => {
@@ -154,6 +156,19 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     });
 
     this._initForm();
+  }
+
+  loadMap() {
+    const dataJSON: string = MOCK_OFFICE;
+    RoomsManagementEditComponent.canvas.loadFromJSON(dataJSON, () => {
+      RoomsManagementEditComponent.canvas.renderAll();
+    });
+    RoomsManagementEditComponent.canvas.forEachObject((obj: fabric.Object) => {
+      if (obj?.name === EDITOR_NAMES.place) {
+        this.placesData.push({ ...obj.data, id: 'some uuid' });
+      }
+    });
+    console.log(this.placesData);
   }
 
   onCancelEdit() {
