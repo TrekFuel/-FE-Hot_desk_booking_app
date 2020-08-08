@@ -12,8 +12,9 @@ import { OfficeData } from '../../shared/models/choose-office.model';
   selector: 'app-rooms-management-edit-container',
   template: `
     <app-rooms-management-edit
-      (handlePlaces)="onHandlePlaces($event)"
-      (deletePlaces)="onDeletePlaces($event)"
+        (handlePlaces)="onHandlePlaces($event)"
+        (deletePlaces)="onDeletePlaces($event)"
+        (deleteMap)="onDeleteMap()"
     ></app-rooms-management-edit>
   `,
 })
@@ -42,6 +43,10 @@ export class RoomsManagementEditContainer implements OnInit {
 
   onDeletePlaces(idToDeleteFromServer: string[]): void {
     console.log(`Need to delete this id from server: ${idToDeleteFromServer}`);
+  }
+
+  onDeleteMap() {
+    console.log('deleteMap chose');
   }
 
   initStore(): void {
