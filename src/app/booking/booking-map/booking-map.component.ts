@@ -1,4 +1,13 @@
-import { ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {
   CanvasSize,
   CurrentBookingPlace
@@ -13,7 +22,8 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-booking-map',
   templateUrl: './booking-map.component.html',
-  styleUrls: ['./booking-map.component.scss']
+  styleUrls: ['./booking-map.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookingMapComponent implements OnInit, OnDestroy {
 
@@ -117,7 +127,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
 
   loadMap() {
     // console.log(this.mapData);
-    this.changeDetection.detectChanges();
+    // this.changeDetection.detectChanges();
     const dataJSON: string = this.mapData;
     this.canvas.loadFromJSON(dataJSON, () => {
       this.canvas.renderAll();
