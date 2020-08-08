@@ -1,31 +1,20 @@
 <div class="container">
-  <div class="row">
-    <div class="col-sm-12 text-center booking-title">
-      <h2 class="h1">Booking</h2>
-      <h4 class="mt-3">
-        <div *ngIf="!!chooseOffice?.data; else noMap">
-          Country: <span class="choosing-span">{{chooseOffice?.data.country}}</span>
-          City: <span class="choosing-span">{{chooseOffice?.data.city}}</span>
-          Address: <span class="choosing-span">{{chooseOffice?.data.address}}</span>
-          <!--          floor: <span class="choosing-span">1</span>-->
-        </div>
-        <ng-template #noMap>Please choose an office</ng-template>
-      </h4>
-    </div>
-  </div>
+
   <office-choosing-container></office-choosing-container>
 
-  <div class="row text-center">
-    <div class="col-sm-12">
-      <img
-        alt="office-map"
-        class="mx-auto img-fluid"
-        src="https://static.tildacdn.com/tild3938-3732-4866-b233-623966336431/move1.jpg"
-        title="office-map">
+  <div class="row justify-content-start mt-3">
+
+    <div class="col-sm-6 col-md-3 my-1">
+      <mat-form-field appearance="outline">
+        <mat-label>Choose Date</mat-label>
+        <input [matDatepicker]="picker3" [value]="date.value" matInput>
+        <mat-datepicker-toggle [for]="picker3" matSuffix></mat-datepicker-toggle>
+        <mat-datepicker #picker3></mat-datepicker>
+      </mat-form-field>
     </div>
-    <div class="col-sm-12">
-      <mat-form-field appearance="outline"
-                      class="mx-auto">
+
+    <div class="col-sm-6 col-md-4 my-1">
+      <mat-form-field appearance="outline">
         <mat-label>Choose a date range</mat-label>
         <mat-date-range-input [rangePicker]="picker">
           <input matStartDate placeholder="Start date">
@@ -35,12 +24,26 @@
         <mat-date-range-picker #picker></mat-date-range-picker>
       </mat-form-field>
     </div>
-    <div class="col-sm-12 mt-1 mb-3">
-      <button class="btn btn-outline-success mx-auto"
-              type="button">Book a workplace
+
+    <div class="col-sm-6 col-md-2 mt-3">
+      <button (click)="onClickAnotherAddress()"
+              [disabled]="!(blockSelection$ | async)"
+              class="btn btn-block btn-outline-secondary">
+        Another address
       </button>
     </div>
+
+    <div class="col-sm-6 col-md-3 mt-3">
+      <button (click)="showMap = !showMap"
+              [disabled]="!(blockSelection$ | async)"
+              class="btn btn-block btn-outline-primary">
+        {{showMap ? 'Hide map' : 'Show map'}}
+      </button>
+    </div>
+
   </div>
+
+  <app-booking-map-container *ngIf="(blockSelection$ | async) && showMap"></app-booking-map-container>
 
   <app-booking-table-container></app-booking-table-container>
 </div>

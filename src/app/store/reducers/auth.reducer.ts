@@ -17,6 +17,7 @@ const initialState: LoginInterface = {
       phone: null,
       skype: null,
       hr: null,
+      img: null,
     },
     token: null,
   }

@@ -44,7 +44,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._bodyElement = this.elRef.nativeElement.offsetParent;
-
+// toDo refactor with HOO
     this.user$ = this.store$.select(userSelector);
     this.userSubscription$ = this.user$
       .subscribe((user: AuthResponse) => {

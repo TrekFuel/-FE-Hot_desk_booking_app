@@ -1,3 +1,19 @@
+<div class="row">
+  <div class="col-sm-12 text-center title-place">
+    <h2 class="h1">{{titleName}}</h2>
+    <h4 class="mt-3">
+      <div
+        *ngIf="blockSelection$ | async; else noMap">
+        Country: <span class="choosing-span">{{country?.value}}</span>
+        City: <span class="choosing-span">{{city?.value}}</span>
+        Address: <span class="choosing-span">{{address?.value}}</span>
+        <!--          floor: <span class="choosing-span">1</span>-->
+      </div>
+      <ng-template #noMap>Please choose an office</ng-template>
+    </h4>
+  </div>
+</div>
+
 <form (ngSubmit)="onSubmit()" [formGroup]="selectOfficeForm"
       class="row justify-content-start mt-1 justify-content-start">
 
@@ -30,15 +46,15 @@
   </mat-form-field>
 
   <div class="col-sm-6 col-md-3 mt-3">
-    <button [disabled]="blockSelection"
+    <button [disabled]="blockSelection$ | async"
             [hasFocus]="currentFocus === SelectorsName.choose"
             class="btn btn-block {{newOfficeObject ? 'btn-outline-success' : 'btn-outline-secondary'}}"
             type="submit">
-      {{newOfficeObject ? 'Create new' : 'Choose'}}
+      {{newOfficeObject ? 'Create new' : (blockSelection$ | async) ? 'Chosen' : 'Choose'}}
     </button>
   </div>
 
-  <div *ngIf="canEditMode && !blockSelection" class="col-sm-6 col-md-3 mt-4 mt-sm-1 d-flex">
+  <div *ngIf="canEditMode && !(blockSelection$ | async)" class="col-sm-6 col-md-3 mt-4 mt-sm-1 d-flex">
     <mat-form-field appearance="outline">
       <mat-label>{{!!newSelected ? 'Please enter a new ' + newSelected : ''}}</mat-label>
       <input (keydown.enter)="onInputMessage(newSelected, $event)"

@@ -7,6 +7,7 @@ import {
   messageStateStartAction,
 } from '../actions/messageState.action';
 import { officeChoosingActionType } from '../actions/officeChoosing.action';
+import { authActionType } from '../actions/auth.actions';
 
 interface messageStateInterface {
   payload;
@@ -16,6 +17,7 @@ interface messageStateInterface {
 const showMessageAction = [
   usersListActionType.USERS_LIST_FAILURE,
   officeChoosingActionType.SELECTORS_DATA_FAILURE,
+  authActionType.LOGIN_FAILURE,
 ];
 
 @Injectable()

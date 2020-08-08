@@ -1,0 +1,31 @@
+<div class="col-sm-12 my-1 canvas">
+  <app-zoom (zoomChange)="doCanvasZoom($event)" [zoom]="canvasSize.zoom"></app-zoom>
+  <canvas #htmlCanvasBooking class="my-3 mx-1 canvas-place"></canvas>
+</div>
+
+<mat-card #cardForBooking [ngClass]="{'hide': !currentBookingPlace?.isPlaceClicked}">
+  <mat-card-header>
+    <button aria-label="Clear" class="btn-clear" mat-button mat-icon-button>
+      <mat-icon (click)="currentBookingPlace.isPlaceClicked = false">close</mat-icon>
+    </button>
+    <img alt="Logo exadel" mat-card-avatar src="../assets/images/logo/logo_micro2.jpg">
+    <mat-card-title> Place #{{currentBookingPlace.placeData?.number | number: '3.0-0'}}</mat-card-title>
+    <mat-card-subtitle>Time for booking: 1:00</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content class="mx-auto">
+    <p class="my-2">State: <span class="state-of-place occupied">occupied</span></p>
+    <p class="my-2">Name: <span class="choosing-span">Sergey Ivanov</span></p>
+    <div class="for-admin my-2">
+      <p class="my-1">Message for admins only</p>
+      <textarea matInput rows="4"></textarea>
+      <div align="end" class="mt-2">
+        <button mat-button>APPLY</button>
+      </div>
+    </div>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-button>BOOKING</button>
+    <button mat-button>MESSAGE</button>
+  </mat-card-actions>
+
+</mat-card>

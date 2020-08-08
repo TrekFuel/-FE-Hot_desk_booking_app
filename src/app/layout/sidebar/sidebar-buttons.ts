@@ -5,7 +5,7 @@ export const sidebarButtons = {
   },
   hr: {
     value: 'List Users',
-    route: 'users',
+    route: 'user'
   },
   admin_office_manager: {
     value: 'Rooms Management',

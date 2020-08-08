@@ -1,15 +1,8 @@
 @import "main";
 
 :host {
-  .room-entry {
-    @include styleForTitle;
-
-    .choosing-span {
-      font-weight: 500;
-      font-size: 1.2rem;
-      color: $mainThemeColor;
-      padding-right: 7px;
-    }
+  .choosing-span {
+    font-size: 1.2rem;
+    @include choosingSpan;
   }
-
 }

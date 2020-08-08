@@ -13,6 +13,7 @@ const showLoaderAction = [
   usersListActionType.USERS_LIST_START,
   officeChoosingActionType.SELECTORS_DATA_START,
   authActionType.LOGIN_START,
+  authActionType.LOGOUT_START,
   officeChoosingActionType.SELECTORS_CREATE_ADDRESS_START,
 ];
 
@@ -23,6 +24,7 @@ const hideLoaderAction = [
   officeChoosingActionType.SELECTORS_DATA_FAILURE,
   authActionType.LOGIN_SUCCESS,
   authActionType.LOGIN_FAILURE,
+  authActionType.LOGOUT_END,
   officeChoosingActionType.SELECTORS_CREATE_ADDRESS,
 ];
 

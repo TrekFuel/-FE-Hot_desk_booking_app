@@ -7,6 +7,8 @@ import { ClearableInputComponent } from './components/clearable-input/clearable-
 import { ZoomComponent } from './components/zoom/zoom.component';
 import { HasFocusDirective } from './directives/has-focus.directive';
 import { OfficeChoosingContainer } from './office-choosing/office-choosing.container';
+import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -14,13 +16,15 @@ import { OfficeChoosingContainer } from './office-choosing/office-choosing.conta
     OfficeChoosingContainer,
     ClearableInputComponent,
     ZoomComponent,
-    HasFocusDirective
+    HasFocusDirective,
+    NotFoundPageComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
+    RouterModule,
   ],
   exports: [
     OfficeChoosingContainer,

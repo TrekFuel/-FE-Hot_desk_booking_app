@@ -1,23 +1,21 @@
-img {
-  border-radius: 1.56rem;
+.mat-card {
+  min-width: 12.5rem;
+  max-width: 25rem;
+}
+
+mat-card-subtitle {
+  font-size: 1.1rem;
+}
+
+ul {
+  display: inline-block;
+  min-width: 10.5rem;
+  text-align: center;
 }
 
 li {
   font-size: 1rem;
-}
-
-.name {
-  font-size: 1.25rem;
-  font-weight: 500;
-}
-
-.position {
-  font-size: 1.1rem;
-  font-weight: 400;
-}
-
-ul {
-  min-width: 10.5rem;
+  text-align: left;
 }
 
 .list-group-item {

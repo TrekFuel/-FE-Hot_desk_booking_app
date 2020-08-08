@@ -11,6 +11,7 @@ import { environment } from '../../../environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { of } from 'rxjs';
 import { Router } from '@angular/router';
+import { MessageStateInterface } from '../../layout/message-state/models/message.interface';
 
 @Injectable()
 
@@ -39,6 +40,7 @@ export class AuthEffects {
                   phone: response.userInfo.phone,
                   skype: response.userInfo.skype,
                   hr: response.userInfo.hr,
+                  img: response.userInfo.img,
                 },
                 token: response.token,
               };
@@ -47,7 +49,17 @@ export class AuthEffects {
               return new LoginSuccessAction({loggedInUser: user});
             }),
             catchError((errorResponse: HttpErrorResponse) => {
-              return of(new LoginFailureAction({errors: errorResponse}));
+              const messageState: MessageStateInterface = {
+                message: {
+                  text: errorResponse.statusText,
+                  stateAlert: 'alert-danger',
+                }
+              };
+
+              return of(new LoginFailureAction({
+                errors: errorResponse,
+                message: messageState,
+              }));
             }),
           );
       }),
