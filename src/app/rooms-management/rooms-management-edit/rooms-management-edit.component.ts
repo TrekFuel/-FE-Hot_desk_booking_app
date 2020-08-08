@@ -7,7 +7,7 @@ import {
   OnInit,
   Output,
   Renderer2,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { fabric } from 'fabric';
 import { CANVAS_DEFAULT, CANVAS_OPTION } from './canvas-option';
@@ -37,7 +37,10 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   placeRole = PlaceRole;
   editorBlocks: EditorBlock[] = editorBlocks;
   blockedElements: string[] = [];
-  activeElementOnCanvas: { clone: boolean, close: boolean } = { clone: false, close: false };
+  activeElementOnCanvas: { clone: boolean; close: boolean } = {
+    clone: false,
+    close: false,
+  };
   confroom: Confroom = {
     default: environment.places.MAX_DEFAULT_QUANTITY_IN_CONFROOM,
     min: environment.places.MIN_QUANTITY_IN_CONFROOM,

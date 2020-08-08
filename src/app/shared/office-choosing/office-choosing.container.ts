@@ -106,6 +106,16 @@ export class OfficeChoosingContainer implements OnInit, OnDestroy {
       queryParamsHandling: 'merge' // remove to replace all query params by provided
       // replaceUrl: true // If we want to replace it in the history instead of adding new value there
     });
+    const data: OfficesDataSelectsInterface = {
+      countryName: queryParams.country,
+      city: queryParams.city,
+      street: queryParams.address,
+    };
+    this.store$.dispatch(
+      new officeChoosingStartCreateAddressAction({
+        selectorData: data,
+      })
+    );
   }
 
   // return AddressId by City and Address from Array of Addresses

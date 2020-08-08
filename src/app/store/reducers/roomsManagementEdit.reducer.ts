@@ -10,7 +10,7 @@ const initialState: RoomsManagementEditStoreInterface = {
   floorId: null,
   roomId: null,
   officeDto: null,
-  dataRoomsContainer: null,
+  defaultData: null,
   florDtoInterface: null,
   roomDtoInterface: null,
   placeDtoInterface: null,
@@ -25,7 +25,7 @@ export function roomsManagementEditReducer(
       return {
         ...state,
         addressId: action.payload.addressId,
-        dataRoomsContainer: action.payload.dataRoomsContainer,
+        defaultData: action.payload.defaultData,
       };
     case roomsManagementEditActionType.R_M_E_OFFICE:
       return {
@@ -45,10 +45,10 @@ export function roomsManagementEditReducer(
         roomId: action.payload.getDataRoom.id,
         roomDtoInterface: action.payload.getDataRoom,
       };
-    case roomsManagementEditActionType.R_M_E_PLACE:
+    case roomsManagementEditActionType.R_M_E_CREATE_MAP:
       return {
         ...state,
-        placeDtoInterface: action.payload.getDataPlace,
+        placeDtoInterface: action.payload.getDataMap,
       };
     default:
       return {

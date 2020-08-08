@@ -1,10 +1,11 @@
 import { Action } from '@ngrx/store';
 import {
-  dataRoomsManagementEditInterface,
+  dataRoomsManagementDefaultEditInterface,
   GetFloorDataInterface,
   GetOfficeDataInterface,
   GetRoomDataInterface,
 } from '../../rooms-management/rooms-management-edit/models/rooms-management-edit-store.interface';
+import { PlaceData } from '../../shared/models/map-data.model';
 
 export enum roomsManagementEditActionType {
   R_M_E_START = '[RoomsManagementEdi] Start Office',
@@ -12,6 +13,8 @@ export enum roomsManagementEditActionType {
   R_M_E_FLOOR = '[RoomsManagementEdi] Post Floor',
   R_M_E_ROOM = '[RoomsManagementEdi] Post Room',
   R_M_E_PLACE = '[RoomsManagementEdi] Post Place',
+  R_M_E_CREATE_MAP = '[RoomsManagementEdi] Create Map',
+  R_M_E_SAVE_MAP = '[RoomsManagementEdi] Save Map',
 }
 
 export class roomsManagementEditStartAction implements Action {
@@ -19,7 +22,7 @@ export class roomsManagementEditStartAction implements Action {
 
   constructor(
     public payload: {
-      dataRoomsContainer: dataRoomsManagementEditInterface;
+      defaultData: dataRoomsManagementDefaultEditInterface;
       addressId: string;
     }
   ) {}
@@ -55,12 +58,33 @@ export class roomsManagementEditRoomAction implements Action {
   ) {}
 }
 
+/*-- Save map --*/
 export class roomsManagementEditPlaceAction implements Action {
   readonly type = roomsManagementEditActionType.R_M_E_PLACE;
 
   constructor(
     public payload: {
-      getDataPlace: any;
+      getDataPlace: PlaceData[];
+    }
+  ) {}
+}
+
+export class roomsManagementEditCreateMapAction implements Action {
+  readonly type = roomsManagementEditActionType.R_M_E_CREATE_MAP;
+
+  constructor(
+    public payload: {
+      getDataMap: PlaceData[];
+    }
+  ) {}
+}
+
+export class roomsManagementEditSaveMapAction implements Action {
+  readonly type = roomsManagementEditActionType.R_M_E_SAVE_MAP;
+
+  constructor(
+    public payload: {
+      getMap: GetFloorDataInterface;
     }
   ) {}
 }
@@ -70,4 +94,6 @@ export type roomsManagementEditTypeActions =
   | roomsManagementEditOfficeAction
   | roomsManagementEditFloorAction
   | roomsManagementEditRoomAction
-  | roomsManagementEditPlaceAction;
+  | roomsManagementEditPlaceAction
+  | roomsManagementEditCreateMapAction
+  | roomsManagementEditSaveMapAction;

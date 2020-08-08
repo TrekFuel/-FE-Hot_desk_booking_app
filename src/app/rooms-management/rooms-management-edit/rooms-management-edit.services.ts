@@ -3,16 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import {
   GetFloorDataInterface,
   GetOfficeDataInterface,
-  GetPlaceDataInterface,
   GetRoomDataInterface,
   PostFloorDataInterface,
   PostOfficeDataInterface,
-  PostPlaceDataInterface,
   PostRoomDataInterface,
 } from './models/rooms-management-edit-store.interface';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { PlaceData } from '../../shared/models/map-data.model';
 
 @Injectable({
   providedIn: 'root',
@@ -40,11 +39,15 @@ export class RoomsManagementEditServices {
       .pipe(map((dataRoom: GetRoomDataInterface) => dataRoom));
   }
 
-  postPlaces(
-    data: PostPlaceDataInterface[]
-  ): Observable<GetPlaceDataInterface[]> {
+  postPlaces(data: PlaceData[]): Observable<PlaceData[]> {
     return this.http
       .post(`${environment.databaseURL}/place/places`, data)
-      .pipe(map((data: GetPlaceDataInterface[]) => data));
+      .pipe(map((data: PlaceData[]) => data));
+  }
+
+  putOffice(data: PostFloorDataInterface) {
+    return this.http
+      .put(`${environment.databaseURL}/floor`, data)
+      .pipe(map((data: GetFloorDataInterface) => data));
   }
 }
