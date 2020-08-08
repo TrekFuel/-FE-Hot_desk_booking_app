@@ -107,7 +107,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     RoomsManagementEditComponent.canvas = new fabric.Canvas(this.htmlCanvas.nativeElement, CANVAS_OPTION.FOR_EDIT);
     this.doCanvasZoom();
-    this.loadMap();
+    // this.loadMap();
 
     RoomsManagementEditComponent.canvas.on({
       'object:added': (e) => {
