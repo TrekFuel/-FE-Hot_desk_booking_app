@@ -8,6 +8,7 @@ import {
   roomsManagementEditActionType,
   roomsManagementEditCreateMapAction,
   roomsManagementEditFloorAction,
+  roomsManagementEditGetMapAction,
   roomsManagementEditOfficeAction,
   roomsManagementEditRoomAction,
   roomsManagementEditSaveMapAction,
@@ -171,18 +172,41 @@ export class RoomsManagementEditEffects {
       );
       return this.roomsManagementEditServices
         .putOffice({
+          id: roomsManagementEditData.floorId,
           officeId: roomsManagementEditData.officeId,
           number: roomsManagementEditData.defaultData.number,
           map: mapJson,
         })
         .pipe(
           map((data: GetFloorDataInterface) => {
+            /*const map: string = { ...data.floor }*/
             return new roomsManagementEditSaveMapAction({
               getMap: data,
             });
           })
         );
     })
+  );
+
+  @Effect()
+  roomManagementGetMap$ = this.actions$.pipe(
+    ofType(roomsManagementEditActionType.R_M_E_START_GET_MAP),
+    switchMap(
+      (
+        data: roomsManagementEditTypeActions.roomsManagementEditStartGetMapAction
+      ) => {
+        return this.roomsManagementEditServices
+          .getOffice(data.payload.addressId)
+          .pipe(
+            map((data: GetFloorDataInterface) => {
+              const { floor } = data;
+              return new roomsManagementEditGetMapAction({
+                getMap: floor[0],
+              });
+            })
+          );
+      }
+    )
   );
 
   constructor(

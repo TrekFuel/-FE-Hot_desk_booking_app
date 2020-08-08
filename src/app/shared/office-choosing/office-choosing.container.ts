@@ -18,16 +18,18 @@ import { OfficeChoosingServices } from './office-choosing.services';
   selector: 'office-choosing-container',
   template: `
     <app-office-choosing
-        [canEditMode]="canEditMode"
-        (onChooseOffice)="onChooseOffice($event)"
-        [selectorsModel]="selectorsModel$ | async"
-        [titleName]="titleName"
+      [canEditMode]="canEditMode"
+      (onChooseOffice)="onChooseOffice($event)"
+      [selectorsModel]="selectorsModel$ | async"
+      [titleName]="titleName"
     >
     </app-office-choosing>
-  `
+  `,
 })
 export class OfficeChoosingContainer implements OnInit, OnDestroy {
-  public selectorsModel$: Observable<SelectorsModel> = this.store$.select(selectorsData);
+  public selectorsModel$: Observable<SelectorsModel> = this.store$.select(
+    selectorsData
+  );
   selectorsModelSubscription: Subscription;
   canEditMode: boolean = false;
   titleName: string;
@@ -68,21 +70,29 @@ export class OfficeChoosingContainer implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.ocs.setBlockSelection(false);
-    this.selectorsModelSubscription = this.selectorsModel$.subscribe((data: SelectorsModel) => {
-      if (!!data && !!this.newOfficeData) {
-        const office: OfficeData = this.newOfficeData;
-        // To PAVEL ---- if it is a new address we get addressId here!
-        let addressId = this.getAddressIdByAddress(data.address, office.city, office.address);
-        console.log(`new address id  is: ${addressId}`);
-        office[addressId] = addressId;
-        this.existingOfficeHandle(office);
-        this.newOfficeData = null;
+    this.selectorsModelSubscription = this.selectorsModel$.subscribe(
+      (data: SelectorsModel) => {
+        if (!!data && !!this.newOfficeData) {
+          const office: OfficeData = this.newOfficeData;
+          // To PAVEL ---- if it is a new address we get addressId here!
+          let addressId = this.getAddressIdByAddress(
+            data.address,
+            office.city,
+            office.address
+          );
+          console.log(`new address id  is: ${addressId}`);
+          office[addressId] = addressId;
+          this.existingOfficeHandle(office);
+          this.newOfficeData = null;
+        }
       }
-    });
+    );
   }
 
   onChooseOffice(event: ChooseOffice): void {
-    event.isNewObject ? this.newOfficeHandle(event.data) : this.existingOfficeHandle(event.data);
+    event.isNewObject
+      ? this.newOfficeHandle(event.data)
+      : this.existingOfficeHandle(event.data);
   }
 
   newOfficeHandle(officeData: OfficeData) {
@@ -91,7 +101,8 @@ export class OfficeChoosingContainer implements OnInit, OnDestroy {
     let [countryName, city, street]: string[] = [
       this.newOfficeData.country,
       this.newOfficeData.city,
-      this.newOfficeData.address];
+      this.newOfficeData.address,
+    ];
     const data: OfficesDataSelectsInterface = { countryName, city, street };
     this.store$.dispatch(
       new officeChoosingStartCreateAddressAction({ selectorData: data })
@@ -99,28 +110,26 @@ export class OfficeChoosingContainer implements OnInit, OnDestroy {
   }
 
   existingOfficeHandle(officeData: OfficeData) {
+    console.log('start route');
     const queryParams: OfficeData = { ...officeData };
     this.router.navigate(['.'], {
       relativeTo: this.route,
       queryParams,
-      queryParamsHandling: 'merge' // remove to replace all query params by provided
+      queryParamsHandling: 'merge', // remove to replace all query params by provided
       // replaceUrl: true // If we want to replace it in the history instead of adding new value there
     });
-    const data: OfficesDataSelectsInterface = {
-      countryName: queryParams.country,
-      city: queryParams.city,
-      street: queryParams.address,
-    };
-    this.store$.dispatch(
-      new officeChoosingStartCreateAddressAction({
-        selectorData: data,
-      })
-    );
   }
 
   // return AddressId by City and Address from Array of Addresses
-  getAddressIdByAddress(offices: SelectorsAddress[], city: string, address: string): string {
-    return offices.filter((item: SelectorsAddress) => item?.city === city && item?.address === address)[0].addressId;
+  getAddressIdByAddress(
+    offices: SelectorsAddress[],
+    city: string,
+    address: string
+  ): string {
+    return offices.filter(
+      (item: SelectorsAddress) =>
+        item?.city === city && item?.address === address
+    )[0].addressId;
   }
 
   // here all you need to retrieve the data

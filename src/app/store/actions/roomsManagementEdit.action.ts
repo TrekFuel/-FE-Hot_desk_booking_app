@@ -15,6 +15,8 @@ export enum roomsManagementEditActionType {
   R_M_E_PLACE = '[RoomsManagementEdi] Post Place',
   R_M_E_CREATE_MAP = '[RoomsManagementEdi] Create Map',
   R_M_E_SAVE_MAP = '[RoomsManagementEdi] Save Map',
+  R_M_E_START_GET_MAP = '[RoomsManagementEdi] Start Get Map',
+  R_M_E_GET_MAP = '[RoomsManagementEdi] Get Map',
 }
 
 export class roomsManagementEditStartAction implements Action {
@@ -89,6 +91,27 @@ export class roomsManagementEditSaveMapAction implements Action {
   ) {}
 }
 
+/*-- Get Map --*/
+export class roomsManagementEditStartGetMapAction implements Action {
+  readonly type = roomsManagementEditActionType.R_M_E_START_GET_MAP;
+
+  constructor(
+    public payload: {
+      addressId: string;
+    }
+  ) {}
+}
+
+export class roomsManagementEditGetMapAction implements Action {
+  readonly type = roomsManagementEditActionType.R_M_E_GET_MAP;
+
+  constructor(
+    public payload: {
+      getMap: GetFloorDataInterface;
+    }
+  ) {}
+}
+
 export type roomsManagementEditTypeActions =
   | roomsManagementEditStartAction
   | roomsManagementEditOfficeAction
@@ -96,4 +119,6 @@ export type roomsManagementEditTypeActions =
   | roomsManagementEditRoomAction
   | roomsManagementEditPlaceAction
   | roomsManagementEditCreateMapAction
-  | roomsManagementEditSaveMapAction;
+  | roomsManagementEditSaveMapAction
+  | roomsManagementEditStartGetMapAction
+  | roomsManagementEditGetMapAction;
