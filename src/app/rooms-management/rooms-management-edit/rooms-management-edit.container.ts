@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { PlaceData } from '../../shared/models/map-data.model';
-import { RoomsManagementEditComponent } from './rooms-management-edit.component';
 import { RoomsManagementEditStoreInterface } from './models/rooms-management-edit-store.interface';
 import { roomsManagementEditData } from '../../store/selectors/roomsManagementEdit.selector';
 import { roomsManagementEditPlaceAction } from '../../store/actions/roomsManagementEdit.action';
+import { ActivatedRoute } from '@angular/router';
+import { OfficeData } from '../../shared/models/choose-office.model';
 
 @Component({
   selector: 'app-rooms-management-edit-container',
@@ -16,33 +17,22 @@ import { roomsManagementEditPlaceAction } from '../../store/actions/roomsManagem
     ></app-rooms-management-edit>
   `,
 })
-export class RoomsManagementEditContainer {
+export class RoomsManagementEditContainer implements OnInit {
   public addressId: string;
   public dataStore: RoomsManagementEditStoreInterface;
 
-  constructor(private store$: Store<AppState>) {
+  constructor(private store$: Store<AppState>, private activatedRoute: ActivatedRoute) {
     this.initStore();
   }
 
+  ngOnInit(): void {
+    this.activatedRoute.queryParams
+      .subscribe((data: OfficeData) => {
+        console.log(data);
+      });
+  }
+
   onHandlePlaces(placeDataArr: PlaceData[]): void {
-    // Input DATA [ {tempId: "1596568001226-651", placeType: 0, number: 1, maxQuantity: 1 } ]
-    //
-    // OUTPUT DATA [ {tempId: "1596568001226-651", placeType: 0, number: 1, maxQuantity: 1, id: 'uuid from server here' } ]
-
-    /*// simulate server work
-    let rnd = Math.ceil(Math.random() * 99 + 1);
-    const newPlaceDataArr = [...placeDataArr].map((item: PlaceData) => {
-      const newItem: PlaceData = { ...item, id: `uuid ${rnd}` };
-      return newItem;
-    });*/
-
-    // changedMap can be save to server
-    let changedMap = RoomsManagementEditComponent.putDataReturnMap(
-      placeDataArr
-    );
-
-    console.log(placeDataArr);
-
     this.store$.dispatch(
       new roomsManagementEditPlaceAction({
         getDataPlace: placeDataArr,
@@ -61,4 +51,5 @@ export class RoomsManagementEditContainer {
         this.dataStore = data;
       });
   }
+
 }
