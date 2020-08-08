@@ -64,8 +64,11 @@ export class OfficeChoosingContainer {
       city: queryParams.city,
       street: queryParams.address,
     };
+    console.log('start');
     this.store$.dispatch(
-      new officeChoosingStartCreateAddressAction({ selectorData: data })
+      new officeChoosingStartCreateAddressAction({
+        selectorData: data,
+      })
     );
     this.roomEdit.emit(event);
   }

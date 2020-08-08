@@ -3,14 +3,9 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { PlaceData } from '../../shared/models/map-data.model';
 import { RoomsManagementEditComponent } from './rooms-management-edit.component';
-import { getAddressId } from '../../store/selectors/officeChosing.selectors';
-import {
-  dataRoomsManagementEditInterface,
-  RoomsManagementEditStoreInterface,
-} from './models/rooms-management-edit-store.interface';
+import { RoomsManagementEditStoreInterface } from './models/rooms-management-edit-store.interface';
 import { roomsManagementEditData } from '../../store/selectors/roomsManagementEdit.selector';
-import { DEFAULT_MAP_DATA } from '../../shared/models/default-map';
-import { roomsManagementEditStartAction } from '../../store/actions/roomsManagementEdit.action';
+import { roomsManagementEditPlaceAction } from '../../store/actions/roomsManagementEdit.action';
 
 @Component({
   selector: 'app-rooms-management-edit-container',
@@ -46,30 +41,11 @@ export class RoomsManagementEditContainer {
       placeDataArr
     );
 
-    const dataContainer: dataRoomsManagementEditInterface = {
-      addressId: this.addressId,
-      number: '1',
-      map: DEFAULT_MAP_DATA,
-      places: [
-        {
-          tempId: '1596568001226-651',
-          placeType: 0,
-          number: 1,
-          maxQuantity: 1,
-        },
-        {
-          tempId: '1596568001226-653',
-          placeType: 0,
-          number: 2,
-          maxQuantity: 1,
-        },
-      ],
-    };
+    console.log(placeDataArr);
 
     this.store$.dispatch(
-      new roomsManagementEditStartAction({
-        dataRoomsContainer: dataContainer,
-        addressId: this.addressId,
+      new roomsManagementEditPlaceAction({
+        getDataPlace: placeDataArr,
       })
     );
   }
@@ -79,10 +55,6 @@ export class RoomsManagementEditContainer {
   }
 
   initStore(): void {
-    this.store$
-      .select(getAddressId)
-      .subscribe((id: string) => (this.addressId = id));
-
     this.store$
       .select(roomsManagementEditData)
       .subscribe((data: RoomsManagementEditStoreInterface) => {

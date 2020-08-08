@@ -7,15 +7,24 @@ import {
   OnInit,
   Output,
   Renderer2,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { fabric } from 'fabric';
 import { CANVAS_OPTION } from './canvas-option';
-import { EDITOR_NAMES, editorBlocks, PLACES_TITLES } from './editor-blocks-info';
+import {
+  EDITOR_NAMES,
+  editorBlocks,
+  PLACES_TITLES,
+} from './editor-blocks-info';
 import { PlaceData, PlaceRole } from '../../shared/models/map-data.model';
 import { Canvas } from 'fabric/fabric-impl';
 import { environment } from '../../../environments/environment';
-import { CanvasSize, Confroom, CurrentPlaceInEditor, EditorBlock } from './models/editor-blocks.models';
+import {
+  CanvasSize,
+  Confroom,
+  CurrentPlaceInEditor,
+  EditorBlock,
+} from './models/editor-blocks.models';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -24,7 +33,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./rooms-management-edit.component.scss'],
 })
 export class RoomsManagementEditComponent implements OnInit, OnDestroy {
-
   private static canvas: Canvas;
 
   @ViewChild('htmlCanvas', { static: true }) htmlCanvas: ElementRef;
@@ -34,32 +42,36 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   public canvasSize: CanvasSize = {
     width: 500,
     height: 500,
-    zoom: 100
+    zoom: 100,
   };
   placesData: PlaceData[] = [];
   placeRole = PlaceRole;
   editorBlocks: EditorBlock[] = editorBlocks;
   blockedElements: string[] = [];
-  activeElementOnCanvas: { clone: boolean, close: boolean } = { clone: false, close: false };
+  activeElementOnCanvas: { clone: boolean; close: boolean } = {
+    clone: false,
+    close: false,
+  };
   confroom: Confroom = {
     default: environment.places.MAX_DEFAULT_QUANTITY_IN_CONFROOM,
     min: environment.places.MIN_QUANTITY_IN_CONFROOM,
-    max: environment.places.MAX_QUANTITY_IN_CONFROOM
+    max: environment.places.MAX_QUANTITY_IN_CONFROOM,
   };
   currentPlace: CurrentPlaceInEditor = {
     isPlaceHovered: false,
     isPlaceClickedToClose: false,
-    placeData: null
+    placeData: null,
   };
   formMaxQuantity: FormGroup;
   currentNumber: number = 0;
 
   // variables for container
-  @Output() handlePlaces: EventEmitter<PlaceData[]> = new EventEmitter<PlaceData[]>();
+  @Output() handlePlaces: EventEmitter<PlaceData[]> = new EventEmitter<
+    PlaceData[]
+  >();
   @Output() deletePlaces: EventEmitter<string[]> = new EventEmitter<string[]>();
 
-  constructor(private renderer: Renderer2) {
-  }
+  constructor(private renderer: Renderer2) {}
 
   get curZoom() {
     return this.canvasSize.zoom / 100;
@@ -71,14 +83,18 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
 
   static putDataReturnMap(placeDataArr: PlaceData[]): string {
     if (placeDataArr.length > 0) {
-      RoomsManagementEditComponent.canvas.forEachObject((obj: (fabric.Object)) => {
-        if (obj?.name === EDITOR_NAMES.place && !obj?.data.id) {
-          console.log('no id');
-          let tempId: string = obj.data.tempId;
-          let placeWithTempId: PlaceData = placeDataArr.find((item: PlaceData) => item.tempId === tempId);
-          obj.data.id = placeWithTempId.id;
+      RoomsManagementEditComponent.canvas.forEachObject(
+        (obj: fabric.Object) => {
+          if (obj?.name === EDITOR_NAMES.place && !obj?.data.id) {
+            console.log('no id');
+            let tempId: string = obj.data.tempId;
+            let placeWithTempId: PlaceData = placeDataArr.find(
+              (item: PlaceData) => item.tempId === tempId
+            );
+            obj.data.id = placeWithTempId.id;
+          }
         }
-      });
+      );
     }
     return JSON.stringify(RoomsManagementEditComponent.canvas);
   }
@@ -87,7 +103,9 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     this.activeElementOnCanvas.clone = this.activeElementOnCanvas.close = false;
   }
 
-  @HostListener('document:keydown', ['$event']) onKeyDown(event: KeyboardEvent) {
+  @HostListener('document:keydown', ['$event']) onKeyDown(
+    event: KeyboardEvent
+  ) {
     switch (event.key) {
       case 'Escape':
         this.discardActObj();
@@ -102,7 +120,10 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    RoomsManagementEditComponent.canvas = new fabric.Canvas(this.htmlCanvas.nativeElement, CANVAS_OPTION.FOR_EDIT);
+    RoomsManagementEditComponent.canvas = new fabric.Canvas(
+      this.htmlCanvas.nativeElement,
+      CANVAS_OPTION.FOR_EDIT
+    );
     this.doCanvasZoom();
 
     RoomsManagementEditComponent.canvas.on({
@@ -114,7 +135,6 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
         if (!this.blockedElements.includes(actObj?.name)) {
           this.positioningCloneAndClose(actObj);
         }
-
       },
       'object:moving': (e) => this.positioningCloneAndClose(e.target),
       'object:scaling': (e) => this.positioningCloneAndClose(e.target),
@@ -127,10 +147,14 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
           this.hidePlaceData();
         }
       },
-      'selection:cleared': (e) => this.activeElementOnCanvas.clone = this.activeElementOnCanvas.close = false,
+      'selection:cleared': (e) =>
+        (this.activeElementOnCanvas.clone = this.activeElementOnCanvas.close = false),
       'mouse:over': (e) => {
         const actObj: fabric.Object = e.target;
-        if (actObj?.name === EDITOR_NAMES.place && RoomsManagementEditComponent.canvas.getActiveObjects().length <= 1) {
+        if (
+          actObj?.name === EDITOR_NAMES.place &&
+          RoomsManagementEditComponent.canvas.getActiveObjects().length <= 1
+        ) {
           this.currentPlace.isPlaceHovered = true;
           this.currentPlace.placeData = actObj.data;
         }
@@ -147,8 +171,10 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
           this.hidePlaceData();
         }
       },
-      'mouse:down:before': (e) => this.blockedElements.includes(e.target?.name) ? this.discardActObj()
-        : this.positioningCloneAndClose(e.target)
+      'mouse:down:before': (e) =>
+        this.blockedElements.includes(e.target?.name)
+          ? this.discardActObj()
+          : this.positioningCloneAndClose(e.target),
     });
 
     this._initForm();
@@ -156,8 +182,12 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
 
   doCanvasZoom(zoom: number = this.canvasSize.zoom): void {
     this.canvasSize.zoom = zoom;
-    RoomsManagementEditComponent.canvas.setWidth(this.canvasSize.width * this.curZoom);
-    RoomsManagementEditComponent.canvas.setHeight(this.canvasSize.height * this.curZoom);
+    RoomsManagementEditComponent.canvas.setWidth(
+      this.canvasSize.width * this.curZoom
+    );
+    RoomsManagementEditComponent.canvas.setHeight(
+      this.canvasSize.height * this.curZoom
+    );
     RoomsManagementEditComponent.canvas.setZoom(this.curZoom);
     const actObj = RoomsManagementEditComponent.canvas.getActiveObject();
     if (actObj) {
@@ -165,25 +195,38 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  onClickAddElementOnCanvas(event: MouseEvent, type: string, title: string): void {
-    const el: HTMLImageElement = (event.target as HTMLImageElement);
+  onClickAddElementOnCanvas(
+    event: MouseEvent,
+    type: string,
+    title: string
+  ): void {
+    const el: HTMLImageElement = event.target as HTMLImageElement;
     fabric.loadSVGFromURL(el.src, (objects, options) => {
-      const addedObj: fabric.Object = fabric.util.groupSVGElements(objects, options);
+      const addedObj: fabric.Object = fabric.util.groupSVGElements(
+        objects,
+        options
+      );
       let role: PlaceRole;
       if (type === EDITOR_NAMES.place) {
-        let typeOfPlace: string = Object.keys(PLACES_TITLES).filter((key: string) => PLACES_TITLES[key] === title)[0];
+        let typeOfPlace: string = Object.keys(PLACES_TITLES).filter(
+          (key: string) => PLACES_TITLES[key] === title
+        )[0];
         role = PlaceRole[typeOfPlace];
       }
       this.addElementOnCanvas(addedObj, type, role);
     });
   }
 
-  addElementOnCanvas(obj: fabric.Object,
-                     type: string,
-                     typeOfPlace?: PlaceRole,
-                     adjustStyle?: number): void {
+  addElementOnCanvas(
+    obj: fabric.Object,
+    type: string,
+    typeOfPlace?: PlaceRole,
+    adjustStyle?: number
+  ): void {
     // add style
-    !adjustStyle ? this.objSetStyle(obj) : this.objSetStyle(obj, obj.left + adjustStyle, obj.top + adjustStyle);
+    !adjustStyle
+      ? this.objSetStyle(obj)
+      : this.objSetStyle(obj, obj.left + adjustStyle, obj.top + adjustStyle);
     // extend object with additional object name and data
     if (type === EDITOR_NAMES.place) {
       this.extendObj(obj, true);
@@ -199,15 +242,15 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
 
   extendObj(obj: fabric.Object, full: boolean = false): void {
     obj.toObject = ((toObject) => {
-      return function() {
+      return function () {
         return full
           ? fabric.util.object.extend(toObject.call(this), {
-            name: this.name,
-            data: this.data
-          })
+              name: this.name,
+              data: this.data,
+            })
           : fabric.util.object.extend(toObject.call(this), {
-            name: this.name
-          });
+              name: this.name,
+            });
       };
     })(obj.toObject);
   }
@@ -218,7 +261,8 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     let tempId = this.generateId();
     const placeData: PlaceData = { tempId, placeType: role, number };
     if (role === PlaceRole.confroom) {
-      placeData.maxQuantity = environment.places.MAX_DEFAULT_QUANTITY_IN_CONFROOM;
+      placeData.maxQuantity =
+        environment.places.MAX_DEFAULT_QUANTITY_IN_CONFROOM;
     } else {
       // default value
       placeData.maxQuantity = 1;
@@ -232,7 +276,9 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   }
 
   generateId(): string {
-    return `${Date.now().toString()}-${(Math.round(Math.random() * 899) + 100).toString()}`;
+    return `${Date.now().toString()}-${(
+      Math.round(Math.random() * 899) + 100
+    ).toString()}`;
   }
 
   // UI method
@@ -255,8 +301,11 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
       actObjs.forEach((actObj: fabric.Object) => {
         if (!this.blockedElements.includes(actObj.name)) {
           if (actObj.name === EDITOR_NAMES.place) {
-            this.placesData = this.placesData.filter((place: PlaceData) => place.tempId !== actObj.data.tempId);
-            if (!!actObj?.data.id) placesIdToDeleteFromServer.push(actObj.data.id);
+            this.placesData = this.placesData.filter(
+              (place: PlaceData) => place.tempId !== actObj.data.tempId
+            );
+            if (!!actObj?.data.id)
+              placesIdToDeleteFromServer.push(actObj.data.id);
           }
           RoomsManagementEditComponent.canvas.remove(actObj);
         }
@@ -269,7 +318,9 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
 
   objSetStyle(obj: fabric.Object, left: number = 30, top: number = 30): void {
     let borderColor: string, padding: number;
-    obj.type === 'activeSelection' ? [borderColor, padding] = ['red', 3] : [borderColor, padding] = ['lightblue', 1];
+    obj.type === 'activeSelection'
+      ? ([borderColor, padding] = ['red', 3])
+      : ([borderColor, padding] = ['lightblue', 1]);
     obj.set({
       left,
       top,
@@ -279,7 +330,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
       transparentCorners: false,
       perPixelTargetFind: true,
       borderColor,
-      padding
+      padding,
     });
   }
 
@@ -299,7 +350,10 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
         this.activeElementOnCanvas.clone = this.activeElementOnCanvas.close = true;
       }
       // top left absolute position of canvas
-      let { x: canvasX, y: canvasY } = this.htmlCanvas.nativeElement.getBoundingClientRect();
+      let {
+        x: canvasX,
+        y: canvasY,
+      } = this.htmlCanvas.nativeElement.getBoundingClientRect();
       // do adjustment on window scroll
       canvasX += window.scrollX;
       canvasY += window.scrollY;
@@ -315,18 +369,37 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
       objX -= 12;
       objY -= 35;
       // calculate and set position of icons
-      this.renderer.setStyle(this.btnClone?.nativeElement, 'left', (canvasX + objX - adjustment) + 'px');
-      this.renderer.setStyle(this.btnClone?.nativeElement, 'top', (canvasY + objY) + 'px');
-      this.renderer.setStyle(this.btnClose?.nativeElement, 'left', (canvasX + (objX + objWidth) + adjustment) + 'px');
-      this.renderer.setStyle(this.btnClose?.nativeElement, 'top', (canvasY + objY) + 'px');
+      this.renderer.setStyle(
+        this.btnClone?.nativeElement,
+        'left',
+        canvasX + objX - adjustment + 'px'
+      );
+      this.renderer.setStyle(
+        this.btnClone?.nativeElement,
+        'top',
+        canvasY + objY + 'px'
+      );
+      this.renderer.setStyle(
+        this.btnClose?.nativeElement,
+        'left',
+        canvasX + (objX + objWidth) + adjustment + 'px'
+      );
+      this.renderer.setStyle(
+        this.btnClose?.nativeElement,
+        'top',
+        canvasY + objY + 'px'
+      );
     }
   }
 
   onSubmitMaxQuantity(): void {
     let maxQuantity: number = this.formMaxQuantity.value.maxQuantity;
     this.currentPlace.placeData['maxQuantity'] = maxQuantity;
-    this.placesData.some((place: PlaceData) => place.tempId === this.currentPlace.placeData.tempId
-      ? place['maxQuantity'] = maxQuantity : false);
+    this.placesData.some((place: PlaceData) =>
+      place.tempId === this.currentPlace.placeData.tempId
+        ? (place['maxQuantity'] = maxQuantity)
+        : false
+    );
   }
 
   onSaveClick(): void {
@@ -348,7 +421,6 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
 
     console.log(this.placesData);
     this.handlePlaces.emit(this.placesData);
-
 
     // // const obj = this.canvas.toObject();
     // const dataJSON: string = JSON.stringify(this.canvas);
@@ -409,8 +481,8 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     this.formMaxQuantity = new FormGroup({
       maxQuantity: new FormControl(this.confroom.default, [
         Validators.min(this.confroom.min),
-        Validators.max(this.confroom.max)
-      ])
+        Validators.max(this.confroom.max),
+      ]),
     });
   }
 }
