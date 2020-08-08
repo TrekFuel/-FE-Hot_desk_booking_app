@@ -50,7 +50,7 @@
             [hasFocus]="currentFocus === SelectorsName.choose"
             class="btn btn-block {{newOfficeObject ? 'btn-outline-success' : 'btn-outline-secondary'}}"
             type="submit">
-      {{newOfficeObject ? 'Create new' : (blockSelection$ | async) ? 'Chosen' : 'Choose'}}
+      {{newOfficeObject ? 'Create new' : (blockSelection$ | async) ? 'was chosen' : 'Choose'}}
     </button>
   </div>
 
