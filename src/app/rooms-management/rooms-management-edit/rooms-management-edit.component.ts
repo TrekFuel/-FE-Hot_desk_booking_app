@@ -7,7 +7,7 @@ import {
   OnInit,
   Output,
   Renderer2,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { fabric } from 'fabric';
 import { CANVAS_DEFAULT, CANVAS_OPTION } from './canvas-option';
@@ -32,6 +32,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   @ViewChild('clone', { static: true, read: ElementRef }) btnClone: ElementRef;
   @ViewChild('close', { static: true, read: ElementRef }) btnClose: ElementRef;
   @ViewChild('cardForPlace', { static: true }) cardForPlace: ElementRef;
+  @ViewChild('checkboxForDelete', { static: true }) checkboxForDelete: ElementRef;
   public canvasSize: CanvasSize = CANVAS_DEFAULT;
   placesData: PlaceData[] = [];
   placeRole = PlaceRole;
@@ -53,10 +54,12 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   };
   formMaxQuantity: FormGroup;
   currentNumber: number = 0;
+  checkToDelete: boolean;
 
   // variables for container
   @Output() handlePlaces: EventEmitter<PlaceData[]> = new EventEmitter<PlaceData[]>();
   @Output() deletePlaces: EventEmitter<string[]> = new EventEmitter<string[]>();
+  @Output() deleteMap: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor(private renderer: Renderer2, private ocs: OfficeChoosingServices) {
   }
@@ -73,7 +76,6 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     if (placeDataArr.length > 0) {
       RoomsManagementEditComponent.canvas.forEachObject((obj: (fabric.Object)) => {
         if (obj?.name === EDITOR_NAMES.place && !obj?.data.id) {
-          console.log('no id');
           let tempId: string = obj.data.tempId;
           let placeWithTempId: PlaceData = placeDataArr.find((item: PlaceData) => item.tempId === tempId);
           obj.data.id = placeWithTempId.id;
@@ -94,7 +96,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
         RoomsManagementEditComponent.canvas.requestRenderAll();
         break;
       case 'Delete':
-        this.onDelete();
+        this.onDeleteCanvasObj();
         break;
       default:
         return;
@@ -156,6 +158,15 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
 
   onCancelEdit() {
     this.ocs.setBlockSelection(false);
+  }
+
+  onClickAgreeToDelete() {
+    this.checkToDelete = this.checkboxForDelete.nativeElement.checked;
+    console.log(this.checkToDelete);
+  }
+
+  onDeleteMap() {
+    this.deleteMap.emit(true);
   }
 
   doCanvasZoom(zoom: number = this.canvasSize.zoom): void {
@@ -252,7 +263,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  onDelete(): void {
+  onDeleteCanvasObj(): void {
     const actObjs: fabric.Object[] = RoomsManagementEditComponent.canvas.getActiveObjects();
     const placesIdToDeleteFromServer: string[] = [];
     if (actObjs) {
