@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './auth/login/login.component';
-import { RoomsManagementEntryComponent } from './rooms-management/rooms-management-entry/rooms-management-entry.component';
 import { AppUsersContainer } from './users/users.container';
 import { UserProfileContainerComponent } from './home/user-profile/user-profile.container';
 import { BookingPageContainerComponent } from './booking/booking-page/booking-page.container';
@@ -11,6 +10,7 @@ import { UsersGuard } from './users/guards/users.guard';
 import { RoomsManagementGuard } from './rooms-management/guards/rooms-management.guard';
 import { environment } from '../environments/environment';
 import { NotFoundPageComponent } from './shared/not-found-page/not-found-page.component';
+import { RoomsManagementEntryContainer } from './rooms-management/rooms-management-entry/rooms-management-entry.container';
 
 const routes: Routes = [
   {
@@ -33,7 +33,7 @@ const routes: Routes = [
   },
   {
     path: 'rooms-management',
-    component: RoomsManagementEntryComponent,
+    component: RoomsManagementEntryContainer,
     canActivate: [
       NoAuthGuard,
       RoomsManagementGuard,

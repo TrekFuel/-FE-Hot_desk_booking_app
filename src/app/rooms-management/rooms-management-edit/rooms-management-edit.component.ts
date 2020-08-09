@@ -17,8 +17,11 @@ import { Canvas } from 'fabric/fabric-impl';
 import { environment } from '../../../environments/environment';
 import { CanvasSize, Confroom, CurrentPlaceInEditor, EditorBlock } from './models/editor-blocks.models';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { OfficeChoosingServices } from '../../shared/office-choosing/office-choosing.services';
 import { MOCK_OFFICE } from '../../shared/mock-office';
+import { roomsManagementEditUnblockSelectorsAction } from '../../store/actions/roomsManagementEdit.action';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-rooms-management-edit',
@@ -62,7 +65,10 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   @Output() deletePlaces: EventEmitter<string[]> = new EventEmitter<string[]>();
   @Output() deleteMap: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor(private renderer: Renderer2, private ocs: OfficeChoosingServices) {
+  constructor(private renderer: Renderer2,
+              private store$: Store<AppState>,
+              private router: Router,
+              private route: ActivatedRoute) {
   }
 
   get curZoom() {
@@ -172,7 +178,12 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   }
 
   onCancelEdit() {
-    this.ocs.setBlockSelection(false);
+    // this.ocs.setBlockSelection(false);
+    this.router.navigate(['.'], {
+      relativeTo: this.route,
+      queryParams: {}
+    });
+    this.store$.dispatch(new roomsManagementEditUnblockSelectorsAction({ blockSelection: false }));
   }
 
   onClickAgreeToDelete() {

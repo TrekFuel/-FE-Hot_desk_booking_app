@@ -22,3 +22,10 @@ export const getMapBooking = createSelector(
     return data.getMap;
   }
 );
+
+export const getBlockSelection = createSelector(
+  roomsManagementEditSelector,
+  (data: RoomsManagementEditStoreInterface): boolean => {
+    return data.blockSelection;
+  }
+);

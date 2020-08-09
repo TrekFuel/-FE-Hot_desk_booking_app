@@ -6,13 +6,14 @@ import { officeChoosingActionType } from '../actions/officeChoosing.action';
 import * as roomsManagementEditTypeActions from '../actions/roomsManagementEdit.action';
 import {
   roomsManagementEditActionType,
+  roomsManagementEditBlockSelectorsAction,
   roomsManagementEditCreateMapAction,
   roomsManagementEditFloorAction,
   roomsManagementEditGetMapAction,
   roomsManagementEditOfficeAction,
   roomsManagementEditRoomAction,
   roomsManagementEditSaveMapAction,
-  roomsManagementEditStartAction,
+  roomsManagementEditStartAction
 } from '../actions/roomsManagementEdit.action';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
@@ -22,7 +23,7 @@ import { roomsManagementEditData } from '../selectors/roomsManagementEdit.select
 import {
   GetFloorDataInterface,
   GetRoomDataInterface,
-  RoomsManagementEditStoreInterface,
+  RoomsManagementEditStoreInterface
 } from '../../rooms-management/rooms-management-edit/models/rooms-management-edit-store.interface';
 import { PlaceData, PlaceRole } from '../../shared/models/map-data.model';
 import { RoomsManagementEditComponent } from '../../rooms-management/rooms-management-edit/rooms-management-edit.component';
@@ -207,6 +208,14 @@ export class RoomsManagementEditEffects {
           );
       }
     )
+  );
+
+  @Effect()
+  blockSelection$ = this.actions$.pipe(
+    ofType(roomsManagementEditActionType.R_M_E_GET_MAP),
+    map((data) => {
+      return new roomsManagementEditBlockSelectorsAction({ blockSelection: true });
+    })
   );
 
   constructor(

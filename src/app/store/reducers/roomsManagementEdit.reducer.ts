@@ -1,8 +1,5 @@
 import { RoomsManagementEditStoreInterface } from '../../rooms-management/rooms-management-edit/models/rooms-management-edit-store.interface';
-import {
-  roomsManagementEditActionType,
-  roomsManagementEditTypeActions,
-} from '../actions/roomsManagementEdit.action';
+import { roomsManagementEditActionType, roomsManagementEditTypeActions } from '../actions/roomsManagementEdit.action';
 
 const initialState: RoomsManagementEditStoreInterface = {
   addressId: null,
@@ -15,6 +12,7 @@ const initialState: RoomsManagementEditStoreInterface = {
   roomDtoInterface: null,
   placeDtoInterface: null,
   getMap: null,
+  blockSelection: null
 };
 
 export function roomsManagementEditReducer(
@@ -51,6 +49,17 @@ export function roomsManagementEditReducer(
       return {
         ...state,
         getMap: action.payload.getMap.map,
+        blockSelection: true
+      };
+    case roomsManagementEditActionType.R_M_E_UNBLOCK_SELECTORS:
+      return {
+        ...state,
+        blockSelection: false
+      };
+    case roomsManagementEditActionType.R_M_E_BLOCK_SELECTORS:
+      return {
+        ...state,
+        blockSelection: true
       };
     default:
       return {

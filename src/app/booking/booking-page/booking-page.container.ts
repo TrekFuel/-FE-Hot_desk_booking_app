@@ -1,16 +1,21 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OfficeData } from '../../shared/models/choose-office.model';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { roomsManagementEditStartGetMapAction } from '../../store/actions/roomsManagementEdit.action';
+import { Observable } from 'rxjs';
+import { getBlockSelection } from '../../store/selectors/roomsManagementEdit.selector';
 
 @Component({
   selector: 'app-booking-page-container',
-  template: ` <app-booking-page></app-booking-page>`,
+  template: `
+    <app-booking-page [$blockSelection]="blockSelection$ | async"></app-booking-page>`
 })
 export class BookingPageContainerComponent {
+  blockSelection$: Observable<boolean>;
+
   constructor(public router: ActivatedRoute, public store$: Store<AppState>) {
     this.router.queryParams
       .pipe(
@@ -22,5 +27,13 @@ export class BookingPageContainerComponent {
           new roomsManagementEditStartGetMapAction({ addressId })
         );
       });
+    this.initStore();
   }
+
+  initStore(): void {
+    this.blockSelection$ = this.store$.select(getBlockSelection).pipe(
+      tap(console.log)
+    );
+  }
+
 }

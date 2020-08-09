@@ -4,10 +4,13 @@ import { MyErrorStateMatcher, ValidateSameName } from '../validators/same-name.v
 import { SelectorsName } from './selectors-name';
 import { SelectorsAddress, SelectorsCity, SelectorsModel } from '../models/selectors.model';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ChooseOffice } from '../models/choose-office.model';
 import { OfficeChoosingServices } from './office-choosing.services';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store';
+import { getBlockSelection } from '../../store/selectors/roomsManagementEdit.selector';
 
 @Component({
   selector: 'app-office-choosing',
@@ -40,10 +43,9 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   // ------------------
 
   @Input() canEditMode: boolean = false;
-  blockSelection$: Observable<boolean> = this.ocs.blockSelection;
-  oscSubscription: Subscription;
+  @Input() $blockSelection: boolean;
 
-  constructor(private ocs: OfficeChoosingServices) {
+  constructor(private ocs: OfficeChoosingServices, private store$: Store<AppState>) {
   }
 
   public get countryOptions(): string[] {
@@ -125,7 +127,9 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
         this.onChoosing(SelectorsName.address, address === SelectorsName.new, this.addressOptions)
         : this.moveFocusFrom(SelectorsName.address));
 
-    this.oscSubscription = this.ocs.blockSelection.pipe(tap((value: boolean) => this.blockAllSelectors(value))).subscribe();
+    // this.oscSubscription = this.ocs.blockSelection.pipe(tap((value: boolean) => this.blockAllSelectors(value))).subscribe();
+    this.store$.select(getBlockSelection).pipe(tap((value: boolean) => this.blockAllSelectors(value)))
+      .subscribe();
   }
 
   getAddressIdByAddress(): string {
@@ -207,7 +211,6 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
       if (addressId === environment.TEMP_ADDRESS_ID_FOR_NEW_OFFICE) delete data.inputNew;
 
       this.cancelAllNewVariables();
-      this.ocs.setBlockSelection(true);
 
       this.onChooseOffice.emit({ isNewObject: this.newOfficeObject, data });
       this.newOfficeObject = false;
@@ -240,7 +243,6 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
     this.countrySubscription.unsubscribe();
     this.citySubscription.unsubscribe();
     this.addressSubscription.unsubscribe();
-    this.oscSubscription.unsubscribe();
   }
 
   private _initChoosingForm(): void {

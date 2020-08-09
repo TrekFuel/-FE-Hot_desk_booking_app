@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import {
   officeChoosingStartAction,
-  officeChoosingStartCreateAddressAction,
+  officeChoosingStartCreateAddressAction
 } from '../../store/actions/officeChoosing.action';
 import { selectorsData } from '../../store/selectors/officeChosing.selectors';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -13,15 +13,21 @@ import { filter, map, tap } from 'rxjs/operators';
 import { ChooseOffice, OfficeData } from '../models/choose-office.model';
 import { OfficesDataSelectsInterface } from '../models/offices-data-selects.interface';
 import { OfficeChoosingServices } from './office-choosing.services';
+import {
+  roomsManagementEditBlockSelectorsAction,
+  roomsManagementEditUnblockSelectorsAction
+} from '../../store/actions/roomsManagementEdit.action';
+import { getBlockSelection } from '../../store/selectors/roomsManagementEdit.selector';
 
 @Component({
   selector: 'office-choosing-container',
   template: `
     <app-office-choosing
-      [canEditMode]="canEditMode"
-      (onChooseOffice)="onChooseOffice($event)"
-      [selectorsModel]="selectorsModel$ | async"
-      [titleName]="titleName"
+        [canEditMode]="canEditMode"
+        (onChooseOffice)="onChooseOffice($event)"
+        [selectorsModel]="selectorsModel$ | async"
+        [titleName]="titleName"
+        [$blockSelection]="blockSelection$ | async"
     >
     </app-office-choosing>
   `,
@@ -34,6 +40,7 @@ export class OfficeChoosingContainer implements OnInit, OnDestroy {
   canEditMode: boolean = false;
   titleName: string;
   newOfficeData: OfficeData | null;
+  blockSelection$: Observable<boolean>;
 
   constructor(
     private store$: Store<AppState>,
@@ -48,6 +55,7 @@ export class OfficeChoosingContainer implements OnInit, OnDestroy {
         map((url: string) => url.split('?')[0]),
         map((url: string) => url.split('#')[0]),
         map((route: string) => route.split('/')[1]),
+
         tap((route) => (this.canEditMode = route === 'rooms-management'))
       )
       .subscribe((route: string) => {
@@ -80,7 +88,7 @@ export class OfficeChoosingContainer implements OnInit, OnDestroy {
             office.city,
             office.address
           );
-          console.log(`new address id  is: ${addressId}`);
+          // console.log(`new address id  is: ${addressId}`);
           office[addressId] = addressId;
           this.existingOfficeHandle(office);
           this.newOfficeData = null;
@@ -107,15 +115,15 @@ export class OfficeChoosingContainer implements OnInit, OnDestroy {
     this.store$.dispatch(
       new officeChoosingStartCreateAddressAction({ selectorData: data })
     );
+    this.store$.dispatch(new roomsManagementEditBlockSelectorsAction({ blockSelection: true }));
   }
 
   existingOfficeHandle(officeData: OfficeData) {
-    console.log('start route');
     const queryParams: OfficeData = { ...officeData };
     this.router.navigate(['.'], {
       relativeTo: this.route,
       queryParams,
-      queryParamsHandling: 'merge', // remove to replace all query params by provided
+      // queryParamsHandling: 'merge', // remove to replace all query params by provided
       // replaceUrl: true // If we want to replace it in the history instead of adding new value there
     });
   }
@@ -135,6 +143,9 @@ export class OfficeChoosingContainer implements OnInit, OnDestroy {
   // here all you need to retrieve the data
   initStore(): void {
     this.store$.dispatch(new officeChoosingStartAction());
+    this.store$.dispatch(new roomsManagementEditUnblockSelectorsAction({ blockSelection: false }));
+
+    this.blockSelection$ = this.store$.select(getBlockSelection);
   }
 
   ngOnDestroy(): void {
