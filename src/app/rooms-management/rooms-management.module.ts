@@ -7,12 +7,14 @@ import { MaterialModule } from '../material/material-module';
 import { RoomsManagementEditComponent } from './rooms-management-edit/rooms-management-edit.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RoomsManagementEditContainer } from './rooms-management-edit/rooms-management-edit.container';
+import { RoomsManagementEntryContainer } from './rooms-management-entry/rooms-management-entry.container';
 
 @NgModule({
   declarations: [
     RoomsManagementEntryComponent,
     RoomsManagementEditComponent,
-    RoomsManagementEditContainer
+    RoomsManagementEditContainer,
+    RoomsManagementEntryContainer
   ],
   imports: [
     CommonModule,
@@ -20,6 +22,9 @@ import { RoomsManagementEditContainer } from './rooms-management-edit/rooms-mana
     MaterialModule,
     RoomsManagementRoutingModule,
     ReactiveFormsModule
+  ],
+  exports: [
+    RoomsManagementEntryContainer
   ]
 })
 

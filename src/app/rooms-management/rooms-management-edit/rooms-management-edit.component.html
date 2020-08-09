@@ -53,12 +53,34 @@
     <app-zoom (zoomChange)="doCanvasZoom($event)" [zoom]="canvasSize.zoom"></app-zoom>
     <canvas #htmlCanvas class="my-3 mx-1 canvas-place"></canvas>
   </div>
+
+  <div class="col-sm-12 my-2">
+    <button (click)="onDeleteMap()"
+            [disabled]="!checkToDelete"
+            class="btn btn-sm btn-danger mr-4 my-2"
+            type="button">
+      Delete map
+    </button>
+    <label class="form-check-label" for="deletingButton">
+      <input #checkboxForDelete
+             (click)="onClickAgreeToDelete()"
+             class="form-check-input"
+             id="deletingButton"
+             type="checkbox">
+
+      <div class="alert {{checkToDelete ? 'alert-secondary' : 'alert-danger'}} mr-2" role="alert">
+        Deleting of this map causes to a significant loss of information. I understand that and want to continue
+      </div>
+    </label>
+
+  </div>
+
   <mat-icon #clone (click)="onClone()"
             [ngClass]="{'hide': !activeElementOnCanvas.clone}"
             class="icons-for-canvas b-clone">
     file_copy
   </mat-icon>
-  <mat-icon #close (click)="onDelete()"
+  <mat-icon #close (click)="onDeleteCanvasObj()"
             [ngClass]="{'hide': !activeElementOnCanvas.close}"
             class="icons-for-canvas b-close">
     close

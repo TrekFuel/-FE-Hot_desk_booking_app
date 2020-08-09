@@ -11,6 +11,7 @@ export interface PlaceData {
   roomId?: string;
   isFree?: boolean;
   maxQuantity?: number;
+  nameOfBooked?: string;
 }
 
 export enum PlaceRole {

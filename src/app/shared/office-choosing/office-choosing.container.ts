@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import {
   officeChoosingStartAction,
-  officeChoosingStartCreateAddressAction,
+  officeChoosingStartCreateAddressAction
 } from '../../store/actions/officeChoosing.action';
 import { selectorsData } from '../../store/selectors/officeChosing.selectors';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -13,6 +13,11 @@ import { filter, map, tap } from 'rxjs/operators';
 import { ChooseOffice, OfficeData } from '../models/choose-office.model';
 import { OfficesDataSelectsInterface } from '../models/offices-data-selects.interface';
 import { OfficeChoosingServices } from './office-choosing.services';
+import {
+  roomsManagementEditBlockSelectorsAction,
+  roomsManagementEditUnblockSelectorsAction
+} from '../../store/actions/roomsManagementEdit.action';
+import { getBlockSelection } from '../../store/selectors/roomsManagementEdit.selector';
 
 @Component({
   selector: 'office-choosing-container',
@@ -22,16 +27,22 @@ import { OfficeChoosingServices } from './office-choosing.services';
         (onChooseOffice)="onChooseOffice($event)"
         [selectorsModel]="selectorsModel$ | async"
         [titleName]="titleName"
+        [$blockSelection]="blockSelection$ | async"
+        [$placeData]="placeData$ | async"
     >
     </app-office-choosing>
-  `
+  `,
 })
 export class OfficeChoosingContainer implements OnInit, OnDestroy {
-  public selectorsModel$: Observable<SelectorsModel> = this.store$.select(selectorsData);
+  public selectorsModel$: Observable<SelectorsModel> = this.store$.select(
+    selectorsData
+  );
   selectorsModelSubscription: Subscription;
   canEditMode: boolean = false;
   titleName: string;
   newOfficeData: OfficeData | null;
+  blockSelection$: Observable<boolean>;
+  placeData$: Observable<SelectorsAddress>;
 
   constructor(
     private store$: Store<AppState>,
@@ -46,21 +57,11 @@ export class OfficeChoosingContainer implements OnInit, OnDestroy {
         map((url: string) => url.split('?')[0]),
         map((url: string) => url.split('#')[0]),
         map((route: string) => route.split('/')[1]),
-        tap((route) => (this.canEditMode = route === 'rooms-management'))
+        tap(route => (this.canEditMode = route === 'rooms-management'))
       )
-      .subscribe((route: string) => {
-        switch (route) {
-          case 'rooms-management':
-            this.titleName = 'Create or edit office';
-            break;
-          case 'booking':
-            this.titleName = 'Booking';
-            break;
-          default:
-            this.titleName = 'Choosing';
-            break;
-        }
-      });
+      .subscribe(route => this.setDataToRoute(route));
+
+    this.placeData$ = this.route.queryParams.pipe(map((data: SelectorsAddress) => data));
 
     // Start action
     this.initStore();
@@ -68,21 +69,43 @@ export class OfficeChoosingContainer implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.ocs.setBlockSelection(false);
-    this.selectorsModelSubscription = this.selectorsModel$.subscribe((data: SelectorsModel) => {
-      if (!!data && !!this.newOfficeData) {
-        const office: OfficeData = this.newOfficeData;
-        // To PAVEL ---- if it is a new address we get addressId here!
-        let addressId = this.getAddressIdByAddress(data.address, office.city, office.address);
-        console.log(`new address id  is: ${addressId}`);
-        office[addressId] = addressId;
-        this.existingOfficeHandle(office);
-        this.newOfficeData = null;
+    this.selectorsModelSubscription = this.selectorsModel$.subscribe(
+      (data: SelectorsModel) => {
+        if (!!data && !!this.newOfficeData) {
+          const office: OfficeData = this.newOfficeData;
+          // To PAVEL ---- if it is a new address we get addressId here!
+          let addressId = this.getAddressIdByAddress(
+            data.address,
+            office.city,
+            office.address
+          );
+          // console.log(`new address id  is: ${addressId}`);
+          office[addressId] = addressId;
+          this.existingOfficeHandle(office);
+          this.newOfficeData = null;
+        }
       }
-    });
+    );
+  }
+
+  setDataToRoute(route: string) {
+    switch (route) {
+      case 'rooms-management':
+        this.titleName = 'Create or edit office';
+        break;
+      case 'booking':
+        this.titleName = 'Booking';
+        break;
+      default:
+        this.titleName = 'Choosing';
+        break;
+    }
   }
 
   onChooseOffice(event: ChooseOffice): void {
-    event.isNewObject ? this.newOfficeHandle(event.data) : this.existingOfficeHandle(event.data);
+    event.isNewObject
+      ? this.newOfficeHandle(event.data)
+      : this.existingOfficeHandle(event.data);
   }
 
   newOfficeHandle(officeData: OfficeData) {
@@ -91,11 +114,13 @@ export class OfficeChoosingContainer implements OnInit, OnDestroy {
     let [countryName, city, street]: string[] = [
       this.newOfficeData.country,
       this.newOfficeData.city,
-      this.newOfficeData.address];
+      this.newOfficeData.address,
+    ];
     const data: OfficesDataSelectsInterface = { countryName, city, street };
     this.store$.dispatch(
       new officeChoosingStartCreateAddressAction({ selectorData: data })
     );
+    this.store$.dispatch(new roomsManagementEditBlockSelectorsAction({ blockSelection: true }));
   }
 
   existingOfficeHandle(officeData: OfficeData) {
@@ -103,29 +128,29 @@ export class OfficeChoosingContainer implements OnInit, OnDestroy {
     this.router.navigate(['.'], {
       relativeTo: this.route,
       queryParams,
-      queryParamsHandling: 'merge' // remove to replace all query params by provided
+      // queryParamsHandling: 'merge', // remove to replace all query params by provided
       // replaceUrl: true // If we want to replace it in the history instead of adding new value there
     });
-    const data: OfficesDataSelectsInterface = {
-      countryName: queryParams.country,
-      city: queryParams.city,
-      street: queryParams.address,
-    };
-    this.store$.dispatch(
-      new officeChoosingStartCreateAddressAction({
-        selectorData: data,
-      })
-    );
   }
 
   // return AddressId by City and Address from Array of Addresses
-  getAddressIdByAddress(offices: SelectorsAddress[], city: string, address: string): string {
-    return offices.filter((item: SelectorsAddress) => item?.city === city && item?.address === address)[0].addressId;
+  getAddressIdByAddress(
+    offices: SelectorsAddress[],
+    city: string,
+    address: string
+  ): string {
+    return offices.filter(
+      (item: SelectorsAddress) =>
+        item?.city === city && item?.address === address
+    )[0].addressId;
   }
 
   // here all you need to retrieve the data
   initStore(): void {
     this.store$.dispatch(new officeChoosingStartAction());
+    this.store$.dispatch(new roomsManagementEditUnblockSelectorsAction({ blockSelection: false }));
+
+    this.blockSelection$ = this.store$.select(getBlockSelection);
   }
 
   ngOnDestroy(): void {

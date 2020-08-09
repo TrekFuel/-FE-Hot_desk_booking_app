@@ -1,4 +1,15 @@
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import {
   CanvasSize,
   CurrentBookingPlace
@@ -6,7 +17,6 @@ import {
 import { Canvas } from 'fabric/fabric-impl';
 import { fabric } from 'fabric';
 import { CANVAS_DEFAULT, CANVAS_OPTION } from '../../rooms-management/rooms-management-edit/canvas-option';
-import { MOCK_OFFICE } from '../../shared/mock-office';
 import { EDITOR_NAMES } from '../../rooms-management/rooms-management-edit/editor-blocks-info';
 import { OfficeChoosingServices } from '../../shared/office-choosing/office-choosing.services';
 import { Subscription } from 'rxjs';
@@ -14,12 +24,15 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-booking-map',
   templateUrl: './booking-map.component.html',
-  styleUrls: ['./booking-map.component.scss']
+  styleUrls: ['./booking-map.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookingMapComponent implements OnInit, OnDestroy {
 
   @ViewChild('htmlCanvasBooking', { static: true }) htmlCanvas: ElementRef;
   @ViewChild('cardForBooking', { static: true }) cardForBooking: ElementRef;
+  @Input() mapData: string;
+  @Output() bookPlaceForId: EventEmitter<string> = new EventEmitter<string>();
   public canvasSize: CanvasSize = CANVAS_DEFAULT;
   currentBookingPlace: CurrentBookingPlace = {
     isPlaceClicked: false,
@@ -68,12 +81,19 @@ export class BookingMapComponent implements OnInit, OnDestroy {
           this.currentBookingPlace.isPlaceClicked = true;
           this.currentBookingPlace.placeData = actObj.data;
           this.changeDetection.detectChanges();
+          console.log(actObj.data.id);
         }
       },
       'mouse:down:before': (e) => {
 
       }
     });
+  }
+
+  onBookingClick(): void {
+    console.log('click');
+    // if (this.currentBookingPlace.placeData?.isFree) {}
+    this.bookPlaceForId.emit(this.currentBookingPlace.placeData.id);
   }
 
   checkBookingsOnPlaces() {
@@ -116,7 +136,9 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   }
 
   loadMap() {
-    const dataJSON: string = MOCK_OFFICE;
+    // console.log(this.mapData);
+    // this.changeDetection.detectChanges();
+    const dataJSON: string = this.mapData;
     this.canvas.loadFromJSON(dataJSON, () => {
       this.canvas.renderAll();
     });

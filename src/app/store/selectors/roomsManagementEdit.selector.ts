@@ -15,3 +15,17 @@ export const roomsManagementEditData = createSelector(
     return data;
   }
 );
+
+export const getMapBooking = createSelector(
+  roomsManagementEditSelector,
+  (data: RoomsManagementEditStoreInterface): string => {
+    return data.getMap;
+  }
+);
+
+export const getBlockSelection = createSelector(
+  roomsManagementEditSelector,
+  (data: RoomsManagementEditStoreInterface): boolean => {
+    return data.blockSelection;
+  }
+);

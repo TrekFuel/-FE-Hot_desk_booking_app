@@ -143,4 +143,10 @@
   .icons-for-canvas.hide {
     display: none;
   }
+
+  #deletingButton {
+    z-index: 1;
+    margin-left: 4px;
+    margin-top: 16px;
+  }
 }

@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -7,7 +8,7 @@ import {
   OnInit,
   Output,
   Renderer2,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { fabric } from 'fabric';
 import { CANVAS_DEFAULT, CANVAS_OPTION } from './canvas-option';
@@ -17,7 +18,11 @@ import { Canvas } from 'fabric/fabric-impl';
 import { environment } from '../../../environments/environment';
 import { CanvasSize, Confroom, CurrentPlaceInEditor, EditorBlock } from './models/editor-blocks.models';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { OfficeChoosingServices } from '../../shared/office-choosing/office-choosing.services';
+import { MOCK_OFFICE } from '../../shared/mock-office';
+import { roomsManagementEditUnblockSelectorsAction } from '../../store/actions/roomsManagementEdit.action';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-rooms-management-edit',
@@ -32,6 +37,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   @ViewChild('clone', { static: true, read: ElementRef }) btnClone: ElementRef;
   @ViewChild('close', { static: true, read: ElementRef }) btnClose: ElementRef;
   @ViewChild('cardForPlace', { static: true }) cardForPlace: ElementRef;
+  @ViewChild('checkboxForDelete', { static: true }) checkboxForDelete: ElementRef;
   public canvasSize: CanvasSize = CANVAS_DEFAULT;
   placesData: PlaceData[] = [];
   placeRole = PlaceRole;
@@ -53,12 +59,18 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   };
   formMaxQuantity: FormGroup;
   currentNumber: number = 0;
+  checkToDelete: boolean;
 
   // variables for container
   @Output() handlePlaces: EventEmitter<PlaceData[]> = new EventEmitter<PlaceData[]>();
   @Output() deletePlaces: EventEmitter<string[]> = new EventEmitter<string[]>();
+  @Output() deleteMap: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor(private renderer: Renderer2, private ocs: OfficeChoosingServices) {
+  constructor(private renderer: Renderer2,
+              private store$: Store<AppState>,
+              private router: Router,
+              private route: ActivatedRoute,
+              private changeDetection: ChangeDetectorRef) {
   }
 
   get curZoom() {
@@ -73,7 +85,6 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     if (placeDataArr.length > 0) {
       RoomsManagementEditComponent.canvas.forEachObject((obj: (fabric.Object)) => {
         if (obj?.name === EDITOR_NAMES.place && !obj?.data.id) {
-          console.log('no id');
           let tempId: string = obj.data.tempId;
           let placeWithTempId: PlaceData = placeDataArr.find((item: PlaceData) => item.tempId === tempId);
           obj.data.id = placeWithTempId.id;
@@ -94,7 +105,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
         RoomsManagementEditComponent.canvas.requestRenderAll();
         break;
       case 'Delete':
-        this.onDelete();
+        this.onDeleteCanvasObj();
         break;
       default:
         return;
@@ -104,6 +115,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     RoomsManagementEditComponent.canvas = new fabric.Canvas(this.htmlCanvas.nativeElement, CANVAS_OPTION.FOR_EDIT);
     this.doCanvasZoom();
+    // this.loadMap();
 
     RoomsManagementEditComponent.canvas.on({
       'object:added': (e) => {
@@ -133,6 +145,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
         if (actObj?.name === EDITOR_NAMES.place && RoomsManagementEditComponent.canvas.getActiveObjects().length <= 1) {
           this.currentPlace.isPlaceHovered = true;
           this.currentPlace.placeData = actObj.data;
+          this.changeDetection.detectChanges();
         }
       },
       'mouse:out': (e) => {
@@ -146,6 +159,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
         } else {
           this.hidePlaceData();
         }
+        this.changeDetection.detectChanges();
       },
       'mouse:down:before': (e) => this.blockedElements.includes(e.target?.name) ? this.discardActObj()
         : this.positioningCloneAndClose(e.target)
@@ -154,8 +168,35 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     this._initForm();
   }
 
+  loadMap() {
+    const dataJSON: string = MOCK_OFFICE;
+    RoomsManagementEditComponent.canvas.loadFromJSON(dataJSON, () => {
+      RoomsManagementEditComponent.canvas.renderAll();
+    });
+    RoomsManagementEditComponent.canvas.forEachObject((obj: fabric.Object) => {
+      if (obj?.name === EDITOR_NAMES.place) {
+        this.placesData.push({ ...obj.data, id: 'some uuid' });
+      }
+    });
+    console.log(this.placesData);
+  }
+
   onCancelEdit() {
-    this.ocs.setBlockSelection(false);
+    // this.ocs.setBlockSelection(false);
+    this.router.navigate(['.'], {
+      relativeTo: this.route,
+      queryParams: {}
+    });
+    this.store$.dispatch(new roomsManagementEditUnblockSelectorsAction({ blockSelection: false }));
+  }
+
+  onClickAgreeToDelete() {
+    this.checkToDelete = this.checkboxForDelete.nativeElement.checked;
+    console.log(this.checkToDelete);
+  }
+
+  onDeleteMap() {
+    this.deleteMap.emit(true);
   }
 
   doCanvasZoom(zoom: number = this.canvasSize.zoom): void {
@@ -252,7 +293,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  onDelete(): void {
+  onDeleteCanvasObj(): void {
     const actObjs: fabric.Object[] = RoomsManagementEditComponent.canvas.getActiveObjects();
     const placesIdToDeleteFromServer: string[] = [];
     if (actObjs) {

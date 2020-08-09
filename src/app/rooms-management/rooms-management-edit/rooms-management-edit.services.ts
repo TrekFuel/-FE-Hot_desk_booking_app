@@ -28,6 +28,7 @@ export class RoomsManagementEditServices {
   }
 
   postFloor(data: PostFloorDataInterface): Observable<GetFloorDataInterface> {
+    console.log(data);
     return this.http
       .post(`${environment.databaseURL}/floor`, data)
       .pipe(map((dataFloor: GetFloorDataInterface) => dataFloor));
@@ -46,8 +47,15 @@ export class RoomsManagementEditServices {
   }
 
   putOffice(data: PostFloorDataInterface) {
+    console.log(data);
     return this.http
       .put(`${environment.databaseURL}/floor`, data)
+      .pipe(map((data: GetFloorDataInterface) => data));
+  }
+
+  getOffice(idAddress: string) {
+    return this.http
+      .get(`${environment.databaseURL}/office/address/${idAddress}`)
       .pipe(map((data: GetFloorDataInterface) => data));
   }
 }

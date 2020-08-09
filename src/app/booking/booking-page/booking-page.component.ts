@@ -1,9 +1,11 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import * as _moment from 'moment';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
-import { Observable } from 'rxjs';
-import { OfficeChoosingServices } from '../../shared/office-choosing/office-choosing.services';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store';
+import { roomsManagementEditUnblockSelectorsAction } from '../../store/actions/roomsManagementEdit.action';
+import { ActivatedRoute, Router } from '@angular/router';
 
 const moment = _moment;
 export const MY_FORMATS = {
@@ -29,13 +31,22 @@ export const MY_FORMATS = {
 export class BookingPageComponent {
   date = new FormControl(new Date());
   // date = new FormControl(moment());
-  blockSelection$: Observable<boolean> = this.ocs.blockSelection;
+  @Input() $blockSelection: boolean;
   showMap: boolean = true;
 
-  constructor(private ocs: OfficeChoosingServices) {
+  constructor(
+    private store$: Store<AppState>,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
   }
 
   onClickAnotherAddress() {
-    this.ocs.setBlockSelection(false);
+    this.router.navigate(['.'], {
+      relativeTo: this.route,
+      queryParams: {}
+    });
+    this.store$.dispatch(new roomsManagementEditUnblockSelectorsAction({ blockSelection: false }));
+
   }
 }

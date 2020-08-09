@@ -1,9 +1,11 @@
 <div class="zoom-widget">
-  <button mat-icon-button matTooltip="Zoom Out" (click)="zoomOut()">
+  <button (click)="zoomOut()" mat-icon-button matTooltip="Zoom Out">
+    <!--    <span>-</span>-->
     <mat-icon>zoom_out</mat-icon>
   </button>
   <span style="padding: 0 5px; font-size: 16px">{{ zoom }}%</span>
-  <button mat-icon-button matTooltip="Zoom In" (click)="zoomIn()">
+  <button (click)="zoomIn()" mat-icon-button matTooltip="Zoom In">
+    <!--    <span>+</span>-->
     <mat-icon>zoom_in</mat-icon>
   </button>
 </div>

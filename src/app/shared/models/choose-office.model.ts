@@ -1,11 +1,11 @@
 export interface ChooseOffice {
-  isNewObject: boolean,
-  data: OfficeData
+  isNewObject: boolean;
+  data: OfficeData;
 }
 
 export interface OfficeData {
-  country: string,
-  city: string,
-  address: string,
-  addressID?: string
+  country: string;
+  city: string;
+  address: string;
+  addressId?: string;
 }
