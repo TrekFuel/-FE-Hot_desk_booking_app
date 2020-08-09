@@ -18,6 +18,7 @@ const showMessageAction = [
   usersListActionType.USERS_LIST_FAILURE,
   officeChoosingActionType.SELECTORS_DATA_FAILURE,
   authActionType.LOGIN_FAILURE,
+  authActionType.LOGOUT_END,
 ];
 
 @Injectable()
