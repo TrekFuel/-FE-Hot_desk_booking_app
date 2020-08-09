@@ -26,6 +26,7 @@
       display: none;
     }
 
+
     mat-card-content {
       .for-confroom.hide {
         display: none;
@@ -35,6 +36,10 @@
         textarea {
           background-color: white;
         }
+      }
+
+      .for-admin.hide {
+        display: none;
       }
 
       .choosing-span {
@@ -62,6 +67,16 @@
 
       .state-of-place.occupied {
         color: $occupiedColor;
+      }
+    }
+
+    mat-card-actions {
+      button {
+
+      }
+
+      button.hide {
+        display: none;
       }
     }
 
