@@ -86,10 +86,17 @@ export class AuthEffects {
           .pipe(
             map(() => {
               localStorage.removeItem(environment.localStorageUser);
+              clearTimeout(this.services$.timer);
               this.router.navigate(['/login']);
               return new LogoutEndAction({
                 loggedInUser: null,
-                expirationDate: null
+                expirationDate: null,
+                message: {
+                  message: {
+                    text: 'Logout',
+                    stateAlert: 'alert-primary',
+                  }
+                }
               });
             }),
           );

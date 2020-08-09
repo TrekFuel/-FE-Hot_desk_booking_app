@@ -42,7 +42,8 @@ export class LogoutStartAction implements Action {
 export class LogoutEndAction implements Action {
   readonly type = authActionType.LOGOUT_END;
 
-  constructor(public payload: { loggedInUser: null, expirationDate: null }) {
+  constructor(public payload: { loggedInUser: null, expirationDate: null,
+  message: MessageStateInterface }) {
   }
 }
 

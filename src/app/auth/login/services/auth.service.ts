@@ -17,9 +17,14 @@ import { LoginInterface } from '../../../store/selectors/auth.selectors';
 export class AuthService {
 
   private _expirationDate: Date;
+  private _timer: number;
 
   constructor(private http: HttpClient,
               private store$: Store<AppState>) {
+  }
+
+  get timer() {
+    return this._timer;
   }
 
   login(loginData: LoginUser): Observable<AuthResponse> {
@@ -65,7 +70,7 @@ export class AuthService {
     this._expirationDate = this.getUserFromLocalStorage().expirationDate;
     const due = Number
     (new Date(this._expirationDate).getTime() - new Date().getTime());
-    setTimeout(() => {
+    this._timer = setTimeout(() => {
       this.store$.dispatch(new LogoutStartAction());
     }, due);
   }
