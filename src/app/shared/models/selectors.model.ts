@@ -18,4 +18,7 @@ export interface SelectorsAddress {
   city: string;
   address: string;
   addressId: string;
+  country?: string
 }
+
+

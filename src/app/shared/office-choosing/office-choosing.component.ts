@@ -44,6 +44,7 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
 
   @Input() canEditMode: boolean = false;
   @Input() $blockSelection: boolean;
+  @Input() $placeData: SelectorsAddress;
 
   constructor(private ocs: OfficeChoosingServices, private store$: Store<AppState>) {
   }

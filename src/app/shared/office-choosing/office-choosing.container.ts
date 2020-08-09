@@ -28,6 +28,7 @@ import { getBlockSelection } from '../../store/selectors/roomsManagementEdit.sel
         [selectorsModel]="selectorsModel$ | async"
         [titleName]="titleName"
         [$blockSelection]="blockSelection$ | async"
+        [$placeData]="placeData$ | async"
     >
     </app-office-choosing>
   `,
@@ -41,6 +42,7 @@ export class OfficeChoosingContainer implements OnInit, OnDestroy {
   titleName: string;
   newOfficeData: OfficeData | null;
   blockSelection$: Observable<boolean>;
+  placeData$: Observable<SelectorsAddress>;
 
   constructor(
     private store$: Store<AppState>,
@@ -55,22 +57,11 @@ export class OfficeChoosingContainer implements OnInit, OnDestroy {
         map((url: string) => url.split('?')[0]),
         map((url: string) => url.split('#')[0]),
         map((route: string) => route.split('/')[1]),
-
-        tap((route) => (this.canEditMode = route === 'rooms-management'))
+        tap(route => (this.canEditMode = route === 'rooms-management'))
       )
-      .subscribe((route: string) => {
-        switch (route) {
-          case 'rooms-management':
-            this.titleName = 'Create or edit office';
-            break;
-          case 'booking':
-            this.titleName = 'Booking';
-            break;
-          default:
-            this.titleName = 'Choosing';
-            break;
-        }
-      });
+      .subscribe(route => this.setDataToRoute(route));
+
+    this.placeData$ = this.route.queryParams.pipe(map((data: SelectorsAddress) => data));
 
     // Start action
     this.initStore();
@@ -95,6 +86,20 @@ export class OfficeChoosingContainer implements OnInit, OnDestroy {
         }
       }
     );
+  }
+
+  setDataToRoute(route: string) {
+    switch (route) {
+      case 'rooms-management':
+        this.titleName = 'Create or edit office';
+        break;
+      case 'booking':
+        this.titleName = 'Booking';
+        break;
+      default:
+        this.titleName = 'Choosing';
+        break;
+    }
   }
 
   onChooseOffice(event: ChooseOffice): void {

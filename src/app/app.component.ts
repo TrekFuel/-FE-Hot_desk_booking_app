@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './auth/login/services/auth.service';
-import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -10,14 +9,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class AppComponent implements OnInit {
   title = 'hot-desk-booking-app';
 
-  constructor(private loginService: AuthService,
-              private router: Router,
-              private route: ActivatedRoute) {
-    this.router.navigate(['.'], {
-      relativeTo: this.route,
-      queryParams: {}
-    });
+  constructor(private loginService: AuthService) {
   }
+
 
   ngOnInit() {
     this.loginService.autoLogin();
