@@ -3,6 +3,7 @@ import { LoginInterface } from '../selectors/auth.selectors';
 
 const initialState: LoginInterface = {
   loggedInUser: {
+    expiresIn: null,
     userInfo: {
       id: null,
       email: null,
@@ -20,7 +21,8 @@ const initialState: LoginInterface = {
       img: null,
     },
     token: null,
-  }
+  },
+  expirationDate: null,
 };
 
 export function authReducer(
@@ -36,6 +38,7 @@ export function authReducer(
       return {
         ...state,
         loggedInUser: action.payload.loggedInUser,
+        expirationDate: action.payload.expirationDate,
       };
     case authActionType.LOGIN_FAILURE:
       return {
@@ -49,6 +52,7 @@ export function authReducer(
       return {
         ...state,
         loggedInUser: action.payload.loggedInUser,
+        expirationDate: action.payload.expirationDate,
       };
     default:
       return {

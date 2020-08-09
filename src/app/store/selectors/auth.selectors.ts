@@ -4,6 +4,7 @@ import { AppState } from '../index';
 
 export interface LoginInterface {
   loggedInUser: AuthResponse;
+  expirationDate: Date;
 }
 
 export const loginSelector = createFeatureSelector<AppState, LoginInterface>

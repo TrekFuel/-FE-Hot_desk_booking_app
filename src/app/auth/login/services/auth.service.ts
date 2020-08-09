@@ -7,7 +7,8 @@ import { environment } from '../../../../environments/environment';
 import { LoginUser } from '../models/login-user.model';
 import { AppState } from '../../../store';
 import { Store } from '@ngrx/store';
-import { LoginSuccessAction } from '../../../store/actions/auth.actions';
+import { LoginSuccessAction, LogoutStartAction } from '../../../store/actions/auth.actions';
+import { LoginInterface } from '../../../store/selectors/auth.selectors';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,15 @@ import { LoginSuccessAction } from '../../../store/actions/auth.actions';
 
 export class AuthService {
 
+  private _expirationDate: Date;
+  private _timer: number;
+
   constructor(private http: HttpClient,
               private store$: Store<AppState>) {
+  }
+
+  get timer() {
+    return this._timer;
   }
 
   login(loginData: LoginUser): Observable<AuthResponse> {
@@ -29,16 +37,23 @@ export class AuthService {
       );
   }
 
-  // check if we have user in localStorage and in case we have - user creation from localStorage
-  autoLogin() {
-    let loadedUser: AuthResponse;
+  getUserFromLocalStorage(): LoginInterface {
+    if (localStorage.getItem(environment.localStorageUser)) {
+      return JSON.parse(localStorage.getItem(environment.localStorageUser));
+    }
+  }
 
-    const userFromLocalStorage = localStorage.getItem(environment.localStorageUser);
-    if (userFromLocalStorage) {
-      loadedUser = JSON.parse(userFromLocalStorage);
-      this.store$.dispatch(new LoginSuccessAction({loggedInUser: loadedUser}));
-    } else {
-      return false;
+  // check if we have user in localStorage and in case we have - user creation from localStorage
+  autoLogin(): void {
+    let loadedUser: LoginInterface;
+    if (this.getUserFromLocalStorage()) {
+      loadedUser = this.getUserFromLocalStorage();
+      this.store$.dispatch(new LoginSuccessAction
+      ({
+        loggedInUser: loadedUser.loggedInUser,
+        expirationDate: loadedUser.expirationDate
+      }));
+      this.autoLogout();
     }
   }
 
@@ -49,6 +64,15 @@ export class AuthService {
           return response;
         })
       );
+  }
+
+  autoLogout(): void {
+    this._expirationDate = this.getUserFromLocalStorage().expirationDate;
+    const due = Number
+    (new Date(this._expirationDate).getTime() - new Date().getTime());
+    this._timer = setTimeout(() => {
+      this.store$.dispatch(new LogoutStartAction());
+    }, due);
   }
 
 }

@@ -22,7 +22,7 @@ export class LoginStartAction implements Action {
 export class LoginSuccessAction implements Action {
   readonly type = authActionType.LOGIN_SUCCESS;
 
-  constructor(public payload: { loggedInUser: AuthResponse }) {
+  constructor(public payload: { loggedInUser: AuthResponse, expirationDate: Date }) {
   }
 }
 
@@ -30,10 +30,7 @@ export class LoginFailureAction implements Action {
   readonly type = authActionType.LOGIN_FAILURE;
 
   constructor(
-    public payload: {
-    errors: HttpErrorResponse;
-    message: MessageStateInterface;
-  }
+    public payload: { errors: HttpErrorResponse, message: MessageStateInterface }
   ) {
   }
 }
@@ -45,7 +42,8 @@ export class LogoutStartAction implements Action {
 export class LogoutEndAction implements Action {
   readonly type = authActionType.LOGOUT_END;
 
-  constructor(public payload: { loggedInUser: null }) {
+  constructor(public payload: { loggedInUser: null, expirationDate: null,
+  message: MessageStateInterface }) {
   }
 }
 

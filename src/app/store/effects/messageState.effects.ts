@@ -19,6 +19,7 @@ const showMessageAction = [
   usersListActionType.USERS_LIST_FAILURE,
   officeChoosingActionType.SELECTORS_DATA_FAILURE,
   authActionType.LOGIN_FAILURE,
+  authActionType.LOGOUT_END,
   roomsManagementEditActionType.R_M_E_SAVE_MAP,
 ];
 
@@ -28,7 +29,6 @@ export class MessageStateEffects {
   loaderStart$ = this.actions$.pipe(
     ofType(...showMessageAction),
     map((action: messageStateInterface) => {
-      console.log(action)
       const { message } = action.payload;
       return new messageStateStartAction({ messageState: message });
     })
