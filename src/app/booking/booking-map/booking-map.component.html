@@ -13,19 +13,24 @@
     <mat-card-subtitle>Time for booking: 1:00</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content class="mx-auto">
-    <p class="my-2">State: <span class="state-of-place occupied">occupied</span></p>
+    <p class="my-2">
+      State:
+      <span class="state-of-place {{currentBookingPlace.placeData?.isFree ? 'free' : 'occupied'}}">
+              {{currentBookingPlace.placeData?.isFree ? 'free' : 'occupied'}}
+      </span>
+    </p>
     <p class="my-2">Name: <span class="choosing-span">Sergey Ivanov</span></p>
-    <div class="for-admin my-2">
+    <div class="for-admin my-2 hide">
       <p class="my-1">Message for admins only</p>
       <textarea matInput rows="4"></textarea>
       <div align="end" class="mt-2">
-        <button mat-button>APPLY</button>
+        <button mat-button>SEND</button>
       </div>
     </div>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-button>BOOKING</button>
-    <button mat-button>MESSAGE</button>
+    <button (click)="onBookingClick()" mat-button>BOOKING</button>
+    <button class="hide" mat-button>MESSAGE</button>
   </mat-card-actions>
 
 </mat-card>

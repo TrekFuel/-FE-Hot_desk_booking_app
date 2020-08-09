@@ -3,9 +3,11 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
+  Output,
   ViewChild
 } from '@angular/core';
 import {
@@ -30,6 +32,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   @ViewChild('htmlCanvasBooking', { static: true }) htmlCanvas: ElementRef;
   @ViewChild('cardForBooking', { static: true }) cardForBooking: ElementRef;
   @Input() mapData: string;
+  @Output() bookPlaceForId: EventEmitter<string> = new EventEmitter<string>();
   public canvasSize: CanvasSize = CANVAS_DEFAULT;
   currentBookingPlace: CurrentBookingPlace = {
     isPlaceClicked: false,
@@ -85,6 +88,12 @@ export class BookingMapComponent implements OnInit, OnDestroy {
 
       }
     });
+  }
+
+  onBookingClick(): void {
+    console.log('click');
+    // if (this.currentBookingPlace.placeData?.isFree) {}
+    this.bookPlaceForId.emit(this.currentBookingPlace.placeData.id);
   }
 
   checkBookingsOnPlaces() {

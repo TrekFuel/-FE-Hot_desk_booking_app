@@ -7,7 +7,9 @@ import { getMapBooking } from '../../store/selectors/roomsManagementEdit.selecto
 @Component({
   selector: 'app-booking-map-container',
   template: `
-    <app-booking-map [mapData]="$getMapBooking | async"></app-booking-map>
+    <app-booking-map [mapData]="$getMapBooking | async"
+                     (bookPlaceForId)="onBookPlace($event)"
+    ></app-booking-map>
   `
 })
 export class BookingMapContainer {
@@ -16,6 +18,10 @@ export class BookingMapContainer {
 
   constructor(private store$: Store<AppState>) {
     this.initStore();
+  }
+
+  onBookPlace(id: string) {
+    console.log(id);
   }
 
   initStore(): void {
