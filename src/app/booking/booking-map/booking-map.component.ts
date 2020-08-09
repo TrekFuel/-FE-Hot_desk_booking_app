@@ -78,6 +78,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
           this.currentBookingPlace.isPlaceClicked = true;
           this.currentBookingPlace.placeData = actObj.data;
           this.changeDetection.detectChanges();
+          console.log(actObj.data.id);
         }
       },
       'mouse:down:before': (e) => {

@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -68,7 +69,8 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   constructor(private renderer: Renderer2,
               private store$: Store<AppState>,
               private router: Router,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private changeDetection: ChangeDetectorRef) {
   }
 
   get curZoom() {
@@ -143,6 +145,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
         if (actObj?.name === EDITOR_NAMES.place && RoomsManagementEditComponent.canvas.getActiveObjects().length <= 1) {
           this.currentPlace.isPlaceHovered = true;
           this.currentPlace.placeData = actObj.data;
+          this.changeDetection.detectChanges();
         }
       },
       'mouse:out': (e) => {
@@ -156,6 +159,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
         } else {
           this.hidePlaceData();
         }
+        this.changeDetection.detectChanges();
       },
       'mouse:down:before': (e) => this.blockedElements.includes(e.target?.name) ? this.discardActObj()
         : this.positioningCloneAndClose(e.target)
