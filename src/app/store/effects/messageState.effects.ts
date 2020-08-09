@@ -8,6 +8,7 @@ import {
 } from '../actions/messageState.action';
 import { officeChoosingActionType } from '../actions/officeChoosing.action';
 import { authActionType } from '../actions/auth.actions';
+import { roomsManagementEditActionType } from '../actions/roomsManagementEdit.action';
 
 interface messageStateInterface {
   payload;
@@ -18,6 +19,7 @@ const showMessageAction = [
   usersListActionType.USERS_LIST_FAILURE,
   officeChoosingActionType.SELECTORS_DATA_FAILURE,
   authActionType.LOGIN_FAILURE,
+  roomsManagementEditActionType.R_M_E_SAVE_MAP,
 ];
 
 @Injectable()
@@ -26,6 +28,7 @@ export class MessageStateEffects {
   loaderStart$ = this.actions$.pipe(
     ofType(...showMessageAction),
     map((action: messageStateInterface) => {
+      console.log(action)
       const { message } = action.payload;
       return new messageStateStartAction({ messageState: message });
     })

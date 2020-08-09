@@ -3,9 +3,10 @@ import {
   dataRoomsManagementDefaultEditInterface,
   GetFloorDataInterface,
   GetOfficeDataInterface,
-  GetRoomDataInterface
+  GetRoomDataInterface,
 } from '../../rooms-management/rooms-management-edit/models/rooms-management-edit-store.interface';
 import { PlaceData } from '../../shared/models/map-data.model';
+import { MessageStateInterface } from '../../layout/message-state/models/message.interface';
 
 export enum roomsManagementEditActionType {
   R_M_E_START = '[RoomsManagementEdi] Start Office',
@@ -89,6 +90,7 @@ export class roomsManagementEditSaveMapAction implements Action {
   constructor(
     public payload: {
       getMap: GetFloorDataInterface;
+      message: MessageStateInterface;
     }
   ) {}
 }
@@ -121,8 +123,7 @@ export class roomsManagementEditUnblockSelectorsAction implements Action {
     public payload: {
       blockSelection: boolean;
     }
-  ) {
-  }
+  ) {}
 }
 
 export class roomsManagementEditBlockSelectorsAction implements Action {
@@ -132,8 +133,7 @@ export class roomsManagementEditBlockSelectorsAction implements Action {
     public payload: {
       blockSelection: boolean;
     }
-  ) {
-  }
+  ) {}
 }
 
 export type roomsManagementEditTypeActions =
