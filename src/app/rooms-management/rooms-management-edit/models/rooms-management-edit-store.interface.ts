@@ -11,6 +11,7 @@ export interface RoomsManagementEditStoreInterface {
   roomDtoInterface: GetRoomDataInterface | null;
   placeDtoInterface: PlaceData[] | null;
   getMap: string | null;
+  blockSelection: boolean | null;
 }
 
 export interface dataRoomsManagementDefaultEditInterface {

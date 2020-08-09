@@ -17,7 +17,11 @@ import { Canvas } from 'fabric/fabric-impl';
 import { environment } from '../../../environments/environment';
 import { CanvasSize, Confroom, CurrentPlaceInEditor, EditorBlock } from './models/editor-blocks.models';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { OfficeChoosingServices } from '../../shared/office-choosing/office-choosing.services';
+import { MOCK_OFFICE } from '../../shared/mock-office';
+import { roomsManagementEditUnblockSelectorsAction } from '../../store/actions/roomsManagementEdit.action';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-rooms-management-edit',
@@ -61,7 +65,10 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   @Output() deletePlaces: EventEmitter<string[]> = new EventEmitter<string[]>();
   @Output() deleteMap: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor(private renderer: Renderer2, private ocs: OfficeChoosingServices) {
+  constructor(private renderer: Renderer2,
+              private store$: Store<AppState>,
+              private router: Router,
+              private route: ActivatedRoute) {
   }
 
   get curZoom() {
@@ -106,6 +113,7 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     RoomsManagementEditComponent.canvas = new fabric.Canvas(this.htmlCanvas.nativeElement, CANVAS_OPTION.FOR_EDIT);
     this.doCanvasZoom();
+    // this.loadMap();
 
     RoomsManagementEditComponent.canvas.on({
       'object:added': (e) => {
@@ -156,8 +164,26 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     this._initForm();
   }
 
+  loadMap() {
+    const dataJSON: string = MOCK_OFFICE;
+    RoomsManagementEditComponent.canvas.loadFromJSON(dataJSON, () => {
+      RoomsManagementEditComponent.canvas.renderAll();
+    });
+    RoomsManagementEditComponent.canvas.forEachObject((obj: fabric.Object) => {
+      if (obj?.name === EDITOR_NAMES.place) {
+        this.placesData.push({ ...obj.data, id: 'some uuid' });
+      }
+    });
+    console.log(this.placesData);
+  }
+
   onCancelEdit() {
-    this.ocs.setBlockSelection(false);
+    // this.ocs.setBlockSelection(false);
+    this.router.navigate(['.'], {
+      relativeTo: this.route,
+      queryParams: {}
+    });
+    this.store$.dispatch(new roomsManagementEditUnblockSelectorsAction({ blockSelection: false }));
   }
 
   onClickAgreeToDelete() {

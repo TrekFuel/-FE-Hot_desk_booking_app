@@ -27,7 +27,7 @@
 
     <div class="col-sm-6 col-md-2 mt-3">
       <button (click)="onClickAnotherAddress()"
-              [disabled]="!(blockSelection$ | async)"
+              [disabled]="!($blockSelection)"
               class="btn btn-block btn-outline-secondary">
         Another address
       </button>
@@ -35,7 +35,7 @@
 
     <div class="col-sm-6 col-md-3 mt-3">
       <button (click)="showMap = !showMap"
-              [disabled]="!(blockSelection$ | async)"
+              [disabled]="!($blockSelection)"
               class="btn btn-block btn-outline-primary">
         {{showMap ? 'Hide map' : 'Show map'}}
       </button>
@@ -43,7 +43,9 @@
 
   </div>
 
-  <app-booking-map-container *ngIf="(blockSelection$ | async) && showMap"></app-booking-map-container>
+  <!--  <p>{{$blockSelection | json}}</p>-->
+
+  <app-booking-map-container *ngIf="$blockSelection && showMap"></app-booking-map-container>
 
   <app-booking-table-container></app-booking-table-container>
 </div>

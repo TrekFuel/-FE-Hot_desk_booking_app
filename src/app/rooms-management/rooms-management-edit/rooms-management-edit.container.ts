@@ -3,10 +3,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { PlaceData } from '../../shared/models/map-data.model';
 import { RoomsManagementEditStoreInterface } from './models/rooms-management-edit-store.interface';
-import {
-  getMapBooking,
-  roomsManagementEditData,
-} from '../../store/selectors/roomsManagementEdit.selector';
+import { getMapBooking, roomsManagementEditData } from '../../store/selectors/roomsManagementEdit.selector';
 import { roomsManagementEditPlaceAction } from '../../store/actions/roomsManagementEdit.action';
 import { ActivatedRoute } from '@angular/router';
 import { OfficeData } from '../../shared/models/choose-office.model';
@@ -50,6 +47,7 @@ export class RoomsManagementEditContainer implements OnInit {
   }
 
   onHandlePlaces(placeDataArr: PlaceData[]): void {
+
     this.store$.dispatch(
       new roomsManagementEditPlaceAction({
         getDataPlace: placeDataArr,

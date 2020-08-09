@@ -3,7 +3,7 @@ import {
   dataRoomsManagementDefaultEditInterface,
   GetFloorDataInterface,
   GetOfficeDataInterface,
-  GetRoomDataInterface,
+  GetRoomDataInterface
 } from '../../rooms-management/rooms-management-edit/models/rooms-management-edit-store.interface';
 import { PlaceData } from '../../shared/models/map-data.model';
 
@@ -17,6 +17,8 @@ export enum roomsManagementEditActionType {
   R_M_E_SAVE_MAP = '[RoomsManagementEdi] Save Map',
   R_M_E_START_GET_MAP = '[RoomsManagementEdi] Start Get Map',
   R_M_E_GET_MAP = '[RoomsManagementEdi] Get Map',
+  R_M_E_UNBLOCK_SELECTORS = '[RoomsManagementEdi] Unblock Selectors',
+  R_M_E_BLOCK_SELECTORS = '[RoomsManagementEdi] Block Selectors',
 }
 
 export class roomsManagementEditStartAction implements Action {
@@ -112,6 +114,28 @@ export class roomsManagementEditGetMapAction implements Action {
   ) {}
 }
 
+export class roomsManagementEditUnblockSelectorsAction implements Action {
+  readonly type = roomsManagementEditActionType.R_M_E_UNBLOCK_SELECTORS;
+
+  constructor(
+    public payload: {
+      blockSelection: boolean;
+    }
+  ) {
+  }
+}
+
+export class roomsManagementEditBlockSelectorsAction implements Action {
+  readonly type = roomsManagementEditActionType.R_M_E_BLOCK_SELECTORS;
+
+  constructor(
+    public payload: {
+      blockSelection: boolean;
+    }
+  ) {
+  }
+}
+
 export type roomsManagementEditTypeActions =
   | roomsManagementEditStartAction
   | roomsManagementEditOfficeAction
@@ -121,4 +145,6 @@ export type roomsManagementEditTypeActions =
   | roomsManagementEditCreateMapAction
   | roomsManagementEditSaveMapAction
   | roomsManagementEditStartGetMapAction
-  | roomsManagementEditGetMapAction;
+  | roomsManagementEditGetMapAction
+  | roomsManagementEditUnblockSelectorsAction
+  | roomsManagementEditBlockSelectorsAction;

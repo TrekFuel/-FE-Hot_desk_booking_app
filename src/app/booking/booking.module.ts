@@ -28,8 +28,8 @@ import { BookingMapContainer } from './booking-map/booking-map.container';
     ReactiveFormsModule,
   ],
    exports: [
-     BookingPageComponent,
      BookingPageContainerComponent,
+     BookingMapContainer
    ]
 })
 
