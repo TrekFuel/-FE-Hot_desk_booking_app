@@ -7,7 +7,7 @@ import {
 } from '@angular/animations';
 
 export const messageStateAnimation = trigger('messageStateAnimation', [
-  state('start', style({ top: '3.9375rem' })),
-  state('end', style({ top: '-3.9375rem' })),
+  state('start', style({ top: '3.9rem' })),
+  state('end', style({ top: '-3.9rem' })),
   transition('start <=> *', animate('750ms ease-in-out')),
 ]);

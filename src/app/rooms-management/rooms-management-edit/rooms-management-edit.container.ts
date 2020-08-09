@@ -4,7 +4,10 @@ import { AppState } from '../../store';
 import { PlaceData } from '../../shared/models/map-data.model';
 import { RoomsManagementEditStoreInterface } from './models/rooms-management-edit-store.interface';
 import { getMapBooking, roomsManagementEditData } from '../../store/selectors/roomsManagementEdit.selector';
-import { roomsManagementEditPlaceAction } from '../../store/actions/roomsManagementEdit.action';
+import {
+  roomsManagementEditPlaceAction,
+  roomsManagementEditUnblockSelectorsAction
+} from '../../store/actions/roomsManagementEdit.action';
 import { ActivatedRoute } from '@angular/router';
 import { OfficeData } from '../../shared/models/choose-office.model';
 import { Observable } from 'rxjs';
@@ -53,6 +56,7 @@ export class RoomsManagementEditContainer implements OnInit {
         getDataPlace: placeDataArr,
       })
     );
+    this.store$.dispatch(new roomsManagementEditUnblockSelectorsAction({ blockSelection: false }));
   }
 
   onDeletePlaces(idToDeleteFromServer: string[]): void {

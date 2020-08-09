@@ -168,6 +168,13 @@ export class RoomsManagementEditComponent implements OnInit, OnDestroy {
     this._initForm();
   }
 
+  //ToDo add modal here Yes / No
+  onClearAllClick() {
+    RoomsManagementEditComponent.canvas.forEachObject((obj: fabric.Object) => {
+      RoomsManagementEditComponent.canvas.remove(obj);
+    });
+  }
+
   loadMap() {
     const dataJSON: string = MOCK_OFFICE;
     RoomsManagementEditComponent.canvas.loadFromJSON(dataJSON, () => {

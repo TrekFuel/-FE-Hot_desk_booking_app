@@ -8,6 +8,7 @@ import {
 } from '../actions/messageState.action';
 import { officeChoosingActionType } from '../actions/officeChoosing.action';
 import { authActionType } from '../actions/auth.actions';
+import { roomsManagementEditActionType } from '../actions/roomsManagementEdit.action';
 
 interface messageStateInterface {
   payload;
@@ -19,6 +20,7 @@ const showMessageAction = [
   officeChoosingActionType.SELECTORS_DATA_FAILURE,
   authActionType.LOGIN_FAILURE,
   authActionType.LOGOUT_END,
+  roomsManagementEditActionType.R_M_E_SAVE_MAP,
 ];
 
 @Injectable()

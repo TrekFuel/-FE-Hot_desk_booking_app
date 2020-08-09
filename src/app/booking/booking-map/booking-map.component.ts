@@ -20,6 +20,7 @@ import { CANVAS_DEFAULT, CANVAS_OPTION } from '../../rooms-management/rooms-mana
 import { EDITOR_NAMES } from '../../rooms-management/rooms-management-edit/editor-blocks-info';
 import { OfficeChoosingServices } from '../../shared/office-choosing/office-choosing.services';
 import { Subscription } from 'rxjs';
+import { PlaceData } from '../../shared/models/map-data.model';
 
 @Component({
   selector: 'app-booking-map',
@@ -38,6 +39,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
     isPlaceClicked: false,
     placeData: null
   };
+  bookings: PlaceData[];
   private ocsSubscription: Subscription;
   private canvas: Canvas;
 
@@ -55,7 +57,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
 
     this._initCanvas();
     this.loadMap();
-    this.checkBookingsOnPlaces();
+    this.drawBookingsOnPlaces();
 
     this.canvas.on({
       'mouse:over': (e) => {
@@ -96,10 +98,11 @@ export class BookingMapComponent implements OnInit, OnDestroy {
     this.bookPlaceForId.emit(this.currentBookingPlace.placeData.id);
   }
 
-  checkBookingsOnPlaces() {
+  drawBookingsOnPlaces() {
     this.canvas.forEachObject((obj: fabric.Object) => {
       if (obj?.name === EDITOR_NAMES.place) {
         const bound = obj.getBoundingRect();
+
 
         const rect = new fabric.Rect({
           left: bound.left - 7,
@@ -120,7 +123,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
           selectable: false
         });
 
-        rect.name = `temp|${obj.data.tempId}`;
+        rect.name = `temp`;
         this.canvas.add(rect);
 
       }

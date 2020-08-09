@@ -13,7 +13,7 @@ import {
   roomsManagementEditOfficeAction,
   roomsManagementEditRoomAction,
   roomsManagementEditSaveMapAction,
-  roomsManagementEditStartAction
+  roomsManagementEditStartAction,
 } from '../actions/roomsManagementEdit.action';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
@@ -23,10 +23,11 @@ import { roomsManagementEditData } from '../selectors/roomsManagementEdit.select
 import {
   GetFloorDataInterface,
   GetRoomDataInterface,
-  RoomsManagementEditStoreInterface
+  RoomsManagementEditStoreInterface,
 } from '../../rooms-management/rooms-management-edit/models/rooms-management-edit-store.interface';
 import { PlaceData, PlaceRole } from '../../shared/models/map-data.model';
 import { RoomsManagementEditComponent } from '../../rooms-management/rooms-management-edit/rooms-management-edit.component';
+import { MessageStateInterface } from '../../layout/message-state/models/message.interface';
 
 @Injectable()
 export class RoomsManagementEditEffects {
@@ -180,9 +181,15 @@ export class RoomsManagementEditEffects {
         })
         .pipe(
           map((data: GetFloorDataInterface) => {
-            /*const map: string = { ...data.floor }*/
+            const message: MessageStateInterface = {
+              message: {
+                text: 'The map is saved successfully',
+                stateAlert: 'alert-success'
+              }
+            }
             return new roomsManagementEditSaveMapAction({
               getMap: data,
+              message
             });
           })
         );
@@ -214,7 +221,9 @@ export class RoomsManagementEditEffects {
   blockSelection$ = this.actions$.pipe(
     ofType(roomsManagementEditActionType.R_M_E_GET_MAP),
     map((data) => {
-      return new roomsManagementEditBlockSelectorsAction({ blockSelection: true });
+      return new roomsManagementEditBlockSelectorsAction({
+        blockSelection: true,
+      });
     })
   );
 

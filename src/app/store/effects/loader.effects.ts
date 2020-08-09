@@ -8,6 +8,7 @@ import {
 } from '../actions/loader.action';
 import { officeChoosingActionType } from '../actions/officeChoosing.action';
 import { authActionType } from '../actions/auth.actions';
+import { roomsManagementEditActionType } from '../actions/roomsManagementEdit.action';
 
 const showLoaderAction = [
   usersListActionType.USERS_LIST_START,
@@ -15,6 +16,8 @@ const showLoaderAction = [
   authActionType.LOGIN_START,
   authActionType.LOGOUT_START,
   officeChoosingActionType.SELECTORS_CREATE_ADDRESS_START,
+  roomsManagementEditActionType.R_M_E_PLACE,
+  roomsManagementEditActionType.R_M_E_START_GET_MAP,
 ];
 
 const hideLoaderAction = [
@@ -26,6 +29,8 @@ const hideLoaderAction = [
   authActionType.LOGIN_FAILURE,
   authActionType.LOGOUT_END,
   officeChoosingActionType.SELECTORS_CREATE_ADDRESS,
+  roomsManagementEditActionType.R_M_E_SAVE_MAP,
+  roomsManagementEditActionType.R_M_E_GET_MAP,
 ];
 
 @Injectable()
