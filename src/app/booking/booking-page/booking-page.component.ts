@@ -47,6 +47,5 @@ export class BookingPageComponent {
       queryParams: {}
     });
     this.store$.dispatch(new roomsManagementEditUnblockSelectorsAction({ blockSelection: false }));
-
   }
 }
