@@ -10,8 +10,6 @@ export class RoomsManagementEntryComponent {
   @Input() $blockSelection: boolean;
 
   constructor() {
-    // console.log(this.$blockSelection);
-
   }
 
 }

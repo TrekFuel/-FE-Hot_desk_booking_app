@@ -7,7 +7,6 @@ import { distinctUntilChanged, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ChooseOffice } from '../models/choose-office.model';
-import { OfficeChoosingServices } from './office-choosing.services';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { getBlockSelection } from '../../store/selectors/roomsManagementEdit.selector';
@@ -46,7 +45,7 @@ export class OfficeChoosingComponent implements OnInit, OnDestroy {
   @Input() $blockSelection: boolean;
   @Input() $placeData: SelectorsAddress;
 
-  constructor(private ocs: OfficeChoosingServices, private store$: Store<AppState>) {
+  constructor(private store$: Store<AppState>) {
   }
 
   public get countryOptions(): string[] {

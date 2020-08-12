@@ -1,28 +1,66 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { getMapBooking } from '../../store/selectors/roomsManagementEdit.selector';
+import { BookingStateOnUI } from './booking-state.models';
+
+const STEP_1: BookingStateOnUI[] = [
+  { placeId: 'd7ddf7d1-c178-49aa-b65e-acd9e09ca88c', isFree: true, placeNumber: 1 },
+  { placeId: '46d7f02b-5d74-4650-b0f3-19daae524f55', isFree: true, placeNumber: 2 },
+  { placeId: 'cba7ae5b-c51e-4d4a-915e-1fe1a12e77ad', isFree: true, placeNumber: 3 }
+];
+const STEP_2: BookingStateOnUI[] = [
+  { placeId: 'd7ddf7d1-c178-49aa-b65e-acd9e09ca88c', isFree: false, nameOfUser: 'SI', placeNumber: 1 },
+  { placeId: '46d7f02b-5d74-4650-b0f3-19daae524f55', isFree: true, placeNumber: 2 },
+  { placeId: 'cba7ae5b-c51e-4d4a-915e-1fe1a12e77ad', isFree: true, placeNumber: 3 }
+];
+const STEP_3: BookingStateOnUI[] = [
+  { placeId: 'd7ddf7d1-c178-49aa-b65e-acd9e09ca88c', isFree: false, nameOfUser: 'SI', placeNumber: 1 },
+  { placeId: '46d7f02b-5d74-4650-b0f3-19daae524f55', isFree: false, nameOfUser: 'KP', placeNumber: 2 },
+  { placeId: 'cba7ae5b-c51e-4d4a-915e-1fe1a12e77ad', isFree: true, placeNumber: 3 }
+];
+const STEP_4: BookingStateOnUI[] = [
+  { placeId: 'd7ddf7d1-c178-49aa-b65e-acd9e09ca88c', isFree: false, nameOfUser: 'SI', placeNumber: 1 },
+  { placeId: '46d7f02b-5d74-4650-b0f3-19daae524f55', isFree: false, nameOfUser: 'KP', placeNumber: 2 },
+  { placeId: 'cba7ae5b-c51e-4d4a-915e-1fe1a12e77ad', isFree: false, nameOfUser: 'RR', placeNumber: 3 }
+];
 
 @Component({
   selector: 'app-booking-map-container',
   template: `
     <app-booking-map [mapData]="$getMapBooking | async"
-                     (bookPlaceForId)="onBookPlace($event)"
+                     [bookingState$]="$bookings"
+                     (bookedPlaceForId)="onBookPlace($event)"
     ></app-booking-map>
   `
 })
 export class BookingMapContainer {
 
   public $getMapBooking: Observable<string>;
+  public $bookings: BehaviorSubject<BookingStateOnUI[]> = new BehaviorSubject<BookingStateOnUI[]>(STEP_1);
+
+  // public $bookings: Observable<BookingStateOnUI[]>;
 
   constructor(private store$: Store<AppState>) {
     this.initStore();
+    setTimeout(() => {
+      this.$bookings.next(STEP_2);
+    }, 10000);
+    setTimeout(() => {
+      this.$bookings.next(STEP_3);
+    }, 20000);
+    setTimeout(() => {
+      this.$bookings.next(STEP_4);
+    }, 30000);
+
+    console.log('here');
   }
 
   onBookPlace(id: string) {
     console.log(id);
   }
+
 
   initStore(): void {
     this.$getMapBooking = this.store$.select(getMapBooking);

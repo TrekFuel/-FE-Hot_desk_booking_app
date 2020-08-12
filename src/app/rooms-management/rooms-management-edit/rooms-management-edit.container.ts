@@ -45,7 +45,7 @@ export class RoomsManagementEditContainer implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((data: OfficeData) => {
-      console.log(data);
+      // console.log(data);
     });
   }
 
@@ -60,7 +60,7 @@ export class RoomsManagementEditContainer implements OnInit {
   }
 
   onDeletePlaces(idToDeleteFromServer: string[]): void {
-    console.log(`Need to delete this id from server: ${idToDeleteFromServer}`);
+    // console.log(`Need to delete this id from server: ${idToDeleteFromServer}`);
   }
 
   onDeleteMap() {

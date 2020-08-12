@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OfficeData } from '../../shared/models/choose-office.model';
-import { filter, map, tap } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { roomsManagementEditStartGetMapAction } from '../../store/actions/roomsManagementEdit.action';
@@ -31,9 +31,7 @@ export class BookingPageContainerComponent {
   }
 
   initStore(): void {
-    this.blockSelection$ = this.store$.select(getBlockSelection).pipe(
-      tap(console.log)
-    );
+    this.blockSelection$ = this.store$.select(getBlockSelection);
   }
 
 }

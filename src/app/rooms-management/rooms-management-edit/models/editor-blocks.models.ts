@@ -20,11 +20,6 @@ export interface CurrentPlaceInEditor {
   placeData: PlaceData | null,
 }
 
-export interface CurrentBookingPlace {
-  isPlaceClicked: boolean,
-  placeData: PlaceData | null
-}
-
 export interface Confroom {
   default: number,
   min: number,

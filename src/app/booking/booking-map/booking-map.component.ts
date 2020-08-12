@@ -10,17 +10,17 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import {
-  CanvasSize,
-  CurrentBookingPlace
-} from '../../rooms-management/rooms-management-edit/models/editor-blocks.models';
+import { CanvasSize } from '../../rooms-management/rooms-management-edit/models/editor-blocks.models';
 import { Canvas } from 'fabric/fabric-impl';
 import { fabric } from 'fabric';
 import { CANVAS_DEFAULT, CANVAS_OPTION } from '../../rooms-management/rooms-management-edit/canvas-option';
 import { EDITOR_NAMES } from '../../rooms-management/rooms-management-edit/editor-blocks-info';
-import { OfficeChoosingServices } from '../../shared/office-choosing/office-choosing.services';
-import { Subscription } from 'rxjs';
-import { PlaceData } from '../../shared/models/map-data.model';
+import { getBlockSelection } from '../../store/selectors/roomsManagementEdit.selector';
+import { tap } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store';
+import { BookingStateOnUI, CurrentBookingPlace } from './booking-state.models';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-booking-map',
@@ -33,17 +33,19 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   @ViewChild('htmlCanvasBooking', { static: true }) htmlCanvas: ElementRef;
   @ViewChild('cardForBooking', { static: true }) cardForBooking: ElementRef;
   @Input() mapData: string;
-  @Output() bookPlaceForId: EventEmitter<string> = new EventEmitter<string>();
+  @Input() bookingState$: Observable<BookingStateOnUI[]>;
+  @Output() bookedPlaceForId: EventEmitter<string> = new EventEmitter<string>();
+  bookingStateSubscription: Subscription;
   public canvasSize: CanvasSize = CANVAS_DEFAULT;
   currentBookingPlace: CurrentBookingPlace = {
     isPlaceClicked: false,
     placeData: null
   };
-  bookings: PlaceData[];
-  private ocsSubscription: Subscription;
+  currentBookingArr: BookingStateOnUI[] = [];
   private canvas: Canvas;
 
-  constructor(private ocs: OfficeChoosingServices, private changeDetection: ChangeDetectorRef) {
+  constructor(private changeDetection: ChangeDetectorRef,
+              private store$: Store<AppState>) {
   }
 
   get curZoom() {
@@ -51,13 +53,17 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.ocsSubscription = this.ocs.blockSelection.subscribe((block: boolean) => {
-      if (block) this.canvasSize.zoom = 100;
-    });
+
+    this.store$.select(getBlockSelection).pipe(tap((value: boolean) => value ? this.canvasSize.zoom = 100 : null))
+      .subscribe();
 
     this._initCanvas();
     this.loadMap();
-    this.drawBookingsOnPlaces();
+
+    this.bookingStateSubscription = this.bookingState$.pipe(
+      tap((data: BookingStateOnUI[]) => this.currentBookingArr = [...data])
+    ).subscribe((data: BookingStateOnUI[]) => this.drawBookingsOnPlaces());
+
 
     this.canvas.on({
       'mouse:over': (e) => {
@@ -81,9 +87,13 @@ export class BookingMapComponent implements OnInit, OnDestroy {
         const actObj: fabric.Object = e.target;
         if (actObj?.name === EDITOR_NAMES.place) {
           this.currentBookingPlace.isPlaceClicked = true;
-          this.currentBookingPlace.placeData = actObj.data;
+          let { id: placeId, number: placeNumber } = actObj.data;
+          const currentBooking: BookingStateOnUI = this.currentBookingArr
+            .filter((item: BookingStateOnUI) => item.placeId === placeId)[0];
+          this.currentBookingPlace.placeData = { ...currentBooking, placeId, placeNumber };
+
           this.changeDetection.detectChanges();
-          console.log(actObj.data.id);
+          // console.log(actObj.data.id);
         }
       },
       'mouse:down:before': (e) => {
@@ -95,15 +105,15 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   onBookingClick(): void {
     console.log('click');
     // if (this.currentBookingPlace.placeData?.isFree) {}
-    this.bookPlaceForId.emit(this.currentBookingPlace.placeData.id);
+    this.bookedPlaceForId.emit(this.currentBookingPlace.placeData.placeId);
   }
 
-  drawBookingsOnPlaces() {
+  drawBookingsOnPlaces(): void {
     this.canvas.forEachObject((obj: fabric.Object) => {
       if (obj?.name === EDITOR_NAMES.place) {
+        // // ToDo temporary here
+        // this.bookings.push({ placeId: obj.data.id, isFree: true });
         const bound = obj.getBoundingRect();
-
-
         const rect = new fabric.Rect({
           left: bound.left - 7,
           top: bound.top - 5,
@@ -129,6 +139,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
       }
       this.canvas.requestRenderAll();
     });
+    // console.log(this.bookings);
   }
 
   doCanvasZoom(zoom: number = this.canvasSize.zoom) {
@@ -159,7 +170,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.ocsSubscription.unsubscribe();
+    this.bookingStateSubscription.unsubscribe();
     this.canvas.off();
   }
 

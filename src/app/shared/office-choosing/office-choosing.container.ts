@@ -12,7 +12,6 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, map, tap } from 'rxjs/operators';
 import { ChooseOffice, OfficeData } from '../models/choose-office.model';
 import { OfficesDataSelectsInterface } from '../models/offices-data-selects.interface';
-import { OfficeChoosingServices } from './office-choosing.services';
 import {
   roomsManagementEditBlockSelectorsAction,
   roomsManagementEditUnblockSelectorsAction
@@ -48,7 +47,6 @@ export class OfficeChoosingContainer implements OnInit, OnDestroy {
     private store$: Store<AppState>,
     private router: Router,
     private route: ActivatedRoute,
-    private ocs: OfficeChoosingServices
   ) {
     this.router.events
       .pipe(
@@ -68,7 +66,7 @@ export class OfficeChoosingContainer implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.ocs.setBlockSelection(false);
+    this.store$.dispatch(new roomsManagementEditUnblockSelectorsAction({ blockSelection: false }));
     this.selectorsModelSubscription = this.selectorsModel$.subscribe(
       (data: SelectorsModel) => {
         if (!!data && !!this.newOfficeData) {
