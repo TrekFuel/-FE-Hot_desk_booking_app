@@ -6,24 +6,24 @@ import { getMapBooking } from '../../store/selectors/roomsManagementEdit.selecto
 import { BookingStateOnUI } from './booking-state.models';
 
 const STEP_1: BookingStateOnUI[] = [
-  { placeId: 'd7ddf7d1-c178-49aa-b65e-acd9e09ca88c', isFree: true, placeNumber: 1 },
-  { placeId: '46d7f02b-5d74-4650-b0f3-19daae524f55', isFree: true, placeNumber: 2 },
-  { placeId: 'cba7ae5b-c51e-4d4a-915e-1fe1a12e77ad', isFree: true, placeNumber: 3 }
+  { placeId: 'd7ddf7d1-c178-49aa-b65e-acd9e09ca88c', isFree: true },
+  { placeId: '46d7f02b-5d74-4650-b0f3-19daae524f55', isFree: true },
+  { placeId: 'cba7ae5b-c51e-4d4a-915e-1fe1a12e77ad', isFree: true }
 ];
 const STEP_2: BookingStateOnUI[] = [
-  { placeId: 'd7ddf7d1-c178-49aa-b65e-acd9e09ca88c', isFree: false, nameOfUser: 'SI', placeNumber: 1 },
-  { placeId: '46d7f02b-5d74-4650-b0f3-19daae524f55', isFree: true, placeNumber: 2 },
-  { placeId: 'cba7ae5b-c51e-4d4a-915e-1fe1a12e77ad', isFree: true, placeNumber: 3 }
+  { placeId: 'd7ddf7d1-c178-49aa-b65e-acd9e09ca88c', isFree: false, nameOfUser: 'SI' },
+  { placeId: '46d7f02b-5d74-4650-b0f3-19daae524f55', isFree: true },
+  { placeId: 'cba7ae5b-c51e-4d4a-915e-1fe1a12e77ad', isFree: true }
 ];
 const STEP_3: BookingStateOnUI[] = [
-  { placeId: 'd7ddf7d1-c178-49aa-b65e-acd9e09ca88c', isFree: false, nameOfUser: 'SI', placeNumber: 1 },
-  { placeId: '46d7f02b-5d74-4650-b0f3-19daae524f55', isFree: false, nameOfUser: 'KP', placeNumber: 2 },
-  { placeId: 'cba7ae5b-c51e-4d4a-915e-1fe1a12e77ad', isFree: true, placeNumber: 3 }
+  { placeId: 'd7ddf7d1-c178-49aa-b65e-acd9e09ca88c', isFree: false, nameOfUser: 'SI' },
+  { placeId: '46d7f02b-5d74-4650-b0f3-19daae524f55', isFree: false, nameOfUser: 'KP' },
+  { placeId: 'cba7ae5b-c51e-4d4a-915e-1fe1a12e77ad', isFree: true }
 ];
 const STEP_4: BookingStateOnUI[] = [
-  { placeId: 'd7ddf7d1-c178-49aa-b65e-acd9e09ca88c', isFree: false, nameOfUser: 'SI', placeNumber: 1 },
-  { placeId: '46d7f02b-5d74-4650-b0f3-19daae524f55', isFree: false, nameOfUser: 'KP', placeNumber: 2 },
-  { placeId: 'cba7ae5b-c51e-4d4a-915e-1fe1a12e77ad', isFree: false, nameOfUser: 'RR', placeNumber: 3 }
+  { placeId: 'd7ddf7d1-c178-49aa-b65e-acd9e09ca88c', isFree: false, nameOfUser: 'SI' },
+  { placeId: '46d7f02b-5d74-4650-b0f3-19daae524f55', isFree: false, nameOfUser: 'KP' },
+  { placeId: 'cba7ae5b-c51e-4d4a-915e-1fe1a12e77ad', isFree: false, nameOfUser: 'RR' }
 ];
 
 @Component({

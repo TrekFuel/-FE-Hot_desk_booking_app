@@ -1,7 +1,7 @@
 export interface BookingStateOnUI {
   placeId: string,
   isFree: boolean,
-  placeNumber: number,
+  placeNumber?: number,
   nameOfUser?: string,
   userId?: string
 }
