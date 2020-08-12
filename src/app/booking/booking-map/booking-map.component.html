@@ -9,7 +9,7 @@
       <mat-icon (click)="currentBookingPlace.isPlaceClicked = false">close</mat-icon>
     </button>
     <img alt="Logo exadel" mat-card-avatar src="../assets/images/logo/logo_micro2.jpg">
-    <mat-card-title> Place #{{currentBookingPlace.placeData?.number | number: '3.0-0'}}</mat-card-title>
+    <mat-card-title> Place #{{currentBookingPlace.placeData?.placeNumber | number: '3.0-0'}}</mat-card-title>
     <mat-card-subtitle>Time for booking: 1:00</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content class="mx-auto">
@@ -19,7 +19,10 @@
               {{currentBookingPlace.placeData?.isFree ? 'free' : 'occupied'}}
       </span>
     </p>
-    <p class="my-2">Name: <span class="choosing-span">Sergey Ivanov</span></p>
+    <p *ngIf="!currentBookingPlace.placeData?.isFree; else noName" class="my-2">
+      Name: <span class="choosing-span">{{currentBookingPlace.placeData?.nameOfUser}}</span>
+    </p>
+    <ng-template #noName><span class="choosing-span">You can book that place</span></ng-template>
     <div class="for-admin my-2 hide">
       <p class="my-1">Message for admins only</p>
       <textarea matInput rows="4"></textarea>
