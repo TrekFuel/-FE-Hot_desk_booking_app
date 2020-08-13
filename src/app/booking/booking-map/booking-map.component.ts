@@ -69,7 +69,8 @@ export class BookingMapComponent implements OnInit, OnDestroy {
       this.drawBookingsOnPlaces();
       if (this.currentBookingPlace.isPlaceClicked || !!this.currentHoveredId) {
         this.canvas.forEachObject((obj: fabric.Object) => {
-          if (this.currentBookingPlace.isPlaceClicked && obj.data?.id === this.currentBookingPlace.placeData.placeId) this.setDataOfClickedPlace(obj);
+          if (this.currentBookingPlace.isPlaceClicked && !!this.currentBookingPlace.placeData && obj.data
+            && obj.data.id === this.currentBookingPlace.placeData.placeId) this.setDataOfClickedPlace(obj);
           if (obj.data?.id === this.currentHoveredId && !!this.currentHoveredId) this.doShadowForPlace(obj);
         });
       }
