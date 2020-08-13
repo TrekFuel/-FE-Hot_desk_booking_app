@@ -43,7 +43,10 @@ export interface GetFloorDataInterface {
   id: string;
   number: number;
   map: string;
-  room: null;
+  room?: {
+    floorId: string;
+    id: string;
+  };
   floor?: {
     officeId: string;
     id: string;

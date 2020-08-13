@@ -14,6 +14,8 @@ import { OfficeChoosingInterface } from '../shared/models/selectors.model';
 import { officeChoosingReducer } from './reducers/officeChoosing.reducer';
 import { roomsManagementEditReducer } from './reducers/roomsManagementEdit.reducer';
 import { RoomsManagementEditStoreInterface } from '../rooms-management/rooms-management-edit/models/rooms-management-edit-store.interface';
+import { BookingStoreInterface } from '../booking/modules/booking-store.interface';
+import { bookingReducer } from './reducers/booking.reducer';
 
 export interface AppState {
   usersList: UsersListInterface;
@@ -23,6 +25,7 @@ export interface AppState {
   modalAlert: ModalAlertInterface;
   officeChoosing: OfficeChoosingInterface;
   roomsManagementEditStore: RoomsManagementEditStoreInterface;
+  booking: BookingStoreInterface;
 }
 
 export const reducers: ActionReducerMap<AppState> = {
@@ -33,6 +36,7 @@ export const reducers: ActionReducerMap<AppState> = {
   modalAlert: moduleAlertReducer,
   officeChoosing: officeChoosingReducer,
   roomsManagementEditStore: roomsManagementEditReducer,
+  booking: bookingReducer,
 };
 
 export const metaReducers: MetaReducer<AppState>[] = !environment.production

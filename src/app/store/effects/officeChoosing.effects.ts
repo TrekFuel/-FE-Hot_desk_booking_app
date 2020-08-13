@@ -4,13 +4,13 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MessageStateInterface } from '../../layout/message-state/models/message.interface';
 import { of } from 'rxjs';
-import * as officeChoosingTypeActions from '../actions/officeChoosing.action';
+import * as officeChoosingTypeActions from '../actions/officeChoosing.actions';
 import {
   officeChoosingActionType,
   officeChoosingCreateAddressAction,
   officeChoosingFailureAction,
   officeChoosingSuccessAction,
-} from '../actions/officeChoosing.action';
+} from '../actions/officeChoosing.actions';
 import { OfficeChoosingServices } from '../../shared/office-choosing/office-choosing.services';
 import { OfficesDataSelectsInterface } from '../../shared/models/offices-data-selects.interface';
 import { SelectorsModel } from '../../shared/models/selectors.model';

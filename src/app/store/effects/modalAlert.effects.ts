@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { modalAlertActionType } from '../actions/modalAlert.action';
+import { modalAlertActionType } from '../actions/modalAlert.actions';
 import { switchMap } from 'rxjs/operators';
 
 @Injectable()
