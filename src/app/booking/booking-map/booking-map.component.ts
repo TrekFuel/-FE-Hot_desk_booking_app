@@ -110,15 +110,19 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   setDataOfClickedPlace(obj: fabric.Object) {
     let { id: placeId, number: placeNumber } = obj.data;
     const currentBooking: BookingStateOnUI = this.getCurrentBookingPlaceData(placeId);
-    this.currentBookingPlace.placeData = { ...currentBooking, placeId, placeNumber };
-    this.changeDetection.detectChanges();
+    if (currentBooking) {
+      this.currentBookingPlace.placeData = { ...currentBooking, placeId, placeNumber };
+      this.changeDetection.detectChanges();
+    }
   }
 
   doShadowForPlace(obj: fabric.Object): void {
     const currentPlace: BookingStateOnUI = this.getCurrentBookingPlaceData(obj.data.id);
-    let shadow = currentPlace.isFree ? '3px 3px 12px rgba(0,255,0,0.7)' : '3px 3px 12px rgba(255,0,0,0.7)';
-    obj.setShadow(shadow);
-    this.canvas.requestRenderAll();
+    if (currentPlace) {
+      let shadow = currentPlace.isFree ? '3px 3px 12px rgba(0,255,0,0.7)' : '3px 3px 12px rgba(255,0,0,0.7)';
+      obj.setShadow(shadow);
+      this.canvas.requestRenderAll();
+    }
   }
 
   getCurrentBookingPlaceData(id: string): BookingStateOnUI {
@@ -143,11 +147,13 @@ export class BookingMapComponent implements OnInit, OnDestroy {
         // this.bookings.push({ placeId: obj.data.id, isFree: true });
         const bound = obj.getBoundingRect();
         const currentPlace: BookingStateOnUI = this.getCurrentBookingPlaceData(obj.data.id);
-        let stroke = currentPlace.isFree ? 'lightgreen' : 'lightgrey';
-        const rect = this.createBorderBoxForPlace(bound, stroke);
+        if (currentPlace) {
+          let stroke = currentPlace.isFree ? 'lightgreen' : 'lightgrey';
+          const rect = this.createBorderBoxForPlace(bound, stroke);
 
-        rect.name = 'temp';
-        this.canvas.add(rect);
+          rect.name = 'temp';
+          this.canvas.add(rect);
+        }
       }
       this.canvas.requestRenderAll();
     });
