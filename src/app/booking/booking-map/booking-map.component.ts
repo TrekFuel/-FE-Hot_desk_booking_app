@@ -35,6 +35,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   @Input() mapData: string;
   @Input() bookingState$: Observable<BookingStateOnUI[]>;
   @Output() bookedPlaceForId: EventEmitter<string> = new EventEmitter<string>();
+  @Output() informPlaceForId: EventEmitter<string> = new EventEmitter<string>();
   bookingStateSubscription: Subscription;
   public canvasSize: CanvasSize = CANVAS_DEFAULT;
   currentBookingPlace: CurrentBookingPlace = {
@@ -42,6 +43,8 @@ export class BookingMapComponent implements OnInit, OnDestroy {
     placeData: null
   };
   currentBookingArr: BookingStateOnUI[] = [];
+  // this for instant ui changing
+  currentHoveredId: string | null;
   private canvas: Canvas;
 
   constructor(private changeDetection: ChangeDetectorRef,
@@ -62,7 +65,15 @@ export class BookingMapComponent implements OnInit, OnDestroy {
 
     this.bookingStateSubscription = this.bookingState$.pipe(
       tap((data: BookingStateOnUI[]) => this.currentBookingArr = [...data])
-    ).subscribe((data: BookingStateOnUI[]) => this.drawBookingsOnPlaces());
+    ).subscribe((data: BookingStateOnUI[]) => {
+      this.drawBookingsOnPlaces();
+      if (this.currentBookingPlace.isPlaceClicked || !!this.currentHoveredId) {
+        this.canvas.forEachObject((obj: fabric.Object) => {
+          if (this.currentBookingPlace.isPlaceClicked && obj.data?.id === this.currentBookingPlace.placeData.placeId) this.setDataOfClickedPlace(obj);
+          if (obj.data?.id === this.currentHoveredId && !!this.currentHoveredId) this.doShadowForPlace(obj);
+        });
+      }
+    });
 
 
     this.canvas.on({
@@ -70,8 +81,8 @@ export class BookingMapComponent implements OnInit, OnDestroy {
         const actObj: fabric.Object = e.target;
         if (actObj?.name === EDITOR_NAMES.place && this.canvas.getActiveObjects().length <= 1) {
           this.canvas.hoverCursor = 'pointer';
-          actObj.setShadow('3px 3px 12px rgba(0,255,0,0.7)');
-          this.canvas.requestRenderAll();
+          this.currentHoveredId = actObj.data.id;
+          this.doShadowForPlace(actObj);
         }
       },
       'mouse:out': (e) => {
@@ -79,7 +90,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
         if (actObj?.name === EDITOR_NAMES.place && this.canvas.getActiveObjects().length <= 1) {
           this.canvas.hoverCursor = 'default';
           actObj.setShadow('0 0 0 rgba(255,255,255,0)');
-
+          this.currentHoveredId = null;
           this.canvas.requestRenderAll();
         }
       },
@@ -87,59 +98,91 @@ export class BookingMapComponent implements OnInit, OnDestroy {
         const actObj: fabric.Object = e.target;
         if (actObj?.name === EDITOR_NAMES.place) {
           this.currentBookingPlace.isPlaceClicked = true;
-          let { id: placeId, number: placeNumber } = actObj.data;
-          const currentBooking: BookingStateOnUI = this.currentBookingArr
-            .filter((item: BookingStateOnUI) => item.placeId === placeId)[0];
-          this.currentBookingPlace.placeData = { ...currentBooking, placeId, placeNumber };
-
-          this.changeDetection.detectChanges();
+          this.setDataOfClickedPlace(actObj);
           // console.log(actObj.data.id);
         }
       },
       'mouse:down:before': (e) => {
-
       }
     });
   }
 
+  setDataOfClickedPlace(obj: fabric.Object) {
+    let { id: placeId, number: placeNumber } = obj.data;
+    const currentBooking: BookingStateOnUI = this.getCurrentBookingPlaceData(placeId);
+    this.currentBookingPlace.placeData = { ...currentBooking, placeId, placeNumber };
+    this.changeDetection.detectChanges();
+  }
+
+  doShadowForPlace(obj: fabric.Object): void {
+    const currentPlace: BookingStateOnUI = this.getCurrentBookingPlaceData(obj.data.id);
+    let shadow = currentPlace.isFree ? '3px 3px 12px rgba(0,255,0,0.7)' : '3px 3px 12px rgba(255,0,0,0.7)';
+    obj.setShadow(shadow);
+    this.canvas.requestRenderAll();
+  }
+
+  getCurrentBookingPlaceData(id: string): BookingStateOnUI {
+    return this.currentBookingArr.filter((item: BookingStateOnUI) => item.placeId === id)[0];
+  }
+
+  onInformClick(): void {
+    this.bookedPlaceForId.emit(this.currentBookingPlace.placeData.placeId);
+  }
+
   onBookingClick(): void {
-    console.log('click');
     // if (this.currentBookingPlace.placeData?.isFree) {}
     this.bookedPlaceForId.emit(this.currentBookingPlace.placeData.placeId);
   }
 
   drawBookingsOnPlaces(): void {
+    this.clearMarkOnPlaces();
+
     this.canvas.forEachObject((obj: fabric.Object) => {
       if (obj?.name === EDITOR_NAMES.place) {
-        // // ToDo temporary here
+        // // ToDo temporary here for uuid grab
         // this.bookings.push({ placeId: obj.data.id, isFree: true });
         const bound = obj.getBoundingRect();
-        const rect = new fabric.Rect({
-          left: bound.left - 7,
-          top: bound.top - 5,
-          width: bound.width + 10,
-          height: bound.height + 10,
-          fill: 'transparent',
-          stroke: 'lightgreen',
-          strokeWidth: 4,
-          opacity: 0.5,
-          rx: 5,
-          ry: 5,
-          perPixelTargetFind: true,
-          lockMovementX: true,
-          lockMovementY: true,
-          hasControls: false,
-          hasBorders: false,
-          selectable: false
-        });
+        const currentPlace: BookingStateOnUI = this.getCurrentBookingPlaceData(obj.data.id);
+        let stroke = currentPlace.isFree ? 'lightgreen' : 'lightgrey';
+        const rect = this.createBorderBoxForPlace(bound, stroke);
 
-        rect.name = `temp`;
+        rect.name = 'temp';
         this.canvas.add(rect);
-
       }
       this.canvas.requestRenderAll();
     });
     // console.log(this.bookings);
+  }
+
+  clearMarkOnPlaces(): void {
+    this.canvas.forEachObject((obj: fabric.Object) => {
+      if (obj?.name === 'temp') this.canvas.remove(obj);
+    });
+  }
+
+  createBorderBoxForPlace(
+    bound: { left: number; top: number; width: number; height: number },
+    stroke: string
+  ): fabric.Object {
+    let scale = 1 / this.curZoom;
+    return new fabric.Rect({
+      left: (bound.left - 7) * scale,
+      top: (bound.top - 5) * scale,
+      width: (bound.width + 10) * scale,
+      height: (bound.height + 10) * scale,
+      fill: 'transparent',
+      stroke,
+      strokeWidth: 4,
+      opacity: 0.5,
+      rx: 5,
+      ry: 5,
+      perPixelTargetFind: true,
+      lockMovementX: true,
+      lockMovementY: true,
+      hasControls: false,
+      hasBorders: false,
+      selectable: false
+    });
   }
 
   doCanvasZoom(zoom: number = this.canvasSize.zoom) {

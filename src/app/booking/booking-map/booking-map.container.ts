@@ -38,23 +38,22 @@ const STEP_4: BookingStateOnUI[] = [
 export class BookingMapContainer {
 
   public $getMapBooking: Observable<string>;
-  public $bookings: BehaviorSubject<BookingStateOnUI[]> = new BehaviorSubject<BookingStateOnUI[]>(STEP_1);
+  public $bookings: BehaviorSubject<BookingStateOnUI[]> = new BehaviorSubject<BookingStateOnUI[]>(STEP_4);
 
   // public $bookings: Observable<BookingStateOnUI[]>;
 
   constructor(private store$: Store<AppState>) {
     this.initStore();
     setTimeout(() => {
-      this.$bookings.next(STEP_2);
+      this.$bookings.next(STEP_3);
     }, 10000);
     setTimeout(() => {
-      this.$bookings.next(STEP_3);
+      this.$bookings.next(STEP_2);
     }, 20000);
     setTimeout(() => {
-      this.$bookings.next(STEP_4);
+      this.$bookings.next(STEP_1);
     }, 30000);
 
-    console.log('here');
   }
 
   onBookPlace(id: string) {

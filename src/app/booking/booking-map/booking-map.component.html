@@ -32,7 +32,13 @@
     </div>
   </mat-card-content>
   <mat-card-actions>
-    <button (click)="onBookingClick()" mat-button>BOOKING</button>
+    <button (click)="onBookingClick()" *ngIf="currentBookingPlace.placeData?.isFree" mat-button>BOOK</button>
+    <button (click)="onInformClick()"
+            *ngIf="!currentBookingPlace.placeData?.isFree"
+            mat-button matTooltip="Ask for information when place will be free">
+      <mat-icon>add_alert</mat-icon>
+      INFORM
+    </button>
     <button class="hide" mat-button>MESSAGE</button>
   </mat-card-actions>
 
