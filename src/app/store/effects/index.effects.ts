@@ -4,6 +4,7 @@ import { LoaderEffects } from './loader.effects';
 import { MessageStateEffects } from './messageState.effects';
 import { OfficeChoosingEffects } from './officeChoosing.effects';
 import { RoomsManagementEditEffects } from './roomsManagementEdit.effects';
+import { BookingEffects } from './booking.effects';
 
 export const indexEffects = [
   UsersListEffects,
@@ -12,4 +13,5 @@ export const indexEffects = [
   MessageStateEffects,
   OfficeChoosingEffects,
   RoomsManagementEditEffects,
+  BookingEffects,
 ];

@@ -8,7 +8,7 @@ import {
 import { ModalAlertInterface } from './models/modal-alert.interface';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
-import { modalAlertFinishesAction } from '../../store/actions/modalAlert.action';
+import { modalAlertFinishesAction } from '../../store/actions/modalAlert.actions';
 
 @Component({
   selector: 'app-modal-alert',

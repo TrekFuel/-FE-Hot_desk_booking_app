@@ -5,10 +5,10 @@ import { map } from 'rxjs/operators';
 import {
   loaderFinishAction,
   loaderStartAction,
-} from '../actions/loader.action';
-import { officeChoosingActionType } from '../actions/officeChoosing.action';
+} from '../actions/loader.actions';
+import { officeChoosingActionType } from '../actions/officeChoosing.actions';
 import { authActionType } from '../actions/auth.actions';
-import { roomsManagementEditActionType } from '../actions/roomsManagementEdit.action';
+import { roomsManagementEditActionType } from '../actions/roomsManagementEdit.actions';
 
 const showLoaderAction = [
   usersListActionType.USERS_LIST_START,

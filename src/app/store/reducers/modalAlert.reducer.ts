@@ -2,7 +2,7 @@ import { ModalAlertInterface } from '../../layout/modal-alert/models/modal-alert
 import {
   modalAlertActionType,
   modalAlertTypeActions,
-} from '../actions/modalAlert.action';
+} from '../actions/modalAlert.actions';
 
 const initialState: ModalAlertInterface = {
   message: null,

@@ -4,20 +4,20 @@ import * as _moment from 'moment';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
-import { roomsManagementEditUnblockSelectorsAction } from '../../store/actions/roomsManagementEdit.action';
+import { roomsManagementEditUnblockSelectorsAction } from '../../store/actions/roomsManagementEdit.actions';
 import { ActivatedRoute, Router } from '@angular/router';
 
 const moment = _moment;
 export const MY_FORMATS = {
   parse: {
-    dateInput: 'LL'
+    dateInput: 'LL',
   },
   display: {
     dateInput: 'LL',
     monthYearLabel: 'MMM YYYY',
     dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY'
-  }
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
 };
 
 @Component({
@@ -27,7 +27,6 @@ export const MY_FORMATS = {
   providers: [{ provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class BookingPageComponent {
   date = new FormControl(new Date());
   // date = new FormControl(moment());
@@ -38,15 +37,15 @@ export class BookingPageComponent {
     private store$: Store<AppState>,
     private router: Router,
     private route: ActivatedRoute
-  ) {
-  }
+  ) {}
 
   onClickAnotherAddress() {
     this.router.navigate(['.'], {
       relativeTo: this.route,
-      queryParams: {}
+      queryParams: {},
     });
-    this.store$.dispatch(new roomsManagementEditUnblockSelectorsAction({ blockSelection: false }));
-
+    this.store$.dispatch(
+      new roomsManagementEditUnblockSelectorsAction({ blockSelection: false })
+    );
   }
 }

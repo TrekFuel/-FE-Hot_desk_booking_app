@@ -5,30 +5,29 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import {
   officeChoosingStartAction,
-  officeChoosingStartCreateAddressAction
-} from '../../store/actions/officeChoosing.action';
+  officeChoosingStartCreateAddressAction,
+} from '../../store/actions/officeChoosing.actions';
 import { selectorsData } from '../../store/selectors/officeChosing.selectors';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, map, tap } from 'rxjs/operators';
 import { ChooseOffice, OfficeData } from '../models/choose-office.model';
 import { OfficesDataSelectsInterface } from '../models/offices-data-selects.interface';
-import { OfficeChoosingServices } from './office-choosing.services';
 import {
   roomsManagementEditBlockSelectorsAction,
-  roomsManagementEditUnblockSelectorsAction
-} from '../../store/actions/roomsManagementEdit.action';
+  roomsManagementEditUnblockSelectorsAction,
+} from '../../store/actions/roomsManagementEdit.actions';
 import { getBlockSelection } from '../../store/selectors/roomsManagementEdit.selector';
 
 @Component({
   selector: 'office-choosing-container',
   template: `
     <app-office-choosing
-        [canEditMode]="canEditMode"
-        (onChooseOffice)="onChooseOffice($event)"
-        [selectorsModel]="selectorsModel$ | async"
-        [titleName]="titleName"
-        [$blockSelection]="blockSelection$ | async"
-        [$placeData]="placeData$ | async"
+      [canEditMode]="canEditMode"
+      (onChooseOffice)="onChooseOffice($event)"
+      [selectorsModel]="selectorsModel$ | async"
+      [titleName]="titleName"
+      [$blockSelection]="blockSelection$ | async"
+      [$placeData]="placeData$ | async"
     >
     </app-office-choosing>
   `,
@@ -47,8 +46,7 @@ export class OfficeChoosingContainer implements OnInit, OnDestroy {
   constructor(
     private store$: Store<AppState>,
     private router: Router,
-    private route: ActivatedRoute,
-    private ocs: OfficeChoosingServices
+    private route: ActivatedRoute
   ) {
     this.router.events
       .pipe(
@@ -57,18 +55,22 @@ export class OfficeChoosingContainer implements OnInit, OnDestroy {
         map((url: string) => url.split('?')[0]),
         map((url: string) => url.split('#')[0]),
         map((route: string) => route.split('/')[1]),
-        tap(route => (this.canEditMode = route === 'rooms-management'))
+        tap((route) => (this.canEditMode = route === 'rooms-management'))
       )
-      .subscribe(route => this.setDataToRoute(route));
+      .subscribe((route) => this.setDataToRoute(route));
 
-    this.placeData$ = this.route.queryParams.pipe(map((data: SelectorsAddress) => data));
+    this.placeData$ = this.route.queryParams.pipe(
+      map((data: SelectorsAddress) => data)
+    );
 
     // Start action
     this.initStore();
   }
 
   ngOnInit() {
-    this.ocs.setBlockSelection(false);
+    this.store$.dispatch(
+      new roomsManagementEditUnblockSelectorsAction({ blockSelection: false })
+    );
     this.selectorsModelSubscription = this.selectorsModel$.subscribe(
       (data: SelectorsModel) => {
         if (!!data && !!this.newOfficeData) {
@@ -120,7 +122,9 @@ export class OfficeChoosingContainer implements OnInit, OnDestroy {
     this.store$.dispatch(
       new officeChoosingStartCreateAddressAction({ selectorData: data })
     );
-    this.store$.dispatch(new roomsManagementEditBlockSelectorsAction({ blockSelection: true }));
+    this.store$.dispatch(
+      new roomsManagementEditBlockSelectorsAction({ blockSelection: true })
+    );
   }
 
   existingOfficeHandle(officeData: OfficeData) {
@@ -148,7 +152,9 @@ export class OfficeChoosingContainer implements OnInit, OnDestroy {
   // here all you need to retrieve the data
   initStore(): void {
     this.store$.dispatch(new officeChoosingStartAction());
-    this.store$.dispatch(new roomsManagementEditUnblockSelectorsAction({ blockSelection: false }));
+    this.store$.dispatch(
+      new roomsManagementEditUnblockSelectorsAction({ blockSelection: false })
+    );
 
     this.blockSelection$ = this.store$.select(getBlockSelection);
   }
