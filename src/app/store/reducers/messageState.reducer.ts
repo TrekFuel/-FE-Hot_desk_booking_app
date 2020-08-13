@@ -2,7 +2,7 @@ import { MessageStateInterface } from '../../layout/message-state/models/message
 import {
   messageSateActionType,
   messageStateTypeActions,
-} from '../actions/messageState.action';
+} from '../actions/messageState.actions';
 
 const initialState: MessageStateInterface = {
   message: {

@@ -1,5 +1,5 @@
 import { LoaderInterface } from '../../layout/loader/models/loader.interface';
-import { loaderActionType, loaderTypeActions } from '../actions/loader.action';
+import { loaderActionType, loaderTypeActions } from '../actions/loader.actions';
 
 const initialState: LoaderInterface = { visible: null };
 

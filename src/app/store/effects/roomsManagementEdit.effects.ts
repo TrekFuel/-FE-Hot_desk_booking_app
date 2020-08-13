@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { RoomsManagementEditServices } from '../../rooms-management/rooms-management-edit/rooms-management-edit.services';
-import * as officeChoosingTypeActions from '../actions/officeChoosing.action';
-import { officeChoosingActionType } from '../actions/officeChoosing.action';
-import * as roomsManagementEditTypeActions from '../actions/roomsManagementEdit.action';
+import * as officeChoosingTypeActions from '../actions/officeChoosing.actions';
+import { officeChoosingActionType } from '../actions/officeChoosing.actions';
+import * as roomsManagementEditTypeActions from '../actions/roomsManagementEdit.actions';
 import {
   roomsManagementEditActionType,
   roomsManagementEditBlockSelectorsAction,
@@ -14,7 +14,7 @@ import {
   roomsManagementEditRoomAction,
   roomsManagementEditSaveMapAction,
   roomsManagementEditStartAction,
-} from '../actions/roomsManagementEdit.action';
+} from '../actions/roomsManagementEdit.actions';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { AppState } from '../index';
@@ -184,12 +184,12 @@ export class RoomsManagementEditEffects {
             const message: MessageStateInterface = {
               message: {
                 text: 'The map is saved successfully',
-                stateAlert: 'alert-success'
-              }
-            }
+                stateAlert: 'alert-success',
+              },
+            };
             return new roomsManagementEditSaveMapAction({
               getMap: data,
-              message
+              message,
             });
           })
         );

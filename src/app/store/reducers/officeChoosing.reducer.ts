@@ -2,7 +2,7 @@ import { OfficeChoosingInterface } from '../../shared/models/selectors.model';
 import {
   officeChoosingActionType,
   officeChoosingTypeActions,
-} from '../actions/officeChoosing.action';
+} from '../actions/officeChoosing.actions';
 
 const initialState: OfficeChoosingInterface = {
   createAddressId: null,

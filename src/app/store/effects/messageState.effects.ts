@@ -5,10 +5,10 @@ import { delay, map } from 'rxjs/operators';
 import {
   messageStateFinishAction,
   messageStateStartAction,
-} from '../actions/messageState.action';
-import { officeChoosingActionType } from '../actions/officeChoosing.action';
+} from '../actions/messageState.actions';
+import { officeChoosingActionType } from '../actions/officeChoosing.actions';
 import { authActionType } from '../actions/auth.actions';
-import { roomsManagementEditActionType } from '../actions/roomsManagementEdit.action';
+import { roomsManagementEditActionType } from '../actions/roomsManagementEdit.actions';
 
 interface messageStateInterface {
   payload;
