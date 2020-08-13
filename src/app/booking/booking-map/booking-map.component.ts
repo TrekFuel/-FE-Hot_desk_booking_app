@@ -164,11 +164,12 @@ export class BookingMapComponent implements OnInit, OnDestroy {
     bound: { left: number; top: number; width: number; height: number },
     stroke: string
   ): fabric.Object {
+    let scale = 1 / this.curZoom;
     return new fabric.Rect({
-      left: bound.left - 7,
-      top: bound.top - 5,
-      width: bound.width + 10,
-      height: bound.height + 10,
+      left: (bound.left - 7) * scale,
+      top: (bound.top - 5) * scale,
+      width: (bound.width + 10) * scale,
+      height: (bound.height + 10) * scale,
       fill: 'transparent',
       stroke,
       strokeWidth: 4,
