@@ -21,6 +21,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { BookingStateOnUI, CurrentBookingPlace } from './booking-state.models';
 import { Observable, Subscription } from 'rxjs';
+import { UserDataInterface } from '../../auth/login/models/auth-response.model';
 
 @Component({
   selector: 'app-booking-map',
@@ -32,6 +33,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
 
   @ViewChild('htmlCanvasBooking', { static: true }) htmlCanvas: ElementRef;
   @ViewChild('cardForBooking', { static: true }) cardForBooking: ElementRef;
+  @Input() userData: UserDataInterface;
   @Input() mapData: string;
   @Input() bookingState$: Observable<BookingStateOnUI[]>;
   @Output() bookedPlaceForId: EventEmitter<string> = new EventEmitter<string>();
@@ -103,8 +105,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
           // console.log(actObj.data.id);
         }
       },
-      'mouse:down:before': (e) => {
-      }
+      'mouse:down:before': (e) => {},
     });
   }
 
@@ -228,6 +229,4 @@ export class BookingMapComponent implements OnInit, OnDestroy {
     this.canvas = new fabric.Canvas(this.htmlCanvas.nativeElement, CANVAS_OPTION.READ_ONLY);
     this.doCanvasZoom();
   }
-
-
 }
