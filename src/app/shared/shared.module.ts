@@ -8,7 +8,8 @@ import { ZoomComponent } from './components/zoom/zoom.component';
 import { HasFocusDirective } from './directives/has-focus.directive';
 import { OfficeChoosingContainer } from './office-choosing/office-choosing.container';
 import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
-import {RouterModule} from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { FormatTimePipe } from './pipes/formatTime.pipe';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import {RouterModule} from '@angular/router';
     ClearableInputComponent,
     ZoomComponent,
     HasFocusDirective,
-    NotFoundPageComponent
+    NotFoundPageComponent,
+    FormatTimePipe
   ],
   imports: [
     CommonModule,
@@ -30,7 +32,8 @@ import {RouterModule} from '@angular/router';
     OfficeChoosingContainer,
     ClearableInputComponent,
     ZoomComponent,
-    HasFocusDirective
+    HasFocusDirective,
+    FormatTimePipe
   ]
 })
 export class SharedModule {

@@ -12,9 +12,19 @@
     right: 0;
     @include marginForRightTopCorner;
     @include userSelectNone;
-    min-width: 220px;
+    min-width: 255px;
     max-width: 400px;
     background-color: $cardOfPlaceBackgroundColor;
+
+    mat-card-subtitle {
+      padding-right: 2px;
+    }
+
+    mat-card-subtitle.time-s-up {
+      color: red;
+      font-weight: bold;
+      padding-right: 0;
+    }
 
     .btn-clear {
       position: absolute;
