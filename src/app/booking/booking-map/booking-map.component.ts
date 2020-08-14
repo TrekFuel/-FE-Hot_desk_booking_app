@@ -158,7 +158,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
 
     this.canvas.forEachObject((obj: fabric.Object) => {
       if (obj?.name === EDITOR_NAMES.place) {
-
+        // console.log(obj.data.id);
         const bound = obj.getBoundingRect();
         const currentPlace: BookingStateOnUI = this.getCurrentBookingPlaceData(obj.data.id);
         if (currentPlace) {
@@ -170,6 +170,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
         }
       }
       this.canvas.requestRenderAll();
+
     });
   }
 
