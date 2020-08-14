@@ -145,8 +145,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
 
     this.canvas.forEachObject((obj: fabric.Object) => {
       if (obj?.name === EDITOR_NAMES.place) {
-        // // ToDo temporary here for uuid grab
-        // this.bookings.push({ placeId: obj.data.id, isFree: true });
+
         const bound = obj.getBoundingRect();
         const currentPlace: BookingStateOnUI = this.getCurrentBookingPlaceData(obj.data.id);
         if (currentPlace) {
@@ -159,7 +158,6 @@ export class BookingMapComponent implements OnInit, OnDestroy {
       }
       this.canvas.requestRenderAll();
     });
-    // console.log(this.bookings);
   }
 
   clearMarkOnPlaces(): void {

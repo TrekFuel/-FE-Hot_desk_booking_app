@@ -15,5 +15,6 @@ export const environment = {
     STEP: 10
   },
   TEMP_ADDRESS_ID_FOR_NEW_OFFICE: 'new office',
-  ERROR_ON_GETTING_ADDRESS_ID: 'error on get id'
+  ERROR_ON_GETTING_ADDRESS_ID: 'error on get id',
+  ROLES_FOR_ADMINISTRATION: ['ROLE_ADMIN', 'ROLE_OFFICE_MANAGER']
 };
