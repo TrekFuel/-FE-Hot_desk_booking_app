@@ -16,6 +16,11 @@ export function bookingReducer(
         ...state,
         mapId: action.payload.mapId,
       };
+    case bookingActionType.BOOKING_GET_ALL:
+      return {
+        ...state,
+        gapDate: action.payload.gapDate,
+      };
     default:
       return {
         ...state,

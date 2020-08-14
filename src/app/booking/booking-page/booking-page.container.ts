@@ -7,6 +7,8 @@ import { AppState } from '../../store';
 import { roomsManagementEditStartGetMapAction } from '../../store/actions/roomsManagementEdit.actions';
 import { Observable } from 'rxjs';
 import { getBlockSelection } from '../../store/selectors/roomsManagementEdit.selector';
+import { getAllBookingsAction } from '../../store/actions/booking.actions';
+import { GapDateInterface } from '../modules/booking-store.interface';
 
 @Component({
   selector: 'app-booking-page-container',
@@ -17,6 +19,12 @@ import { getBlockSelection } from '../../store/selectors/roomsManagementEdit.sel
 export class BookingPageContainerComponent {
   blockSelection$: Observable<boolean>;
 
+  //for Sergei
+  gapDate: GapDateInterface = {
+    startDate: '2020-08-15',
+    endDate: '2020-08-15',
+  };
+
   constructor(public router: ActivatedRoute, public store$: Store<AppState>) {
     this.router.queryParams
       .pipe(
@@ -26,6 +34,9 @@ export class BookingPageContainerComponent {
       .subscribe((addressId: string) => {
         this.store$.dispatch(
           new roomsManagementEditStartGetMapAction({ addressId })
+        );
+        this.store$.dispatch(
+          new getAllBookingsAction({ gapDate: this.gapDate })
         );
       });
     this.initStore();
