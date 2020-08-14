@@ -68,7 +68,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
     this.loadMap();
 
     this.bookingStateSubscription = this.bookingState$.pipe(
-      tap((data: BookingStateOnUI[]) => this.currentBookingArr = [...data])
+      tap((data: BookingStateOnUI[]) => !!data ? this.currentBookingArr = [...data] : null)
     ).subscribe((data: BookingStateOnUI[]) => {
       this.drawBookingsOnPlaces();
       if (this.currentBookingPlace.isPlaceClicked || !!this.currentHoveredId) {
