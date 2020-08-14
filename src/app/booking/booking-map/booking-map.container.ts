@@ -70,7 +70,7 @@ export class BookingMapContainer {
     BookingStateOnUI[]
   >(STEP_4);
 
-  // public $bookings: Observable<BookingStateOnUI[]>;
+  /*public $bookings: Observable<BookingStateOnUI[]>;*/
 
   constructor(private store$: Store<AppState>) {
     this.initStore();

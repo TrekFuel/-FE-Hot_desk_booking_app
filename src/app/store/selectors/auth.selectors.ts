@@ -42,6 +42,8 @@ export const userRolesSelector = createSelector(
 export const userData = createSelector(
   loginSelector,
   (login: LoginInterface): UserDataInterface => {
-    return login.loggedInUser.userInfo;
+    if (login.loggedInUser) {
+      return login.loggedInUser.userInfo;
+    }
   }
 );
