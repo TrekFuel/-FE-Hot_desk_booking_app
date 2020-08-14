@@ -16,12 +16,13 @@ import { fabric } from 'fabric';
 import { CANVAS_DEFAULT, CANVAS_OPTION } from '../../rooms-management/rooms-management-edit/canvas-option';
 import { EDITOR_NAMES } from '../../rooms-management/rooms-management-edit/editor-blocks-info';
 import { getBlockSelection } from '../../store/selectors/roomsManagementEdit.selector';
-import { tap } from 'rxjs/operators';
+import { map, takeWhile, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { BookingStateOnUI, CurrentBookingPlace } from './booking-state.models';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, timer } from 'rxjs';
 import { UserDataInterface } from '../../auth/login/models/auth-response.model';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-booking-map',
@@ -47,6 +48,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   currentBookingArr: BookingStateOnUI[] = [];
   // this for instant ui changing
   currentHoveredId: string | null;
+  countDown: Observable<number>;
   private canvas: Canvas;
 
   constructor(private changeDetection: ChangeDetectorRef,
@@ -66,7 +68,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
     this.loadMap();
 
     this.bookingStateSubscription = this.bookingState$.pipe(
-      tap((data: BookingStateOnUI[]) => this.currentBookingArr = [...data])
+      tap((data: BookingStateOnUI[]) => !!data ? this.currentBookingArr = [...data] : null)
     ).subscribe((data: BookingStateOnUI[]) => {
       this.drawBookingsOnPlaces();
       if (this.currentBookingPlace.isPlaceClicked || !!this.currentHoveredId) {
@@ -77,7 +79,6 @@ export class BookingMapComponent implements OnInit, OnDestroy {
         });
       }
     });
-
 
     this.canvas.on({
       'mouse:over': (e) => {
@@ -102,11 +103,23 @@ export class BookingMapComponent implements OnInit, OnDestroy {
         if (actObj?.name === EDITOR_NAMES.place) {
           this.currentBookingPlace.isPlaceClicked = true;
           this.setDataOfClickedPlace(actObj);
+          this.activateTimer();
+
           // console.log(actObj.data.id);
         }
       },
       'mouse:down:before': (e) => {},
     });
+  }
+
+  activateTimer() {
+    let start = environment.TIMER_ON_BOOKING;
+    this.countDown = timer(0, 1000).pipe(
+      map(count => start - count),
+      tap(count => count === 0 ? this.currentBookingPlace.isPlaceClicked = false : null),
+      takeWhile(count => count >= 0)
+    );
+    this.changeDetection.detectChanges();
   }
 
   setDataOfClickedPlace(obj: fabric.Object) {
@@ -145,8 +158,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
 
     this.canvas.forEachObject((obj: fabric.Object) => {
       if (obj?.name === EDITOR_NAMES.place) {
-        // // ToDo temporary here for uuid grab
-        // this.bookings.push({ placeId: obj.data.id, isFree: true });
+        // console.log(obj.data.id);
         const bound = obj.getBoundingRect();
         const currentPlace: BookingStateOnUI = this.getCurrentBookingPlaceData(obj.data.id);
         if (currentPlace) {
@@ -158,8 +170,8 @@ export class BookingMapComponent implements OnInit, OnDestroy {
         }
       }
       this.canvas.requestRenderAll();
+
     });
-    // console.log(this.bookings);
   }
 
   clearMarkOnPlaces(): void {

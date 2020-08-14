@@ -1,7 +1,4 @@
-import {
-  AuthResponse,
-  UserDataInterface,
-} from '../../auth/login/models/auth-response.model';
+import { AuthResponse, UserDataInterface } from '../../auth/login/models/auth-response.model';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { AppState } from '../index';
 
