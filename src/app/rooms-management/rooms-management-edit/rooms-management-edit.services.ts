@@ -40,12 +40,14 @@ export class RoomsManagementEditServices {
   }
 
   postPlaces(data: PlaceData[]): Observable<PlaceData[]> {
+    console.log(data);
     return this.http
       .post(`${environment.databaseURL}/place/places`, data)
       .pipe(map((data: PlaceData[]) => data));
   }
 
   putOffice(data: PostFloorDataInterface) {
+    console.log(data);
     return this.http
       .put(`${environment.databaseURL}/floor`, data)
       .pipe(map((data: GetFloorDataInterface) => data));

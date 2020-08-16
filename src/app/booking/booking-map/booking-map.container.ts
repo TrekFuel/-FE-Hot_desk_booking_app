@@ -19,7 +19,6 @@ import { userData } from '../../store/selectors/auth.selectors';
 //   { placeId: 'd22d0704-203b-4c33-969a-f293e407b2c1', isFree: true }
 // ];
 
-
 @Component({
   selector: 'app-booking-map-container',
   template: `
@@ -34,11 +33,12 @@ import { userData } from '../../store/selectors/auth.selectors';
 export class BookingMapContainer {
   public $userData: Observable<UserDataInterface>;
   public $getMapBooking: Observable<string>;
-  public $bookings: BehaviorSubject<BookingStateOnUI[]> = new BehaviorSubject<BookingStateOnUI[]>(null);
+  public $bookings: BehaviorSubject<BookingStateOnUI[]> = new BehaviorSubject<
+    BookingStateOnUI[]
+  >(null);
 
   constructor(private store$: Store<AppState>) {
     this.initStore();
-
   }
 
   onBookPlace(id: string) {

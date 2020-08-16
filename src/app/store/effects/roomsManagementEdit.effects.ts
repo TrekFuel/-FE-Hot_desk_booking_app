@@ -187,6 +187,7 @@ export class RoomsManagementEditEffects {
                 stateAlert: 'alert-success',
               },
             };
+            console.log(data);
             return new roomsManagementEditSaveMapAction({
               getMap: data,
               message,

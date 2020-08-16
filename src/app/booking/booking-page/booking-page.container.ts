@@ -5,8 +5,11 @@ import { filter, map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { roomsManagementEditStartGetMapAction } from '../../store/actions/roomsManagementEdit.actions';
-import { Observable } from 'rxjs';
+import { interval, Observable } from 'rxjs';
 import { getBlockSelection } from '../../store/selectors/roomsManagementEdit.selector';
+import { gapDateBookingsAction } from '../../store/actions/booking.actions';
+import { GapDateInterface } from '../modules/booking-store.interface';
+import { allBookings } from '../../store/selectors/booking.selctors';
 
 @Component({
   selector: 'app-booking-page-container',
@@ -16,6 +19,13 @@ import { getBlockSelection } from '../../store/selectors/roomsManagementEdit.sel
 })
 export class BookingPageContainerComponent {
   blockSelection$: Observable<boolean>;
+
+  //for Sergei
+  public allBookings$: Observable<[]>;
+  gapDate: GapDateInterface = {
+    startDate: '2020-08-17T17:33:03.880Z',
+    endDate: '2020-08-17T17:33:03.880Z',
+  };
 
   constructor(public router: ActivatedRoute, public store$: Store<AppState>) {
     this.router.queryParams
@@ -27,11 +37,17 @@ export class BookingPageContainerComponent {
         this.store$.dispatch(
           new roomsManagementEditStartGetMapAction({ addressId })
         );
+        this.loopRequest();
       });
     this.initStore();
   }
 
+  loopRequest() {
+    this.store$.dispatch(new gapDateBookingsAction({ gapDate: this.gapDate }));
+  }
+
   initStore(): void {
     this.blockSelection$ = this.store$.select(getBlockSelection);
+    this.allBookings$ = this.store$.select(allBookings);
   }
 }

@@ -112,7 +112,6 @@ export class OfficeChoosingContainer implements OnInit, OnDestroy {
 
   newOfficeHandle(officeData: OfficeData) {
     this.newOfficeData = { ...officeData };
-    console.log(officeData);
     let [countryName, city, street]: string[] = [
       this.newOfficeData.country,
       this.newOfficeData.city,
