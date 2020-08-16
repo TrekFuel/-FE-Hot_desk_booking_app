@@ -66,9 +66,15 @@ export class BookingMapComponent implements OnInit, OnDestroy {
 
     this._initCanvas();
     this.loadMap();
+    this.createAllPlacesArr();
+
+    console.log(this.userData);
 
     this.bookingStateSubscription = this.bookingState$.pipe(
-      tap((data: BookingStateOnUI[]) => !!data ? this.currentBookingArr = [...data] : null)
+      tap((data: any) => {
+        console.log(data);
+      }),
+      tap((data) => this.changeDataOnPlaces(data))
     ).subscribe((data: BookingStateOnUI[]) => {
       this.drawBookingsOnPlaces();
       if (this.currentBookingPlace.isPlaceClicked || !!this.currentHoveredId) {
@@ -108,7 +114,30 @@ export class BookingMapComponent implements OnInit, OnDestroy {
           // console.log(actObj.data.id);
         }
       },
-      'mouse:down:before': (e) => {},
+      'mouse:down:before': (e) => {
+      }
+    });
+  }
+
+  changeDataOnPlaces(data: any): void {
+    console.log('handle data here :' + data);
+  }
+
+  createAllPlacesArr(): void {
+    // ToDo check userRole here and do block if needed
+    this.canvas.forEachObject((obj: fabric.Object) => {
+      if (obj?.name === EDITOR_NAMES.place) {
+        let { id: placeId, placeType, number: placeNumber, maxQuantity } = obj.data;
+        const newPl: BookingStateOnUI = {
+          placeId,
+          placeNumber,
+          placeType,
+          maxQuantity,
+          isFree: true,
+          nameOfUser: null
+        };
+        this.currentBookingArr.push(newPl);
+      }
     });
   }
 
@@ -155,10 +184,9 @@ export class BookingMapComponent implements OnInit, OnDestroy {
 
   drawBookingsOnPlaces(): void {
     this.clearMarkOnPlaces();
-
     this.canvas.forEachObject((obj: fabric.Object) => {
       if (obj?.name === EDITOR_NAMES.place) {
-        // console.log(obj.data.id);
+
         const bound = obj.getBoundingRect();
         const currentPlace: BookingStateOnUI = this.getCurrentBookingPlaceData(obj.data.id);
         if (currentPlace) {
