@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { getMapBooking } from '../../store/selectors/roomsManagementEdit.selector';
-import { BookingStateOnUI } from './booking-state.models';
+import { BookingStateOnUI, DataForBooking } from './booking-state.models';
 import { UserDataInterface } from '../../auth/login/models/auth-response.model';
 import { userData } from '../../store/selectors/auth.selectors';
 import { allBookings } from '../../store/selectors/booking.selctors';
@@ -43,8 +43,8 @@ export class BookingMapContainer {
     this.initStore();
   }
 
-  onBookPlace(id: string) {
-    console.log(id);
+  onBookPlace(data: DataForBooking) {
+    console.log(data);
   }
 
   initStore(): void {

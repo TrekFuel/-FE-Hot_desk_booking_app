@@ -13,3 +13,10 @@ export interface CurrentBookingPlace {
   isPlaceClicked: boolean,
   placeData: BookingStateOnUI | null
 }
+
+export interface DataForBooking {
+  placeId: string,
+  userId: string,
+  startDate: string,
+  endDate: string
+}

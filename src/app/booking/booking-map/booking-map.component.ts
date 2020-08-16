@@ -19,10 +19,11 @@ import { getBlockSelection } from '../../store/selectors/roomsManagementEdit.sel
 import { map, takeWhile, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
-import { BookingStateOnUI, CurrentBookingPlace } from './booking-state.models';
+import { BookingStateOnUI, CurrentBookingPlace, DataForBooking } from './booking-state.models';
 import { Observable, Subscription, timer } from 'rxjs';
 import { UserDataInterface } from '../../auth/login/models/auth-response.model';
 import { environment } from '../../../environments/environment';
+import { GapDateInterface } from '../modules/booking-store.interface';
 
 @Component({
   selector: 'app-booking-map',
@@ -37,7 +38,9 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   @Input() userData: UserDataInterface;
   @Input() mapData: string;
   @Input() bookingState$: Observable<BookingStateOnUI[]>;
-  @Output() bookedPlaceForId: EventEmitter<string> = new EventEmitter<string>();
+  // temp data
+  @Input() dateForBooking: GapDateInterface = { startDate: '2020-08-17T17:33:03', endDate: '2020-08-17T17:33:03' };
+  @Output() bookedPlaceForId: EventEmitter<DataForBooking> = new EventEmitter<DataForBooking>();
   @Output() informPlaceForId: EventEmitter<string> = new EventEmitter<string>();
   bookingStateSubscription: Subscription;
   public canvasSize: CanvasSize = CANVAS_DEFAULT;
@@ -174,12 +177,13 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   }
 
   onInformClick(): void {
-    this.bookedPlaceForId.emit(this.currentBookingPlace.placeData.placeId);
+
   }
 
   onBookingClick(): void {
-    // if (this.currentBookingPlace.placeData?.isFree) {}
-    this.bookedPlaceForId.emit(this.currentBookingPlace.placeData.placeId);
+    // ToDo need check place first is free
+    let [placeId, userId] = [this.currentBookingPlace.placeData.placeId, this.userData.id];
+    this.bookedPlaceForId.emit({ placeId, userId, ...this.dateForBooking });
   }
 
   drawBookingsOnPlaces(): void {
