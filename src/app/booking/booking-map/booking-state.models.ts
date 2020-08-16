@@ -17,6 +17,6 @@ export interface CurrentBookingPlace {
 export interface DataForBooking {
   placeId: string,
   userId: string,
-  startDate: string,
-  endDate: string
+  startDate?: string,
+  endDate?: string
 }

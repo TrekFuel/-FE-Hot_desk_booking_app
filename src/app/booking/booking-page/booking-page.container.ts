@@ -5,26 +5,31 @@ import { filter, map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { roomsManagementEditStartGetMapAction } from '../../store/actions/roomsManagementEdit.actions';
-import { interval, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { getBlockSelection } from '../../store/selectors/roomsManagementEdit.selector';
 import { gapDateBookingsAction } from '../../store/actions/booking.actions';
 import { GapDateInterface } from '../modules/booking-store.interface';
-import { allBookings } from '../../store/selectors/booking.selctors';
+import * as _moment from 'moment';
+
+const moment = _moment;
 
 @Component({
   selector: 'app-booking-page-container',
-  template: ` <app-booking-page
-    [$blockSelection]="blockSelection$ | async"
-  ></app-booking-page>`,
+  template: `
+    <app-booking-page
+        [$blockSelection]="blockSelection$ | async"
+        (choseDateEmitter)="onChangeDate($event)"
+    ></app-booking-page>`
 })
 export class BookingPageContainerComponent {
   blockSelection$: Observable<boolean>;
+  choseDate: string = moment().format().split('+')[0];
 
-  //for Sergei
-  public allBookings$: Observable<[]>;
+  //don`t need that here
+  // public allBookings$: Observable<[]>;
   gapDate: GapDateInterface = {
-    startDate: '2020-08-17T17:33:03.880Z',
-    endDate: '2020-08-17T17:33:03.880Z',
+    startDate: this.choseDate,
+    endDate: this.choseDate
   };
 
   constructor(public router: ActivatedRoute, public store$: Store<AppState>) {
@@ -42,12 +47,16 @@ export class BookingPageContainerComponent {
     this.initStore();
   }
 
+  onChangeDate(date: string) {
+    console.log(date);
+  }
+
   loopRequest() {
     this.store$.dispatch(new gapDateBookingsAction({ gapDate: this.gapDate }));
   }
 
   initStore(): void {
     this.blockSelection$ = this.store$.select(getBlockSelection);
-    this.allBookings$ = this.store$.select(allBookings);
+    // this.allBookings$ = this.store$.select(allBookings);
   }
 }

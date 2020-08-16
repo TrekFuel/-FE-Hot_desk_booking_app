@@ -23,7 +23,6 @@ import { BookingStateOnUI, CurrentBookingPlace, DataForBooking } from './booking
 import { Observable, Subscription, timer } from 'rxjs';
 import { UserDataInterface } from '../../auth/login/models/auth-response.model';
 import { environment } from '../../../environments/environment';
-import { GapDateInterface } from '../modules/booking-store.interface';
 
 @Component({
   selector: 'app-booking-map',
@@ -38,8 +37,6 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   @Input() userData: UserDataInterface;
   @Input() mapData: string;
   @Input() bookingState$: Observable<BookingStateOnUI[]>;
-  // temp data
-  @Input() dateForBooking: GapDateInterface = { startDate: '2020-08-17T17:33:03', endDate: '2020-08-17T17:33:03' };
   @Output() bookedPlaceForId: EventEmitter<DataForBooking> = new EventEmitter<DataForBooking>();
   @Output() informPlaceForId: EventEmitter<string> = new EventEmitter<string>();
   bookingStateSubscription: Subscription;
@@ -183,7 +180,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   onBookingClick(): void {
     // ToDo need check place first is free
     let [placeId, userId] = [this.currentBookingPlace.placeData.placeId, this.userData.id];
-    this.bookedPlaceForId.emit({ placeId, userId, ...this.dateForBooking });
+    this.bookedPlaceForId.emit({ placeId, userId });
   }
 
   drawBookingsOnPlaces(): void {
