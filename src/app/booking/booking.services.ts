@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { GetAllBookingsInterface } from './modules/booking-store.interface';
+import {
+  CreateBookingInterface,
+  GetAllBookingsInterface,
+} from './modules/booking-store.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -12,5 +15,15 @@ export class BookingServices {
   getAllBooking(data: GetAllBookingsInterface) {
     return this.http.get(`
     ${environment.databaseURL}/booking/byroom?roomId=${data.roomId}&start=${data.startDate}&end=${data.endDate}`);
+  }
+
+  createBooking(data: CreateBookingInterface) {
+    console.log(data);
+    return this.http.post(`${environment.databaseURL}/booking`, {
+      bookingDate: data.date.startDate,
+      dueDate: data.date.endDate,
+      id: data.userId,
+      placeId: data.placeId,
+    });
   }
 }

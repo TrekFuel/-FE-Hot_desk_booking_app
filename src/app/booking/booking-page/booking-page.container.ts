@@ -23,8 +23,8 @@ export class BookingPageContainerComponent {
   //for Sergei
   public allBookings$: Observable<[]>;
   gapDate: GapDateInterface = {
-    startDate: '2020-08-17T17:33:03.880Z',
-    endDate: '2020-08-17T17:33:03.880Z',
+    startDate: '2020-08-18T23:33:03',
+    endDate: '2020-08-18T23:33:03',
   };
 
   constructor(public router: ActivatedRoute, public store$: Store<AppState>) {
@@ -41,6 +41,8 @@ export class BookingPageContainerComponent {
       });
     this.initStore();
   }
+
+  currentDate() {}
 
   loopRequest() {
     this.store$.dispatch(new gapDateBookingsAction({ gapDate: this.gapDate }));
