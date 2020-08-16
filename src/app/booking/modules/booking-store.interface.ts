@@ -2,6 +2,7 @@ export interface BookingStoreInterface {
   mapId: GetAllMapIdInterface;
   gapDate: GapDateInterface;
   getBooking?: GetAllBookingsInterface;
+  allBookings?: [];
 }
 
 export interface GetAllMapIdInterface {

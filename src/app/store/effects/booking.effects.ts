@@ -6,6 +6,7 @@ import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
   bookingActionType,
   bookingGetMapIdAction,
+  getAllBookingsAction,
 } from '../actions/booking.actions';
 import * as roomsManagementEditTypeActions from '../actions/roomsManagementEdit.actions';
 import {
@@ -40,25 +41,29 @@ export class BookingEffects {
     )
   );
 
-  //Uncomment!!!
-
-  /*@Effect()
+  @Effect()
   getAllBooking = this.actions$.pipe(
     ofType(bookingActionType.BOOKING_GET_MAP_ID),
-    switchMap(() => timer(0, 1000)),
+    /*switchMap(() => timer(0, 1000)),*/
     withLatestFrom(this.store$.select(bookingMapId)),
     map(([action, booking]): [number, BookingStoreInterface] => [
       action,
       booking,
     ]),
     switchMap(([, bookingData]) => {
-      return this.bookingServices.getAllBooking({
-        startDate: bookingData.gapDate.startDate,
-        endDate: bookingData.gapDate.endDate,
-        roomId: bookingData.mapId.roomId,
-      });
+      return this.bookingServices
+        .getAllBooking({
+          startDate: bookingData.gapDate.startDate,
+          endDate: bookingData.gapDate.endDate,
+          roomId: bookingData.mapId.roomId,
+        })
+        .pipe(
+          map((data) => {
+            return new getAllBookingsAction({ allBookings: data });
+          })
+        );
     })
-  );*/
+  );
 
   constructor(
     private store$: Store<AppState>,
