@@ -13,17 +13,23 @@ export class BookingServices {
   constructor(private http: HttpClient) {}
 
   getAllBooking(data: GetAllBookingsInterface) {
+    console.log(data);
     return this.http.get(`
     ${environment.databaseURL}/booking/byroom?roomId=${data.roomId}&start=${data.startDate}&end=${data.endDate}`);
   }
 
   createBooking(data: CreateBookingInterface) {
-    console.log(data);
-    return this.http.post(`${environment.databaseURL}/booking`, {
-      bookingDate: data.date.startDate,
-      dueDate: data.date.endDate,
-      id: data.userId,
+    console.log({
+      bookingDate: data.startDate,
+      dueDate: data.endDate,
       placeId: data.placeId,
+      userDto: data.userDto,
+    });
+    return this.http.post(`${environment.databaseURL}/booking`, {
+      bookingDate: data.startDate,
+      dueDate: data.endDate,
+      placeId: data.placeId,
+      userDto: data.userDto,
     });
   }
 }
