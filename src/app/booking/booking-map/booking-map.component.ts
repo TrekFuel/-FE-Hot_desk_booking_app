@@ -8,44 +8,45 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { CanvasSize } from '../../rooms-management/rooms-management-edit/models/editor-blocks.models';
 import { Canvas } from 'fabric/fabric-impl';
 import { fabric } from 'fabric';
-import {
-  CANVAS_DEFAULT,
-  CANVAS_OPTION,
-} from '../../rooms-management/rooms-management-edit/canvas-option';
+import { CANVAS_DEFAULT, CANVAS_OPTION } from '../../rooms-management/rooms-management-edit/canvas-option';
 import { EDITOR_NAMES } from '../../rooms-management/rooms-management-edit/editor-blocks-info';
 import { getBlockSelection } from '../../store/selectors/roomsManagementEdit.selector';
 import { map, takeWhile, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
-import { BookingStateOnUI, CurrentBookingPlace } from './booking-state.models';
+import { BookingStateOnUI, CurrentBookingPlace, DataForBooking } from './booking-state.models';
 import { Observable, Subscription, timer } from 'rxjs';
 import { UserDataInterface } from '../../auth/login/models/auth-response.model';
 import { environment } from '../../../environments/environment';
+import { GapDateInterface } from '../modules/booking-store.interface';
 
 @Component({
   selector: 'app-booking-map',
   templateUrl: './booking-map.component.html',
   styleUrls: ['./booking-map.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookingMapComponent implements OnInit, OnDestroy {
+
   @ViewChild('htmlCanvasBooking', { static: true }) htmlCanvas: ElementRef;
   @ViewChild('cardForBooking', { static: true }) cardForBooking: ElementRef;
   @Input() userData: UserDataInterface;
   @Input() mapData: string;
   @Input() bookingState$: Observable<BookingStateOnUI[]>;
-  @Output() bookedPlaceForId: EventEmitter<string> = new EventEmitter<string>();
+  // temp data
+  @Input() dateForBooking: GapDateInterface = { startDate: '2020-08-17T17:33:03', endDate: '2020-08-17T17:33:03' };
+  @Output() bookedPlaceForId: EventEmitter<DataForBooking> = new EventEmitter<DataForBooking>();
   @Output() informPlaceForId: EventEmitter<string> = new EventEmitter<string>();
   bookingStateSubscription: Subscription;
   public canvasSize: CanvasSize = CANVAS_DEFAULT;
   currentBookingPlace: CurrentBookingPlace = {
     isPlaceClicked: false,
-    placeData: null,
+    placeData: null
   };
   currentBookingArr: BookingStateOnUI[] = [];
   // this for instant ui changing
@@ -53,62 +54,45 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   countDown: Observable<number>;
   private canvas: Canvas;
 
-  constructor(
-    private changeDetection: ChangeDetectorRef,
-    private store$: Store<AppState>
-  ) {}
+  constructor(private changeDetection: ChangeDetectorRef,
+              private store$: Store<AppState>) {
+  }
 
   get curZoom() {
     return this.canvasSize.zoom / 100;
   }
 
   ngOnInit(): void {
-    this.store$
-      .select(getBlockSelection)
-      .pipe(
-        tap((value: boolean) => (value ? (this.canvasSize.zoom = 100) : null))
-      )
+
+    this.store$.select(getBlockSelection).pipe(tap((value: boolean) => value ? this.canvasSize.zoom = 100 : null))
       .subscribe();
 
     this._initCanvas();
     this.loadMap();
+    this.createAllPlacesArr();
 
-    this.bookingStateSubscription = this.bookingState$
-      .pipe(
-        tap((data: BookingStateOnUI[]) =>
-          !!data ? (this.currentBookingArr = [...data]) : null
-        )
-      )
-      .subscribe((data: BookingStateOnUI[]) => {
-        this.drawBookingsOnPlaces();
-        if (
-          this.currentBookingPlace.isPlaceClicked ||
-          !!this.currentHoveredId
-        ) {
-          this.canvas.forEachObject((obj: fabric.Object) => {
-            if (
-              this.currentBookingPlace.isPlaceClicked &&
-              !!this.currentBookingPlace.placeData &&
-              obj.data &&
-              obj.data.id === this.currentBookingPlace.placeData.placeId
-            )
-              this.setDataOfClickedPlace(obj);
-            if (
-              obj.data?.id === this.currentHoveredId &&
-              !!this.currentHoveredId
-            )
-              this.doShadowForPlace(obj);
-          });
-        }
-      });
+    console.log(this.userData);
+
+    this.bookingStateSubscription = this.bookingState$.pipe(
+      tap((data: any) => {
+        console.log(data);
+      }),
+      tap((data) => this.changeDataOnPlaces(data))
+    ).subscribe((data: BookingStateOnUI[]) => {
+      this.drawBookingsOnPlaces();
+      if (this.currentBookingPlace.isPlaceClicked || !!this.currentHoveredId) {
+        this.canvas.forEachObject((obj: fabric.Object) => {
+          if (this.currentBookingPlace.isPlaceClicked && !!this.currentBookingPlace.placeData && obj.data
+            && obj.data.id === this.currentBookingPlace.placeData.placeId) this.setDataOfClickedPlace(obj);
+          if (obj.data?.id === this.currentHoveredId && !!this.currentHoveredId) this.doShadowForPlace(obj);
+        });
+      }
+    });
 
     this.canvas.on({
       'mouse:over': (e) => {
         const actObj: fabric.Object = e.target;
-        if (
-          actObj?.name === EDITOR_NAMES.place &&
-          this.canvas.getActiveObjects().length <= 1
-        ) {
+        if (actObj?.name === EDITOR_NAMES.place && this.canvas.getActiveObjects().length <= 1) {
           this.canvas.hoverCursor = 'pointer';
           this.currentHoveredId = actObj.data.id;
           this.doShadowForPlace(actObj);
@@ -116,10 +100,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
       },
       'mouse:out': (e) => {
         const actObj: fabric.Object = e.target;
-        if (
-          actObj?.name === EDITOR_NAMES.place &&
-          this.canvas.getActiveObjects().length <= 1
-        ) {
+        if (actObj?.name === EDITOR_NAMES.place && this.canvas.getActiveObjects().length <= 1) {
           this.canvas.hoverCursor = 'default';
           actObj.setShadow('0 0 0 rgba(255,255,255,0)');
           this.currentHoveredId = null;
@@ -136,63 +117,73 @@ export class BookingMapComponent implements OnInit, OnDestroy {
           // console.log(actObj.data.id);
         }
       },
-      'mouse:down:before': (e) => {},
+      'mouse:down:before': (e) => {
+      }
+    });
+  }
+
+  changeDataOnPlaces(data: any): void {
+    console.log('handle data here :' + data);
+  }
+
+  createAllPlacesArr(): void {
+    // ToDo check userRole here and do block if needed
+    this.canvas.forEachObject((obj: fabric.Object) => {
+      if (obj?.name === EDITOR_NAMES.place) {
+        let { id: placeId, placeType, number: placeNumber, maxQuantity } = obj.data;
+        const newPl: BookingStateOnUI = {
+          placeId,
+          placeNumber,
+          placeType,
+          maxQuantity,
+          isFree: true,
+          nameOfUser: null
+        };
+        this.currentBookingArr.push(newPl);
+      }
     });
   }
 
   activateTimer() {
     let start = environment.TIMER_ON_BOOKING;
     this.countDown = timer(0, 1000).pipe(
-      map((count) => start - count),
-      tap((count) =>
-        count === 0 ? (this.currentBookingPlace.isPlaceClicked = false) : null
-      ),
-      takeWhile((count) => count >= 0)
+      map(count => start - count),
+      tap(count => count === 0 ? this.currentBookingPlace.isPlaceClicked = false : null),
+      takeWhile(count => count >= 0)
     );
     this.changeDetection.detectChanges();
   }
 
   setDataOfClickedPlace(obj: fabric.Object) {
     let { id: placeId, number: placeNumber } = obj.data;
-    const currentBooking: BookingStateOnUI = this.getCurrentBookingPlaceData(
-      placeId
-    );
+    const currentBooking: BookingStateOnUI = this.getCurrentBookingPlaceData(placeId);
     if (currentBooking) {
-      this.currentBookingPlace.placeData = {
-        ...currentBooking,
-        placeId,
-        placeNumber,
-      };
+      this.currentBookingPlace.placeData = { ...currentBooking, placeId, placeNumber };
       this.changeDetection.detectChanges();
     }
   }
 
   doShadowForPlace(obj: fabric.Object): void {
-    const currentPlace: BookingStateOnUI = this.getCurrentBookingPlaceData(
-      obj.data.id
-    );
+    const currentPlace: BookingStateOnUI = this.getCurrentBookingPlaceData(obj.data.id);
     if (currentPlace) {
-      let shadow = currentPlace.isFree
-        ? '3px 3px 12px rgba(0,255,0,0.7)'
-        : '3px 3px 12px rgba(255,0,0,0.7)';
+      let shadow = currentPlace.isFree ? '3px 3px 12px rgba(0,255,0,0.7)' : '3px 3px 12px rgba(255,0,0,0.7)';
       obj.setShadow(shadow);
       this.canvas.requestRenderAll();
     }
   }
 
   getCurrentBookingPlaceData(id: string): BookingStateOnUI {
-    return this.currentBookingArr.filter(
-      (item: BookingStateOnUI) => item.placeId === id
-    )[0];
+    return this.currentBookingArr.filter((item: BookingStateOnUI) => item.placeId === id)[0];
   }
 
   onInformClick(): void {
-    this.bookedPlaceForId.emit(this.currentBookingPlace.placeData.placeId);
+
   }
 
   onBookingClick(): void {
-    // if (this.currentBookingPlace.placeData?.isFree) {}
-    this.bookedPlaceForId.emit(this.currentBookingPlace.placeData.placeId);
+    // ToDo need check place first is free
+    let [placeId, userId] = [this.currentBookingPlace.placeData.placeId, this.userData.id];
+    this.bookedPlaceForId.emit({ placeId, userId, ...this.dateForBooking });
   }
 
   drawBookingsOnPlaces(): void {
@@ -200,11 +191,8 @@ export class BookingMapComponent implements OnInit, OnDestroy {
 
     this.canvas.forEachObject((obj: fabric.Object) => {
       if (obj?.name === EDITOR_NAMES.place) {
-        console.log(obj.data.id);
         const bound = obj.getBoundingRect();
-        const currentPlace: BookingStateOnUI = this.getCurrentBookingPlaceData(
-          obj.data.id
-        );
+        const currentPlace: BookingStateOnUI = this.getCurrentBookingPlaceData(obj.data.id);
         if (currentPlace) {
           let stroke = currentPlace.isFree ? 'lightgreen' : 'lightgrey';
           const rect = this.createBorderBoxForPlace(bound, stroke);
@@ -214,6 +202,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
         }
       }
       this.canvas.requestRenderAll();
+
     });
   }
 
@@ -244,7 +233,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
       lockMovementY: true,
       hasControls: false,
       hasBorders: false,
-      selectable: false,
+      selectable: false
     });
   }
 
@@ -281,10 +270,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   }
 
   private _initCanvas(): void {
-    this.canvas = new fabric.Canvas(
-      this.htmlCanvas.nativeElement,
-      CANVAS_OPTION.READ_ONLY
-    );
+    this.canvas = new fabric.Canvas(this.htmlCanvas.nativeElement, CANVAS_OPTION.READ_ONLY);
     this.doCanvasZoom();
   }
 }
