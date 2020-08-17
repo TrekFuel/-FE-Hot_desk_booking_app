@@ -10,7 +10,8 @@
         <input (dateInput)="onDateChange($event)"
                [matDatepicker]="picker3"
                [value]="date.value"
-               matInput>
+               matInput
+               matTooltip="Sorry, this option is unavailable in this release">
         <mat-datepicker-toggle [for]="picker3" matSuffix></mat-datepicker-toggle>
         <mat-datepicker #picker3></mat-datepicker>
       </mat-form-field>
@@ -19,7 +20,7 @@
     <div class="col-sm-6 col-md-4 my-1">
       <mat-form-field appearance="outline">
         <mat-label>Choose a date range</mat-label>
-        <mat-date-range-input [rangePicker]="picker">
+        <mat-date-range-input [rangePicker]="picker" matTooltip="Sorry, this option is unavailable in this release">
           <input matStartDate placeholder="Start date">
           <input matEndDate placeholder="End date">
         </mat-date-range-input>

@@ -43,10 +43,10 @@ export class BookingPageComponent {
   ) {}
 
   onDateChange(event: MatDatepickerInputEvent<string>) {
-    // let date: Moment = event.target.value;
-    let date: any = event.target.value;
-    this.choseDate = date.format().split('+')[0];
-    this.choseDateEmitter.next(this.choseDate);
+    // // let date: Moment = event.target.value;
+    // let date: any = event.target.value;
+    // this.choseDate = date.format().split('+')[0];
+    // this.choseDateEmitter.next(this.choseDate);
   }
 
   onClickAnotherAddress() {

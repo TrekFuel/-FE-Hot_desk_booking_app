@@ -24,12 +24,14 @@ const moment = _moment;
 export class BookingPageContainerComponent {
   blockSelection$: Observable<boolean>;
   choseDate: string = moment().format().split('+')[0];
+  startDate: string = moment().format().split('T')[0];
+  endDate: string = moment().format().split('T')[0];
 
   //don`t need that here
   // public allBookings$: Observable<[]>;
   gapDate: GapDateInterface = {
-    startDate: this.choseDate,
-    endDate: this.choseDate
+    startDate: this.startDate + 'T00:00:01',
+    endDate: this.endDate + 'T23:23:59'
   };
 
   constructor(public router: ActivatedRoute, public store$: Store<AppState>) {
@@ -48,7 +50,9 @@ export class BookingPageContainerComponent {
   }
 
   onChangeDate(date: string) {
-    this.gapDate = { startDate: date, endDate: date };
+    let changedDate = date.split('T');
+    let [startDate, endDate] = [changedDate + 'T00:00:01', changedDate + 'T23:23:59'];
+    this.gapDate = { startDate, endDate };
   }
 
   loopRequest() {

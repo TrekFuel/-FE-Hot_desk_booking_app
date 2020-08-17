@@ -9,6 +9,7 @@ import { allBookings } from '../../store/selectors/booking.selctors';
 import * as _moment from 'moment';
 import { createBookingAction } from '../../store/actions/booking.actions';
 import { CreateBookingInterface } from '../modules/booking-store.interface';
+import { BookingResponseModel } from '../../shared/models/booking-response.model';
 
 const moment = _moment;
 
@@ -29,14 +30,16 @@ export class BookingMapContainer {
   public $userData: Observable<UserDataInterface>;
   public $getMapBooking: Observable<string>;
   @Input() choseDate: string = moment().format().split('+')[0];
-  public allBookings$: Observable<[]>;
+  startDate: string = moment().format().split('T')[0] + 'T08:00:00';
+  endDate: string = moment().format().split('T')[0] + 'T17:00:00';
+  public allBookings$: Observable<BookingResponseModel[]>;
 
   constructor(private store$: Store<AppState>) {
     this.initStore();
   }
 
   onBookPlace(data: CreateBookingInterface) {
-    let [startDate, endDate] = [this.choseDate, this.choseDate];
+    let [startDate, endDate] = [this.startDate, this.endDate];
     let dataForBooking: CreateBookingInterface = {
       ...data,
       startDate,
@@ -50,7 +53,7 @@ export class BookingMapContainer {
   }
 
   onDeleteBookedPlace(placeId: string) {
-    console.log(placeId);
+    // console.log(placeId);
   }
 
   onDeleteMap() {
