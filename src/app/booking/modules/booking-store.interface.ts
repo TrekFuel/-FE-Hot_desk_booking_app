@@ -1,14 +1,10 @@
+import { UserDataInterface } from '../../auth/login/models/auth-response.model';
+
 export interface BookingStoreInterface {
   mapId: GetAllMapIdInterface;
   gapDate: GapDateInterface;
   getBooking?: GetAllBookingsInterface;
   allBookings?: [];
-}
-
-export interface CreateBookingInterface {
-  date: GapDateInterface;
-  placeId: string;
-  userId: string;
 }
 
 export interface GetAllMapIdInterface {
@@ -29,7 +25,10 @@ export interface GapDateInterface {
   endDate: string;
 }
 
-export interface createBookingInterface {
+export interface CreateBookingInterface {
+  startDate: string;
+  endDate: string;
   userId: string;
   placeId: string;
+  userDto?: UserDataInterface;
 }

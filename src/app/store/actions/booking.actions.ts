@@ -1,6 +1,5 @@
 import { Action } from '@ngrx/store';
 import {
-  createBookingInterface,
   CreateBookingInterface,
   GapDateInterface,
   GetAllMapIdInterface,
@@ -11,6 +10,7 @@ export enum bookingActionType {
   BOOKING_GAP_DATE = '[Booking] Booking Gap Date bookings',
   BOOKING_ALL = '[Booking] Booking All',
   BOOKING_CREATE = '[Booking] Booking Create',
+  BOOKING_GET_CREATE = '[Booking] Booking Get Create',
 }
 
 export class bookingGetMapIdAction implements Action {
@@ -34,11 +34,16 @@ export class getAllBookingsAction implements Action {
 export class createBookingAction implements Action {
   readonly type = bookingActionType.BOOKING_CREATE;
 
-  constructor(public payload: { dataCreateBooking: createBookingInterface }) {}
+  constructor(public payload: { dataCreateBooking: CreateBookingInterface }) {}
+}
+
+export class getCreateBookingAction implements Action {
+  readonly type = bookingActionType.BOOKING_GET_CREATE;
 }
 
 export type bookingTypeActions =
   | bookingGetMapIdAction
   | gapDateBookingsAction
   | getAllBookingsAction
-  | createBookingAction;
+  | createBookingAction
+  | getCreateBookingAction;

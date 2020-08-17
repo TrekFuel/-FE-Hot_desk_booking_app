@@ -3,11 +3,12 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { Observable } from 'rxjs';
 import { getMapBooking } from '../../store/selectors/roomsManagementEdit.selector';
-import { DataForBooking } from './booking-state.models';
 import { UserDataInterface } from '../../auth/login/models/auth-response.model';
 import { userData } from '../../store/selectors/auth.selectors';
 import { allBookings } from '../../store/selectors/booking.selctors';
 import * as _moment from 'moment';
+import { createBookingAction } from '../../store/actions/booking.actions';
+import { CreateBookingInterface } from '../modules/booking-store.interface';
 
 const moment = _moment;
 
@@ -15,10 +16,10 @@ const moment = _moment;
   selector: 'app-booking-map-container',
   template: `
     <app-booking-map
-        [userData]="$userData | async"
-        [mapData]="$getMapBooking | async"
-        [bookingState$]="allBookings$"
-        (bookedPlaceForId)="onBookPlace($event)"
+      [userData]="$userData | async"
+      [mapData]="$getMapBooking | async"
+      [bookingState$]="allBookings$"
+      (bookedPlaceForId)="onBookPlace($event)"
     ></app-booking-map>
   `,
 })
@@ -32,10 +33,18 @@ export class BookingMapContainer {
     this.initStore();
   }
 
-  onBookPlace(data: DataForBooking) {
+  onBookPlace(data: CreateBookingInterface) {
     let [startDate, endDate] = [this.choseDate, this.choseDate];
-    let dataForBooking: DataForBooking = { ...data, startDate, endDate };
-    console.log(dataForBooking);
+    let dataForBooking: CreateBookingInterface = {
+      ...data,
+      startDate,
+      endDate,
+    };
+    this.store$.dispatch(
+      new createBookingAction({
+        dataCreateBooking: dataForBooking,
+      })
+    );
   }
 
   initStore(): void {

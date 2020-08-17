@@ -6,21 +6,22 @@ import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
   bookingActionType,
   bookingGetMapIdAction,
-  bookingTypeActions,
   createBookingAction,
   getAllBookingsAction,
+  getCreateBookingAction,
 } from '../actions/booking.actions';
 import * as roomsManagementEditTypeActions from '../actions/roomsManagementEdit.actions';
 import {
   BookingStoreInterface,
   CreateBookingInterface,
-  GapDateInterface,
   GetAllMapIdInterface,
 } from '../../booking/modules/booking-store.interface';
 import { interval, Observable, timer } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '../index';
 import { bookingMapId, gapDateBooking } from '../selectors/booking.selctors';
+import { userData } from '../selectors/auth.selectors';
+import { UserDataInterface } from '../../auth/login/models/auth-response.model';
 
 @Injectable()
 export class BookingEffects {
@@ -48,7 +49,7 @@ export class BookingEffects {
   @Effect()
   getAllBooking = this.actions$.pipe(
     ofType(bookingActionType.BOOKING_GET_MAP_ID),
-    switchMap(() => timer(0, 6000)),
+    /*switchMap(() => timer(0, 3000)),*/
     withLatestFrom(this.store$.select(bookingMapId)),
     map(([action, booking]): [number, BookingStoreInterface] => [
       action,
@@ -70,29 +71,31 @@ export class BookingEffects {
     })
   );
 
-  /*@Effect()
+  @Effect()
   createBooking = this.actions$.pipe(
     ofType(bookingActionType.BOOKING_CREATE),
-    withLatestFrom(this.store$.select(gapDateBooking)),
-    map(([action, gapData]): [createBookingAction, GapDateInterface] => {
-      return [action, gapData];
-    }),
-    switchMap(([action, gapData]) => {
+    withLatestFrom(this.store$.select(userData)),
+    map(([action, userId]): [createBookingAction, UserDataInterface] => [
+      action,
+      userId,
+    ]),
+    switchMap(([action, userData]) => {
+      console.log('start');
       const data: CreateBookingInterface = {
-        date: {
-          startDate: gapData.startDate,
-          endDate: gapData.endDate,
-        },
+        startDate: action.payload.dataCreateBooking.startDate,
+        endDate: action.payload.dataCreateBooking.endDate,
         userId: action.payload.dataCreateBooking.userId,
         placeId: action.payload.dataCreateBooking.placeId,
+        userDto: userData,
       };
       return this.bookingServices.createBooking(data).pipe(
         map((data) => {
-          return data;
+          console.log(data);
+          return new getCreateBookingAction();
         })
       );
     })
-  );*/
+  );
 
   constructor(
     private store$: Store<AppState>,
