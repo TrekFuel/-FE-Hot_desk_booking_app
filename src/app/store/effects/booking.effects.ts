@@ -90,7 +90,7 @@ export class BookingEffects {
       };
       return this.bookingServices.createBooking(data).pipe(
         map((data: BookingResponseModel) => {
-          // console.log(data);
+          console.log(data);
           return new getCreateBookingAction();
         })
       );

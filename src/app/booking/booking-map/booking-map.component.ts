@@ -38,6 +38,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   @ViewChild('cardForBooking', { static: true }) cardForBooking: ElementRef;
   @Input() userData: UserDataInterface;
   canBookAdministration: boolean;
+  canDeleteMap: boolean;
   @Input() mapData: string;
   @Input() bookingState$: Observable<BookingResponseModel[]>;
   @Output() bookedPlaceForId: EventEmitter<DataForBooking> = new EventEmitter<DataForBooking>();
@@ -72,10 +73,11 @@ export class BookingMapComponent implements OnInit, OnDestroy {
     this.store$.select(getBlockSelection).pipe(tap((value: boolean) => value ? this.canvasSize.zoom = 100 : null))
       .subscribe();
     this.canBookAdministration = this.checkUserRole(this.userData);
+    this.canDeleteMap = this.checkUserRoleForDeleteMap(this.userData);
     this._initCanvas();
     this.loadMap();
     this.createAllPlacesArr();
-    console.log(this.canBookAdministration);
+    // console.log(this.canDeleteMap);
 
     this.bookingStateSubscription = this.bookingState$.pipe(
       tap((data: BookingResponseModel[]) => this.changeDataOnPlaces(data))
@@ -140,6 +142,11 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   checkUserRole(user: UserDataInterface): boolean {
     // ToDo check only first role of user
     return environment.ROLES_FOR_ADMINISTRATION.includes(user.roleNames[0]);
+  }
+
+  checkUserRoleForDeleteMap(user: UserDataInterface): boolean {
+    // ToDo check only first role of user
+    return environment.WHO_CAN_DELETE_MAPS.includes(user.roleNames[0]);
   }
 
   changeDataOnPlaces(data: BookingResponseModel[]): void {
