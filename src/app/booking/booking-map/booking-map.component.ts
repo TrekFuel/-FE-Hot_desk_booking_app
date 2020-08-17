@@ -144,6 +144,14 @@ export class BookingMapComponent implements OnInit, OnDestroy {
 
   changeDataOnPlaces(data: BookingResponseModel[]): void {
     console.log(data);
+    // ToDO need to do with user name later
+    if (!!data) {
+      const bookedId: string[] = [];
+      data.forEach((item: BookingResponseModel) => bookedId.push(item.placeId));
+      this.currentBookingArr.forEach((item: BookingStateOnUI) => {
+        item.isFree = !bookedId.includes(item.placeId);
+      });
+    }
   }
 
   onClosePlace(): void {
