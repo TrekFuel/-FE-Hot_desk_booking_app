@@ -3,7 +3,7 @@
   <canvas #htmlCanvasBooking class="my-3 mx-1 canvas-place"></canvas>
 </div>
 
-<div class="col-sm-12 my-2">
+<div [ngClass]="{'hide': !canBookAdministration}" class="col-sm-12 my-2 button-delete-map">
   <button (click)="onDeleteMap()"
           [disabled]="!checkToDelete"
           class="btn btn-sm btn-danger mr-4 my-2"

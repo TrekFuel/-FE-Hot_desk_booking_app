@@ -2,6 +2,10 @@
 
 :host {
 
+  .button-delete-map.hide {
+    display: none;
+  }
+
   #deletingButton {
     z-index: 1;
     margin-left: 4px;
