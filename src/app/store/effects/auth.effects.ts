@@ -43,7 +43,6 @@ export class AuthEffects {
                     location: response.userInfo.location,
                     phone: response.userInfo.phone,
                     skype: response.userInfo.skype,
-                    hr: response.userInfo.hr,
                     img: response.userInfo.img,
                   },
                   token: response.token,
