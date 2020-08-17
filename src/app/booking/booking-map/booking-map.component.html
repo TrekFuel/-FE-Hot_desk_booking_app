@@ -6,7 +6,7 @@
 <mat-card #cardForBooking [ngClass]="{'hide': !currentBookingPlace?.isPlaceClicked}">
   <mat-card-header>
     <button aria-label="Clear" class="btn-clear" mat-button mat-icon-button>
-      <mat-icon (click)="currentBookingPlace.isPlaceClicked = false">close</mat-icon>
+      <mat-icon (click)="onClosePlace()">close</mat-icon>
     </button>
     <img alt="Logo exadel" mat-card-avatar src="../assets/images/logo/logo_micro2.jpg">
     <mat-card-title> Place #{{currentBookingPlace.placeData?.placeNumber | number: '3.0-0'}}</mat-card-title>

@@ -19,6 +19,7 @@ const moment = _moment;
         [mapData]="$getMapBooking | async"
         [bookingState$]="allBookings$"
         (bookedPlaceForId)="onBookPlace($event)"
+        (deleteBookingForPlace)="onDeleteBookedPlace($event)"
     ></app-booking-map>
   `,
 })
@@ -34,8 +35,12 @@ export class BookingMapContainer {
 
   onBookPlace(data: DataForBooking) {
     let [startDate, endDate] = [this.choseDate, this.choseDate];
-    let dataForBooking: DataForBooking = { ...data, startDate, endDate };
+    const dataForBooking: DataForBooking = { ...data, startDate, endDate };
     console.log(dataForBooking);
+  }
+
+  onDeleteBookedPlace(placeId: string) {
+    console.log(placeId);
   }
 
   initStore(): void {

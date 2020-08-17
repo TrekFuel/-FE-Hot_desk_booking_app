@@ -39,6 +39,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   @Input() bookingState$: Observable<BookingStateOnUI[]>;
   @Output() bookedPlaceForId: EventEmitter<DataForBooking> = new EventEmitter<DataForBooking>();
   @Output() informPlaceForId: EventEmitter<string> = new EventEmitter<string>();
+  @Output() deleteBookingForPlace: EventEmitter<string> = new EventEmitter<string>();
   bookingStateSubscription: Subscription;
   public canvasSize: CanvasSize = CANVAS_DEFAULT;
   currentBookingPlace: CurrentBookingPlace = {
@@ -71,9 +72,6 @@ export class BookingMapComponent implements OnInit, OnDestroy {
     console.log(this.userData);
 
     this.bookingStateSubscription = this.bookingState$.pipe(
-      tap((data: any) => {
-        console.log(data);
-      }),
       tap((data) => this.changeDataOnPlaces(data))
     ).subscribe((data: BookingStateOnUI[]) => {
       this.drawBookingsOnPlaces();
@@ -110,6 +108,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
           this.currentBookingPlace.isPlaceClicked = true;
           this.setDataOfClickedPlace(actObj);
           this.activateTimer();
+          this.onBookingClick();
 
           // console.log(actObj.data.id);
         }
@@ -121,6 +120,17 @@ export class BookingMapComponent implements OnInit, OnDestroy {
 
   changeDataOnPlaces(data: any): void {
     console.log('handle data here :' + data);
+  }
+
+  onClosePlace(): void {
+    let placeId: string = this.currentBookingPlace.placeData.placeId;
+    this.currentBookingPlace.isPlaceClicked = false;
+    this.onDeleteBooking(placeId);
+
+  }
+
+  onDeleteBooking(placeId: string): void {
+    this.deleteBookingForPlace.emit(placeId);
   }
 
   createAllPlacesArr(): void {
@@ -145,7 +155,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
     let start = environment.TIMER_ON_BOOKING;
     this.countDown = timer(0, 1000).pipe(
       map(count => start - count),
-      tap(count => count === 0 ? this.currentBookingPlace.isPlaceClicked = false : null),
+      tap(count => count === 0 ? this.onClosePlace() : null),
       takeWhile(count => count >= 0)
     );
     this.changeDetection.detectChanges();
