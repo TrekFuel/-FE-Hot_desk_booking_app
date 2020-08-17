@@ -20,6 +20,7 @@ const moment = _moment;
         [bookingState$]="allBookings$"
         (bookedPlaceForId)="onBookPlace($event)"
         (deleteBookingForPlace)="onDeleteBookedPlace($event)"
+        (deleteMap)="onDeleteMap()"
     ></app-booking-map>
   `,
 })
@@ -41,6 +42,10 @@ export class BookingMapContainer {
 
   onDeleteBookedPlace(placeId: string) {
     console.log(placeId);
+  }
+
+  onDeleteMap() {
+    console.log('need to delete map!!');
   }
 
   initStore(): void {

@@ -42,6 +42,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   @Output() bookedPlaceForId: EventEmitter<DataForBooking> = new EventEmitter<DataForBooking>();
   @Output() informPlaceForId: EventEmitter<string> = new EventEmitter<string>();
   @Output() deleteBookingForPlace: EventEmitter<string> = new EventEmitter<string>();
+  @Output() deleteMap: EventEmitter<boolean> = new EventEmitter<boolean>();
   bookingStateSubscription: Subscription;
   public canvasSize: CanvasSize = CANVAS_DEFAULT;
   currentBookingPlace: CurrentBookingPlace = {
@@ -52,6 +53,9 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   // this for instant ui changing
   currentHoveredId: string | null;
   countDown: Observable<number>;
+  checkToDelete: boolean;
+  @ViewChild('checkboxForDelete', { static: true }) checkboxForDelete: ElementRef;
+
   private canvas: Canvas;
 
   constructor(private changeDetection: ChangeDetectorRef,
@@ -122,6 +126,14 @@ export class BookingMapComponent implements OnInit, OnDestroy {
       'mouse:down:before': (e) => {
       }
     });
+  }
+
+  onDeleteMap() {
+    this.deleteMap.emit(true);
+  }
+
+  onClickAgreeToDelete() {
+    this.checkToDelete = this.checkboxForDelete.nativeElement.checked;
   }
 
   checkUserRole(user: UserDataInterface): boolean {
