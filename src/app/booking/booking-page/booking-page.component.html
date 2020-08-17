@@ -7,7 +7,10 @@
     <div class="col-sm-6 col-md-3 my-1">
       <mat-form-field appearance="outline">
         <mat-label>Choose Date</mat-label>
-        <input [matDatepicker]="picker3" [value]="date.value" matInput>
+        <input (dateInput)="onDateChange($event)"
+               [matDatepicker]="picker3"
+               [value]="date.value"
+               matInput>
         <mat-datepicker-toggle [for]="picker3" matSuffix></mat-datepicker-toggle>
         <mat-datepicker #picker3></mat-datepicker>
       </mat-form-field>
@@ -45,7 +48,7 @@
 
   <!--  <p>{{$blockSelection | json}}</p>-->
 
-  <app-booking-map-container *ngIf="$blockSelection && showMap"></app-booking-map-container>
+  <app-booking-map-container *ngIf="$blockSelection && showMap" [choseDate]="choseDate"></app-booking-map-container>
 
   <app-booking-table-container></app-booking-table-container>
 </div>
