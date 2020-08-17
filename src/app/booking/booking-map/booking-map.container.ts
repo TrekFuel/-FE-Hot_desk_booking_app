@@ -9,6 +9,7 @@ import { allBookings } from '../../store/selectors/booking.selctors';
 import * as _moment from 'moment';
 import { createBookingAction } from '../../store/actions/booking.actions';
 import { CreateBookingInterface } from '../modules/booking-store.interface';
+import { BookingResponseModel } from '../../shared/models/booking-response.model';
 
 const moment = _moment;
 
@@ -31,7 +32,7 @@ export class BookingMapContainer {
   @Input() choseDate: string = moment().format().split('+')[0];
   startDate: string = moment().format().split('T')[0] + 'T08:00:00';
   endDate: string = moment().format().split('T')[0] + 'T17:00:00';
-  public allBookings$: Observable<[]>;
+  public allBookings$: Observable<BookingResponseModel[]>;
 
   constructor(private store$: Store<AppState>) {
     this.initStore();

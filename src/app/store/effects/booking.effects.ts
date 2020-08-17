@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { BookingServices } from '../../booking/booking.services';
+import * as roomsManagementEditTypeActions from '../actions/roomsManagementEdit.actions';
 import { roomsManagementEditActionType } from '../actions/roomsManagementEdit.actions';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
@@ -8,20 +9,19 @@ import {
   bookingGetMapIdAction,
   createBookingAction,
   getAllBookingsAction,
-  getCreateBookingAction,
+  getCreateBookingAction
 } from '../actions/booking.actions';
-import * as roomsManagementEditTypeActions from '../actions/roomsManagementEdit.actions';
 import {
   BookingStoreInterface,
   CreateBookingInterface,
-  GetAllMapIdInterface,
+  GetAllMapIdInterface
 } from '../../booking/modules/booking-store.interface';
-import { interval, Observable, timer } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '../index';
-import { bookingMapId, gapDateBooking } from '../selectors/booking.selctors';
+import { bookingMapId } from '../selectors/booking.selctors';
 import { userData } from '../selectors/auth.selectors';
 import { UserDataInterface } from '../../auth/login/models/auth-response.model';
+import { BookingResponseModel } from '../../shared/models/booking-response.model';
 
 @Injectable()
 export class BookingEffects {
@@ -89,8 +89,8 @@ export class BookingEffects {
         userDto: userData,
       };
       return this.bookingServices.createBooking(data).pipe(
-        map((data) => {
-          console.log(data);
+        map((data: BookingResponseModel) => {
+          // console.log(data);
           return new getCreateBookingAction();
         })
       );

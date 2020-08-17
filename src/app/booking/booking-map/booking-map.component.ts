@@ -24,6 +24,7 @@ import { Observable, Subscription, timer } from 'rxjs';
 import { UserDataInterface } from '../../auth/login/models/auth-response.model';
 import { environment } from '../../../environments/environment';
 import { PlaceRole } from '../../shared/models/map-data.model';
+import { BookingResponseModel } from '../../shared/models/booking-response.model';
 
 @Component({
   selector: 'app-booking-map',
@@ -38,7 +39,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   @Input() userData: UserDataInterface;
   canBookAdministration: boolean;
   @Input() mapData: string;
-  @Input() bookingState$: Observable<BookingStateOnUI[]>;
+  @Input() bookingState$: Observable<BookingResponseModel[]>;
   @Output() bookedPlaceForId: EventEmitter<DataForBooking> = new EventEmitter<DataForBooking>();
   @Output() informPlaceForId: EventEmitter<string> = new EventEmitter<string>();
   @Output() deleteBookingForPlace: EventEmitter<string> = new EventEmitter<string>();
@@ -77,8 +78,8 @@ export class BookingMapComponent implements OnInit, OnDestroy {
     console.log(this.canBookAdministration);
 
     this.bookingStateSubscription = this.bookingState$.pipe(
-      tap((data) => this.changeDataOnPlaces(data))
-    ).subscribe((data: BookingStateOnUI[]) => {
+      tap((data: BookingResponseModel[]) => this.changeDataOnPlaces(data))
+    ).subscribe(() => {
       this.drawBookingsOnPlaces();
       if (this.currentBookingPlace.isPlaceClicked || !!this.currentHoveredId) {
         this.canvas.forEachObject((obj: fabric.Object) => {
@@ -141,8 +142,8 @@ export class BookingMapComponent implements OnInit, OnDestroy {
     return environment.ROLES_FOR_ADMINISTRATION.includes(user.roleNames[0]);
   }
 
-  changeDataOnPlaces(data: any): void {
-    console.log('handle data here :' + data);
+  changeDataOnPlaces(data: BookingResponseModel[]): void {
+    console.log(data);
   }
 
   onClosePlace(): void {
