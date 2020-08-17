@@ -3,6 +3,7 @@ import { PlaceRole } from '../../shared/models/map-data.model';
 export interface BookingStateOnUI {
   placeId: string,
   isFree: boolean,
+  isDenied?: boolean,
   placeNumber?: number,
   placeType?: PlaceRole,
   maxQuantity?: number,
