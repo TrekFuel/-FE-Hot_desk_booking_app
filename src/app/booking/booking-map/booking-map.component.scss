@@ -1,6 +1,13 @@
 @import "main";
 
 :host {
+
+  #deletingButton {
+    z-index: 1;
+    margin-left: 4px;
+    margin-top: 16px;
+  }
+
   mat-icon {
     @include userSelectNone;
   }

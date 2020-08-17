@@ -16,10 +16,12 @@ const moment = _moment;
   selector: 'app-booking-map-container',
   template: `
     <app-booking-map
-      [userData]="$userData | async"
-      [mapData]="$getMapBooking | async"
-      [bookingState$]="allBookings$"
-      (bookedPlaceForId)="onBookPlace($event)"
+        [userData]="$userData | async"
+        [mapData]="$getMapBooking | async"
+        [bookingState$]="allBookings$"
+        (bookedPlaceForId)="onBookPlace($event)"
+        (deleteBookingForPlace)="onDeleteBookedPlace($event)"
+        (deleteMap)="onDeleteMap()"
     ></app-booking-map>
   `,
 })
@@ -45,6 +47,14 @@ export class BookingMapContainer {
         dataCreateBooking: dataForBooking,
       })
     );
+  }
+
+  onDeleteBookedPlace(placeId: string) {
+    console.log(placeId);
+  }
+
+  onDeleteMap() {
+    console.log('need to delete map!!');
   }
 
   initStore(): void {
