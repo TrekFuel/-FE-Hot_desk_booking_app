@@ -17,6 +17,5 @@ export interface UserDataInterface {
   location: string;
   phone: string;
   skype: string;
-  hr: string;
   img: string;
 }
