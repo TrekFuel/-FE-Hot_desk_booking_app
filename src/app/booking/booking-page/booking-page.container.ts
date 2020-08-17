@@ -48,7 +48,7 @@ export class BookingPageContainerComponent {
   }
 
   onChangeDate(date: string) {
-    console.log(date);
+    this.gapDate = { startDate: date, endDate: date };
   }
 
   loopRequest() {
