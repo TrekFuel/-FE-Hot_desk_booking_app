@@ -7,6 +7,7 @@
   <button (click)="onDeleteMap()"
           [disabled]="!checkToDelete"
           class="btn btn-sm btn-danger mr-4 my-2"
+          matTooltip="Sorry, this option is unavailable in this release"
           type="button">
     Delete map
   </button>
@@ -46,11 +47,11 @@
       Name: <span class="choosing-span">{{currentBookingPlace.placeData?.nameOfUser}}</span>
     </p>
     <ng-template #noName><span class="choosing-span">You can book that place</span></ng-template>
-    <div class="for-admin my-2 hide">
+    <div [ngClass]="{'hide': !canBookAdministration}" class="for-admin my-2">
       <p class="my-1">Message for admins only</p>
       <textarea matInput rows="4"></textarea>
       <div align="end" class="mt-2">
-        <button mat-button>SEND</button>
+        <button mat-button matTooltip="Sorry, this option is unavailable in this release">SEND</button>
       </div>
     </div>
   </mat-card-content>

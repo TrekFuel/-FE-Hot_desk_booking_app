@@ -119,7 +119,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
             this.currentBookingPlace.isPlaceClicked = true;
             this.setDataOfClickedPlace(actObj);
             this.activateTimer();
-            this.onBookingClick();
+            // this.onBookingClick();
           }
         }
       },
@@ -129,7 +129,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   }
 
   onDeleteMap() {
-    this.deleteMap.emit(true);
+    // this.deleteMap.emit(true);
   }
 
   onClickAgreeToDelete() {
