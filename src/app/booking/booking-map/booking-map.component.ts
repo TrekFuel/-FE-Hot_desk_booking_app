@@ -108,11 +108,15 @@ export class BookingMapComponent implements OnInit, OnDestroy {
       'mouse:down': (e) => {
         const actObj: fabric.Object = e.target;
         if (actObj?.name === EDITOR_NAMES.place) {
-          if (!(!this.canBookAdministration && actObj.data.placeType === PlaceRole.constant))
+          if (!(!this.canBookAdministration && actObj.data.placeType === PlaceRole.constant)) {
+            if (this.currentBookingPlace.isPlaceClicked && actObj.data.id !== this.currentBookingPlace.placeData.placeId) {
+              this.onDeleteBooking(this.currentBookingPlace.placeData.placeId);
+            }
             this.currentBookingPlace.isPlaceClicked = true;
-          this.setDataOfClickedPlace(actObj);
-          this.activateTimer();
-          this.onBookingClick();
+            this.setDataOfClickedPlace(actObj);
+            this.activateTimer();
+            this.onBookingClick();
+          }
         }
       },
       'mouse:down:before': (e) => {
