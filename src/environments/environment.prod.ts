@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   localStorageUser: 'user',
-  databaseURL: '/api',
+  databaseURL: 'https://calm-plains-62100.herokuapp.com',
   usersComponentRoute: 'user',
   officesURL: '/offices',
   places: {
