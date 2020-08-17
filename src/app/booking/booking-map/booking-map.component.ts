@@ -23,6 +23,7 @@ import { BookingStateOnUI, CurrentBookingPlace, DataForBooking } from './booking
 import { Observable, Subscription, timer } from 'rxjs';
 import { UserDataInterface } from '../../auth/login/models/auth-response.model';
 import { environment } from '../../../environments/environment';
+import { PlaceRole } from '../../shared/models/map-data.model';
 
 @Component({
   selector: 'app-booking-map',
@@ -35,6 +36,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   @ViewChild('htmlCanvasBooking', { static: true }) htmlCanvas: ElementRef;
   @ViewChild('cardForBooking', { static: true }) cardForBooking: ElementRef;
   @Input() userData: UserDataInterface;
+  canBookAdministration: boolean;
   @Input() mapData: string;
   @Input() bookingState$: Observable<BookingStateOnUI[]>;
   @Output() bookedPlaceForId: EventEmitter<DataForBooking> = new EventEmitter<DataForBooking>();
@@ -64,12 +66,11 @@ export class BookingMapComponent implements OnInit, OnDestroy {
 
     this.store$.select(getBlockSelection).pipe(tap((value: boolean) => value ? this.canvasSize.zoom = 100 : null))
       .subscribe();
-
+    this.canBookAdministration = this.checkUserRole(this.userData);
     this._initCanvas();
     this.loadMap();
     this.createAllPlacesArr();
-
-    console.log(this.userData);
+    console.log(this.canBookAdministration);
 
     this.bookingStateSubscription = this.bookingState$.pipe(
       tap((data) => this.changeDataOnPlaces(data))
@@ -87,15 +88,17 @@ export class BookingMapComponent implements OnInit, OnDestroy {
     this.canvas.on({
       'mouse:over': (e) => {
         const actObj: fabric.Object = e.target;
-        if (actObj?.name === EDITOR_NAMES.place && this.canvas.getActiveObjects().length <= 1) {
-          this.canvas.hoverCursor = 'pointer';
-          this.currentHoveredId = actObj.data.id;
-          this.doShadowForPlace(actObj);
+        if (actObj?.name === EDITOR_NAMES.place) {
+          if (!(!this.canBookAdministration && actObj.data.placeType === PlaceRole.constant)) {
+            this.canvas.hoverCursor = 'pointer';
+            this.currentHoveredId = actObj.data.id;
+            this.doShadowForPlace(actObj);
+          }
         }
       },
       'mouse:out': (e) => {
         const actObj: fabric.Object = e.target;
-        if (actObj?.name === EDITOR_NAMES.place && this.canvas.getActiveObjects().length <= 1) {
+        if (actObj?.name === EDITOR_NAMES.place) {
           this.canvas.hoverCursor = 'default';
           actObj.setShadow('0 0 0 rgba(255,255,255,0)');
           this.currentHoveredId = null;
@@ -105,12 +108,11 @@ export class BookingMapComponent implements OnInit, OnDestroy {
       'mouse:down': (e) => {
         const actObj: fabric.Object = e.target;
         if (actObj?.name === EDITOR_NAMES.place) {
-          this.currentBookingPlace.isPlaceClicked = true;
+          if (!(!this.canBookAdministration && actObj.data.placeType === PlaceRole.constant))
+            this.currentBookingPlace.isPlaceClicked = true;
           this.setDataOfClickedPlace(actObj);
           this.activateTimer();
           this.onBookingClick();
-
-          // console.log(actObj.data.id);
         }
       },
       'mouse:down:before': (e) => {
@@ -118,15 +120,21 @@ export class BookingMapComponent implements OnInit, OnDestroy {
     });
   }
 
+  checkUserRole(user: UserDataInterface): boolean {
+    // ToDo check only first role of user
+    return environment.ROLES_FOR_ADMINISTRATION.includes(user.roleNames[0]);
+  }
+
   changeDataOnPlaces(data: any): void {
     console.log('handle data here :' + data);
   }
 
   onClosePlace(): void {
-    let placeId: string = this.currentBookingPlace.placeData.placeId;
-    this.currentBookingPlace.isPlaceClicked = false;
-    this.onDeleteBooking(placeId);
-
+    if (!!this.currentBookingPlace.placeData) {
+      let placeId: string = this.currentBookingPlace.placeData.placeId;
+      this.currentBookingPlace.isPlaceClicked = false;
+      this.onDeleteBooking(placeId);
+    }
   }
 
   onDeleteBooking(placeId: string): void {
@@ -134,19 +142,22 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   }
 
   createAllPlacesArr(): void {
-    // ToDo check userRole here and do block if needed
     this.canvas.forEachObject((obj: fabric.Object) => {
       if (obj?.name === EDITOR_NAMES.place) {
         let { id: placeId, placeType, number: placeNumber, maxQuantity } = obj.data;
-        const newPl: BookingStateOnUI = {
-          placeId,
-          placeNumber,
-          placeType,
-          maxQuantity,
-          isFree: true,
-          nameOfUser: null
-        };
-        this.currentBookingArr.push(newPl);
+        // let isDenied: boolean = !(!this.canBookAdministration && placeType === PlaceRole.constant);
+
+        if (!(!this.canBookAdministration && placeType === PlaceRole.constant)) {
+          const newPl: BookingStateOnUI = {
+            placeId,
+            placeNumber,
+            placeType,
+            maxQuantity,
+            isFree: true,
+            nameOfUser: null
+          };
+          this.currentBookingArr.push(newPl);
+        }
       }
     });
   }
@@ -189,8 +200,10 @@ export class BookingMapComponent implements OnInit, OnDestroy {
 
   onBookingClick(): void {
     // ToDo need check place first is free
-    let [placeId, userId] = [this.currentBookingPlace.placeData.placeId, this.userData.id];
-    this.bookedPlaceForId.emit({ placeId, userId });
+    if (!!this.currentBookingPlace.placeData) {
+      let [placeId, userId] = [this.currentBookingPlace.placeData.placeId, this.userData.id];
+      this.bookedPlaceForId.emit({ placeId, userId });
+    }
   }
 
   drawBookingsOnPlaces(): void {
