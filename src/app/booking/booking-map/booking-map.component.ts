@@ -185,9 +185,9 @@ export class BookingMapComponent implements OnInit, OnDestroy {
 
   drawBookingsOnPlaces(): void {
     this.clearMarkOnPlaces();
+
     this.canvas.forEachObject((obj: fabric.Object) => {
       if (obj?.name === EDITOR_NAMES.place) {
-
         const bound = obj.getBoundingRect();
         const currentPlace: BookingStateOnUI = this.getCurrentBookingPlaceData(obj.data.id);
         if (currentPlace) {

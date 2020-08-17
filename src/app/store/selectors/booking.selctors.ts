@@ -1,6 +1,9 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { AppState } from '../index';
-import { BookingStoreInterface } from '../../booking/modules/booking-store.interface';
+import {
+  BookingStoreInterface,
+  GapDateInterface,
+} from '../../booking/modules/booking-store.interface';
 
 export const bookingSelector = createFeatureSelector<
   AppState,
@@ -18,5 +21,12 @@ export const allBookings = createSelector(
   bookingSelector,
   (state: BookingStoreInterface): [] => {
     return state.allBookings;
+  }
+);
+
+export const gapDateBooking = createSelector(
+  bookingSelector,
+  (state: BookingStoreInterface): GapDateInterface => {
+    return state.gapDate;
   }
 );

@@ -5,6 +5,12 @@ export interface BookingStoreInterface {
   allBookings?: [];
 }
 
+export interface CreateBookingInterface {
+  date: GapDateInterface;
+  placeId: string;
+  userId: string;
+}
+
 export interface GetAllMapIdInterface {
   addressId: string;
   officeId: string;
@@ -21,4 +27,9 @@ export interface GetAllBookingsInterface {
 export interface GapDateInterface {
   startDate: string;
   endDate: string;
+}
+
+export interface createBookingInterface {
+  userId: string;
+  placeId: string;
 }
