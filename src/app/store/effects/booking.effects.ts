@@ -3,7 +3,7 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { BookingServices } from '../../booking/booking.services';
 import * as roomsManagementEditTypeActions from '../actions/roomsManagementEdit.actions';
 import { roomsManagementEditActionType } from '../actions/roomsManagementEdit.actions';
-import { map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { map, switchMap, take, withLatestFrom } from 'rxjs/operators';
 import {
   bookingActionType,
   bookingGetMapIdAction,
@@ -22,9 +22,11 @@ import { bookingMapId } from '../selectors/booking.selctors';
 import { userData } from '../selectors/auth.selectors';
 import { UserDataInterface } from '../../auth/login/models/auth-response.model';
 import { BookingResponseModel } from '../../shared/models/booking-response.model';
+import { timer } from 'rxjs';
 
 @Injectable()
 export class BookingEffects {
+
   @Effect()
   getAllMapId$ = this.actions$.pipe(
     ofType(roomsManagementEditActionType.R_M_E_GET_MAP),
@@ -49,7 +51,8 @@ export class BookingEffects {
   @Effect()
   getAllBooking = this.actions$.pipe(
     ofType(bookingActionType.BOOKING_GET_MAP_ID),
-    /*switchMap(() => timer(0, 3000)),*/
+    switchMap(() => timer(0, 3000)),
+    take(10),
     withLatestFrom(this.store$.select(bookingMapId)),
     map(([action, booking]): [number, BookingStoreInterface] => [
       action,
@@ -64,7 +67,7 @@ export class BookingEffects {
         })
         .pipe(
           map((data) => {
-            console.log(data);
+            // console.log(data);
             return new getAllBookingsAction({ allBookings: data });
           })
         );
