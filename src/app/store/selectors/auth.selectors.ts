@@ -1,7 +1,4 @@
-import {
-  AuthResponse,
-  UserDataInterface,
-} from '../../auth/login/models/auth-response.model';
+import { AuthResponse, UserDataInterface } from '../../auth/login/models/auth-response.model';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { AppState } from '../index';
 
@@ -42,6 +39,8 @@ export const userRolesSelector = createSelector(
 export const userData = createSelector(
   loginSelector,
   (login: LoginInterface): UserDataInterface => {
-    return login.loggedInUser.userInfo;
+    if (login.loggedInUser) {
+      return login.loggedInUser.userInfo;
+    }
   }
 );

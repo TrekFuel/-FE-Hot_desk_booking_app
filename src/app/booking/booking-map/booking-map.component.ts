@@ -16,12 +16,15 @@ import { fabric } from 'fabric';
 import { CANVAS_DEFAULT, CANVAS_OPTION } from '../../rooms-management/rooms-management-edit/canvas-option';
 import { EDITOR_NAMES } from '../../rooms-management/rooms-management-edit/editor-blocks-info';
 import { getBlockSelection } from '../../store/selectors/roomsManagementEdit.selector';
-import { tap } from 'rxjs/operators';
+import { map, takeWhile, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
-import { BookingStateOnUI, CurrentBookingPlace } from './booking-state.models';
-import { Observable, Subscription } from 'rxjs';
+import { BookingStateOnUI, CurrentBookingPlace, DataForBooking } from './booking-state.models';
+import { Observable, Subscription, timer } from 'rxjs';
 import { UserDataInterface } from '../../auth/login/models/auth-response.model';
+import { environment } from '../../../environments/environment';
+import { PlaceRole } from '../../shared/models/map-data.model';
+import { BookingResponseModel } from '../../shared/models/booking-response.model';
 
 @Component({
   selector: 'app-booking-map',
@@ -34,10 +37,14 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   @ViewChild('htmlCanvasBooking', { static: true }) htmlCanvas: ElementRef;
   @ViewChild('cardForBooking', { static: true }) cardForBooking: ElementRef;
   @Input() userData: UserDataInterface;
+  canBookAdministration: boolean;
+  canDeleteMap: boolean;
   @Input() mapData: string;
-  @Input() bookingState$: Observable<BookingStateOnUI[]>;
-  @Output() bookedPlaceForId: EventEmitter<string> = new EventEmitter<string>();
+  @Input() bookingState$: Observable<BookingResponseModel[]>;
+  @Output() bookedPlaceForId: EventEmitter<DataForBooking> = new EventEmitter<DataForBooking>();
   @Output() informPlaceForId: EventEmitter<string> = new EventEmitter<string>();
+  @Output() deleteBookingForPlace: EventEmitter<string> = new EventEmitter<string>();
+  @Output() deleteMap: EventEmitter<boolean> = new EventEmitter<boolean>();
   bookingStateSubscription: Subscription;
   public canvasSize: CanvasSize = CANVAS_DEFAULT;
   currentBookingPlace: CurrentBookingPlace = {
@@ -47,6 +54,10 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   currentBookingArr: BookingStateOnUI[] = [];
   // this for instant ui changing
   currentHoveredId: string | null;
+  countDown: Observable<number>;
+  checkToDelete: boolean;
+  @ViewChild('checkboxForDelete', { static: true }) checkboxForDelete: ElementRef;
+
   private canvas: Canvas;
 
   constructor(private changeDetection: ChangeDetectorRef,
@@ -61,13 +72,16 @@ export class BookingMapComponent implements OnInit, OnDestroy {
 
     this.store$.select(getBlockSelection).pipe(tap((value: boolean) => value ? this.canvasSize.zoom = 100 : null))
       .subscribe();
-
+    this.canBookAdministration = this.checkUserRole(this.userData);
+    this.canDeleteMap = this.checkUserRoleForDeleteMap(this.userData);
     this._initCanvas();
     this.loadMap();
+    this.createAllPlacesArr();
+    // console.log(this.canDeleteMap);
 
     this.bookingStateSubscription = this.bookingState$.pipe(
-      tap((data: BookingStateOnUI[]) => this.currentBookingArr = [...data])
-    ).subscribe((data: BookingStateOnUI[]) => {
+      tap((data: BookingResponseModel[]) => this.changeDataOnPlaces(data))
+    ).subscribe(() => {
       this.drawBookingsOnPlaces();
       if (this.currentBookingPlace.isPlaceClicked || !!this.currentHoveredId) {
         this.canvas.forEachObject((obj: fabric.Object) => {
@@ -78,19 +92,20 @@ export class BookingMapComponent implements OnInit, OnDestroy {
       }
     });
 
-
     this.canvas.on({
       'mouse:over': (e) => {
         const actObj: fabric.Object = e.target;
-        if (actObj?.name === EDITOR_NAMES.place && this.canvas.getActiveObjects().length <= 1) {
-          this.canvas.hoverCursor = 'pointer';
-          this.currentHoveredId = actObj.data.id;
-          this.doShadowForPlace(actObj);
+        if (actObj?.name === EDITOR_NAMES.place) {
+          if (!(!this.canBookAdministration && actObj.data.placeType === PlaceRole.constant)) {
+            this.canvas.hoverCursor = 'pointer';
+            this.currentHoveredId = actObj.data.id;
+            this.doShadowForPlace(actObj);
+          }
         }
       },
       'mouse:out': (e) => {
         const actObj: fabric.Object = e.target;
-        if (actObj?.name === EDITOR_NAMES.place && this.canvas.getActiveObjects().length <= 1) {
+        if (actObj?.name === EDITOR_NAMES.place) {
           this.canvas.hoverCursor = 'default';
           actObj.setShadow('0 0 0 rgba(255,255,255,0)');
           this.currentHoveredId = null;
@@ -100,13 +115,93 @@ export class BookingMapComponent implements OnInit, OnDestroy {
       'mouse:down': (e) => {
         const actObj: fabric.Object = e.target;
         if (actObj?.name === EDITOR_NAMES.place) {
-          this.currentBookingPlace.isPlaceClicked = true;
-          this.setDataOfClickedPlace(actObj);
-          // console.log(actObj.data.id);
+          if (!(!this.canBookAdministration && actObj.data.placeType === PlaceRole.constant)) {
+            if (this.currentBookingPlace.isPlaceClicked && actObj.data.id !== this.currentBookingPlace.placeData.placeId) {
+              this.onDeleteBooking(this.currentBookingPlace.placeData.placeId);
+            }
+            this.currentBookingPlace.isPlaceClicked = true;
+            this.setDataOfClickedPlace(actObj);
+            this.activateTimer();
+            // this.onBookingClick();
+          }
         }
       },
-      'mouse:down:before': (e) => {},
+      'mouse:down:before': (e) => {
+      }
     });
+  }
+
+  onDeleteMap() {
+    // this.deleteMap.emit(true);
+  }
+
+  onClickAgreeToDelete() {
+    this.checkToDelete = this.checkboxForDelete.nativeElement.checked;
+  }
+
+  checkUserRole(user: UserDataInterface): boolean {
+    // ToDo check only first role of user
+    return environment.ROLES_FOR_ADMINISTRATION.includes(user.roleNames[0]);
+  }
+
+  checkUserRoleForDeleteMap(user: UserDataInterface): boolean {
+    // ToDo check only first role of user
+    return environment.WHO_CAN_DELETE_MAPS.includes(user.roleNames[0]);
+  }
+
+  changeDataOnPlaces(data: BookingResponseModel[]): void {
+    // console.log(data);
+    // ToDO need to do with user name later
+    if (!!data) {
+      const bookedId: string[] = [];
+      data.forEach((item: BookingResponseModel) => bookedId.push(item.placeId));
+      this.currentBookingArr.forEach((item: BookingStateOnUI) => {
+        item.isFree = !bookedId.includes(item.placeId);
+      });
+    }
+  }
+
+  onClosePlace(): void {
+    if (!!this.currentBookingPlace.placeData) {
+      let placeId: string = this.currentBookingPlace.placeData.placeId;
+      this.currentBookingPlace.isPlaceClicked = false;
+      this.onDeleteBooking(placeId);
+    }
+  }
+
+  onDeleteBooking(placeId: string): void {
+    this.deleteBookingForPlace.emit(placeId);
+  }
+
+  createAllPlacesArr(): void {
+    this.canvas.forEachObject((obj: fabric.Object) => {
+      if (obj?.name === EDITOR_NAMES.place) {
+        let { id: placeId, placeType, number: placeNumber, maxQuantity } = obj.data;
+        // let isDenied: boolean = !(!this.canBookAdministration && placeType === PlaceRole.constant);
+
+        if (!(!this.canBookAdministration && placeType === PlaceRole.constant)) {
+          const newPl: BookingStateOnUI = {
+            placeId,
+            placeNumber,
+            placeType,
+            maxQuantity,
+            isFree: true,
+            nameOfUser: null
+          };
+          this.currentBookingArr.push(newPl);
+        }
+      }
+    });
+  }
+
+  activateTimer() {
+    let start = environment.TIMER_ON_BOOKING;
+    this.countDown = timer(0, 1000).pipe(
+      map(count => start - count),
+      tap(count => count === 0 ? this.onClosePlace() : null),
+      takeWhile(count => count >= 0)
+    );
+    this.changeDetection.detectChanges();
   }
 
   setDataOfClickedPlace(obj: fabric.Object) {
@@ -132,12 +227,15 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   }
 
   onInformClick(): void {
-    this.bookedPlaceForId.emit(this.currentBookingPlace.placeData.placeId);
+
   }
 
   onBookingClick(): void {
-    // if (this.currentBookingPlace.placeData?.isFree) {}
-    this.bookedPlaceForId.emit(this.currentBookingPlace.placeData.placeId);
+    // ToDo need check place first is free
+    if (!!this.currentBookingPlace.placeData) {
+      let [placeId, userId] = [this.currentBookingPlace.placeData.placeId, this.userData.id];
+      this.bookedPlaceForId.emit({ placeId, userId });
+    }
   }
 
   drawBookingsOnPlaces(): void {
@@ -145,8 +243,6 @@ export class BookingMapComponent implements OnInit, OnDestroy {
 
     this.canvas.forEachObject((obj: fabric.Object) => {
       if (obj?.name === EDITOR_NAMES.place) {
-        // // ToDo temporary here for uuid grab
-        // this.bookings.push({ placeId: obj.data.id, isFree: true });
         const bound = obj.getBoundingRect();
         const currentPlace: BookingStateOnUI = this.getCurrentBookingPlaceData(obj.data.id);
         if (currentPlace) {
@@ -158,8 +254,8 @@ export class BookingMapComponent implements OnInit, OnDestroy {
         }
       }
       this.canvas.requestRenderAll();
+
     });
-    // console.log(this.bookings);
   }
 
   clearMarkOnPlaces(): void {

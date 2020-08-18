@@ -11,6 +11,7 @@
   <div class="col-sm-6 col-md-3 mt-1 mb-3">
     <button class="btn btn-block btn-outline-success"
             disabled
+            matTooltip="Sorry, this option is unavailable in this release"
             type="button">
       Load from server
     </button>
@@ -56,26 +57,26 @@
     <canvas #htmlCanvas class="my-3 mx-1 canvas-place"></canvas>
   </div>
 
-  <div class="col-sm-12 my-2">
-    <button (click)="onDeleteMap()"
-            [disabled]="!checkToDelete"
-            class="btn btn-sm btn-danger mr-4 my-2"
-            type="button">
-      Delete map
-    </button>
-    <label class="form-check-label" for="deletingButton">
-      <input #checkboxForDelete
-             (click)="onClickAgreeToDelete()"
-             class="form-check-input"
-             id="deletingButton"
-             type="checkbox">
+  <!--  <div class="col-sm-12 my-2">-->
+  <!--    <button (click)="onDeleteMap()"-->
+  <!--            [disabled]="!checkToDelete"-->
+  <!--            class="btn btn-sm btn-danger mr-4 my-2"-->
+  <!--            type="button">-->
+  <!--      Delete map-->
+  <!--    </button>-->
+  <!--    <label class="form-check-label" for="deletingButton">-->
+  <!--      <input #checkboxForDelete-->
+  <!--             (click)="onClickAgreeToDelete()"-->
+  <!--             class="form-check-input"-->
+  <!--             id="deletingButton"-->
+  <!--             type="checkbox">-->
 
-      <div class="alert {{checkToDelete ? 'alert-secondary' : 'alert-danger'}} mr-2" role="alert">
-        Deleting of this map causes to a significant loss of information. I understand that and want to continue
-      </div>
-    </label>
+  <!--      <div class="alert {{checkToDelete ? 'alert-secondary' : 'alert-danger'}} mr-2" role="alert">-->
+  <!--        Deleting of this map causes to a significant loss of information. I understand that and want to continue-->
+  <!--      </div>-->
+  <!--    </label>-->
 
-  </div>
+  <!--  </div>-->
 
   <mat-icon #clone (click)="onClone()"
             [ngClass]="{'hide': !activeElementOnCanvas.clone}"

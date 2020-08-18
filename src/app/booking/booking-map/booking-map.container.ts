@@ -1,96 +1,68 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { getMapBooking } from '../../store/selectors/roomsManagementEdit.selector';
-import { BookingStateOnUI } from './booking-state.models';
 import { UserDataInterface } from '../../auth/login/models/auth-response.model';
 import { userData } from '../../store/selectors/auth.selectors';
+import { allBookings } from '../../store/selectors/booking.selctors';
+import * as _moment from 'moment';
+import { createBookingAction } from '../../store/actions/booking.actions';
+import { CreateBookingInterface } from '../modules/booking-store.interface';
+import { BookingResponseModel } from '../../shared/models/booking-response.model';
 
-const STEP_1: BookingStateOnUI[] = [
-  { placeId: 'd7ddf7d1-c178-49aa-b65e-acd9e09ca88c', isFree: true },
-  { placeId: '46d7f02b-5d74-4650-b0f3-19daae524f55', isFree: true },
-  { placeId: 'cba7ae5b-c51e-4d4a-915e-1fe1a12e77ad', isFree: true },
-];
-const STEP_2: BookingStateOnUI[] = [
-  {
-    placeId: 'd7ddf7d1-c178-49aa-b65e-acd9e09ca88c',
-    isFree: false,
-    nameOfUser: 'SI',
-  },
-  { placeId: '46d7f02b-5d74-4650-b0f3-19daae524f55', isFree: true },
-  { placeId: 'cba7ae5b-c51e-4d4a-915e-1fe1a12e77ad', isFree: true },
-];
-const STEP_3: BookingStateOnUI[] = [
-  {
-    placeId: 'd7ddf7d1-c178-49aa-b65e-acd9e09ca88c',
-    isFree: false,
-    nameOfUser: 'SI',
-  },
-  {
-    placeId: '46d7f02b-5d74-4650-b0f3-19daae524f55',
-    isFree: false,
-    nameOfUser: 'KP',
-  },
-  { placeId: 'cba7ae5b-c51e-4d4a-915e-1fe1a12e77ad', isFree: true },
-];
-const STEP_4: BookingStateOnUI[] = [
-  {
-    placeId: 'd7ddf7d1-c178-49aa-b65e-acd9e09ca88c',
-    isFree: false,
-    nameOfUser: 'SI',
-  },
-  {
-    placeId: '46d7f02b-5d74-4650-b0f3-19daae524f55',
-    isFree: false,
-    nameOfUser: 'KP',
-  },
-  {
-    placeId: 'cba7ae5b-c51e-4d4a-915e-1fe1a12e77ad',
-    isFree: false,
-    nameOfUser: 'RR',
-  },
-];
+const moment = _moment;
 
 @Component({
   selector: 'app-booking-map-container',
   template: `
     <app-booking-map
-      [userData]="$userData | async"
-      [mapData]="$getMapBooking | async"
-      [bookingState$]="$bookings"
-      (bookedPlaceForId)="onBookPlace($event)"
+        [userData]="$userData | async"
+        [mapData]="$getMapBooking | async"
+        [bookingState$]="allBookings$"
+        (bookedPlaceForId)="onBookPlace($event)"
+        (deleteBookingForPlace)="onDeleteBookedPlace($event)"
+        (deleteMap)="onDeleteMap()"
     ></app-booking-map>
   `,
 })
 export class BookingMapContainer {
   public $userData: Observable<UserDataInterface>;
   public $getMapBooking: Observable<string>;
-  public $bookings: BehaviorSubject<BookingStateOnUI[]> = new BehaviorSubject<
-    BookingStateOnUI[]
-  >(STEP_4);
-
-  // public $bookings: Observable<BookingStateOnUI[]>;
+  @Input() choseDate: string = moment().format().split('+')[0];
+  startDate: string = moment().format().split('T')[0] + 'T08:00:00';
+  endDate: string = moment().format().split('T')[0] + 'T17:00:00';
+  public allBookings$: Observable<BookingResponseModel[]>;
 
   constructor(private store$: Store<AppState>) {
     this.initStore();
-    setTimeout(() => {
-      this.$bookings.next(STEP_3);
-    }, 10000);
-    setTimeout(() => {
-      this.$bookings.next(STEP_2);
-    }, 20000);
-    setTimeout(() => {
-      this.$bookings.next(STEP_1);
-    }, 30000);
   }
 
-  onBookPlace(id: string) {
-    console.log(id);
+  onBookPlace(data: CreateBookingInterface) {
+    let [startDate, endDate] = [this.startDate, this.endDate];
+    let dataForBooking: CreateBookingInterface = {
+      ...data,
+      startDate,
+      endDate,
+    };
+    this.store$.dispatch(
+      new createBookingAction({
+        dataCreateBooking: dataForBooking,
+      })
+    );
+  }
+
+  onDeleteBookedPlace(placeId: string) {
+    // console.log(placeId);
+  }
+
+  onDeleteMap() {
+    console.log('need to delete map!!');
   }
 
   initStore(): void {
     this.$getMapBooking = this.store$.select(getMapBooking);
     this.$userData = this.store$.select(userData);
+    this.allBookings$ = this.store$.select(allBookings);
   }
 }

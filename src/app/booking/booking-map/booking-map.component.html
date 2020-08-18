@@ -3,14 +3,38 @@
   <canvas #htmlCanvasBooking class="my-3 mx-1 canvas-place"></canvas>
 </div>
 
+<div [ngClass]="{'hide': !canDeleteMap}" class="col-sm-12 my-2 button-delete-map">
+  <button (click)="onDeleteMap()"
+          [disabled]="!checkToDelete"
+          class="btn btn-sm btn-danger mr-4 my-2"
+          matTooltip="Sorry, this option is unavailable in this release"
+          type="button">
+    Delete map
+  </button>
+  <label class="form-check-label" for="deletingButton">
+    <input #checkboxForDelete
+           (click)="onClickAgreeToDelete()"
+           class="form-check-input"
+           id="deletingButton"
+           type="checkbox">
+
+    <div class="alert {{checkToDelete ? 'alert-secondary' : 'alert-danger'}} mr-2" role="alert">
+      Deleting of this map causes to a significant loss of information. I understand that and want to continue
+    </div>
+  </label>
+
+</div>
+
 <mat-card #cardForBooking [ngClass]="{'hide': !currentBookingPlace?.isPlaceClicked}">
   <mat-card-header>
     <button aria-label="Clear" class="btn-clear" mat-button mat-icon-button>
-      <mat-icon (click)="currentBookingPlace.isPlaceClicked = false">close</mat-icon>
+      <mat-icon (click)="onClosePlace()">close</mat-icon>
     </button>
     <img alt="Logo exadel" mat-card-avatar src="../assets/images/logo/logo_micro2.jpg">
     <mat-card-title> Place #{{currentBookingPlace.placeData?.placeNumber | number: '3.0-0'}}</mat-card-title>
-    <mat-card-subtitle>Time for booking: 1:00</mat-card-subtitle>
+    <mat-card-subtitle [ngClass]="{'time-s-up': (countDown | async) < 15}">
+      Time for booking: {{countDown | async | formatTime}}
+    </mat-card-subtitle>
   </mat-card-header>
   <mat-card-content class="mx-auto">
     <p class="my-2">
@@ -23,11 +47,11 @@
       Name: <span class="choosing-span">{{currentBookingPlace.placeData?.nameOfUser}}</span>
     </p>
     <ng-template #noName><span class="choosing-span">You can book that place</span></ng-template>
-    <div class="for-admin my-2 hide">
+    <div [ngClass]="{'hide': !canBookAdministration}" class="for-admin my-2">
       <p class="my-1">Message for admins only</p>
       <textarea matInput rows="4"></textarea>
       <div align="end" class="mt-2">
-        <button mat-button>SEND</button>
+        <button mat-button matTooltip="Sorry, this option is unavailable in this release">SEND</button>
       </div>
     </div>
   </mat-card-content>

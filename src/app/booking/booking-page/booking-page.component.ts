@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import * as _moment from 'moment';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { roomsManagementEditUnblockSelectorsAction } from '../../store/actions/roomsManagementEdit.actions';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import * as _moment from 'moment';
 
 const moment = _moment;
 export const MY_FORMATS = {
@@ -28,9 +29,11 @@ export const MY_FORMATS = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BookingPageComponent {
-  date = new FormControl(new Date());
-  // date = new FormControl(moment());
+  // date = new FormControl(new Date());
+  date: FormControl = new FormControl(moment());
+  @Output() choseDateEmitter: EventEmitter<string> = new EventEmitter<string>();
   @Input() $blockSelection: boolean;
+  @Output() choseDate: string = moment().format().split('+')[0];
   showMap: boolean = true;
 
   constructor(
@@ -38,6 +41,13 @@ export class BookingPageComponent {
     private router: Router,
     private route: ActivatedRoute
   ) {}
+
+  onDateChange(event: MatDatepickerInputEvent<string>) {
+    // // let date: Moment = event.target.value;
+    // let date: any = event.target.value;
+    // this.choseDate = date.format().split('+')[0];
+    // this.choseDateEmitter.next(this.choseDate);
+  }
 
   onClickAnotherAddress() {
     this.router.navigate(['.'], {
