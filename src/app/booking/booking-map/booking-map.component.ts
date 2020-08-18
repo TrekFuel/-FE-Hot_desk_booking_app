@@ -150,7 +150,7 @@ export class BookingMapComponent implements OnInit, OnDestroy {
   }
 
   changeDataOnPlaces(data: BookingResponseModel[]): void {
-    console.log(data);
+    // console.log(data);
     // ToDO need to do with user name later
     if (!!data) {
       const bookedId: string[] = [];

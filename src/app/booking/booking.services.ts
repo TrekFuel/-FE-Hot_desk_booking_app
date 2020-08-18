@@ -10,7 +10,7 @@ export class BookingServices {
   constructor(private http: HttpClient) {}
 
   getAllBooking(data: GetAllBookingsInterface) {
-    console.log(data);
+    // console.log(data);
     return this.http.get(`
     ${environment.databaseURL}/booking/byroom?roomId=${data.roomId}&start=${data.startDate}&end=${data.endDate}`);
   }

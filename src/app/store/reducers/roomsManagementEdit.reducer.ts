@@ -1,8 +1,5 @@
 import { RoomsManagementEditStoreInterface } from '../../rooms-management/rooms-management-edit/models/rooms-management-edit-store.interface';
-import {
-  roomsManagementEditActionType,
-  roomsManagementEditTypeActions,
-} from '../actions/roomsManagementEdit.actions';
+import { roomsManagementEditActionType, roomsManagementEditTypeActions } from '../actions/roomsManagementEdit.actions';
 
 const initialState: RoomsManagementEditStoreInterface = {
   addressId: null,
@@ -48,7 +45,7 @@ export function roomsManagementEditReducer(
         roomDtoInterface: action.payload.getDataRoom,
       };
     case roomsManagementEditActionType.R_M_E_GET_MAP:
-      console.log(action.payload.getMap);
+      // console.log(action.payload.getMap);
       return {
         ...state,
         getMap: action.payload.getMap.map,
